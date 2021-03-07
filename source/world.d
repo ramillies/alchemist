@@ -58,31 +58,16 @@ class World: Drawable
 		return result;
 	}
 
-	void makeIslands(size_t numCells)
+	void makeIslands()
 	{
+		size_t numCells = to!size_t(18/landFraction) + 1;
 		Pos[] kernels = cartesianProduct(_width.iota, _height.iota)
 				.map!((x) => Pos(x[0], x[1]))
 				.randomSample(numCells, width*height).array;
-		bool[] land = numCells.iota.map!((x) => uniform01() < landFraction).array;
+		bool[] land = chain(true.repeat(18), false.repeat(numCells - 18)).array.randomCover.array;
 
 		size_t[] snowLine = [ height/4 ];
 		size_t[] sandLine = [ 3*height/4 ];
-		while(snowLine.length < width)
-		{
-			auto snow = snowLine[$-1];
-			snowLine ~= snow + [-1, 0, 1][dice([
-				snow > height/6 ? 1 : 0, // Chance to go more north
-				1, // Chance to stay
-				snow < height/3 ? 1 : 0 // Chance to go more south
-			])];
-			auto sand = sandLine[$-1];
-			sandLine ~= sand + [-1, 0, 1][dice([
-				sand > 2*height/3 ? 1 : 0, // Chance to go more north
-				1, // Chance to stay
-				snow < 5*height/6 ? 1 : 0 // Chance to go more south
-			])];
-		}
-
 		foreach(y; 0 .. height)
 			foreach(x; 0 .. width)
 				terrain[y][x] = "water";
@@ -93,15 +78,54 @@ class World: Drawable
 				auto closest = kernels.map!((k) => (k.x - x)^^2 + (k.y - y)^^2).array.minIndex;
 				islandDivisions[y][x] = closest;
 				if(land[closest])
-				{
+					terrain[y][x] = "land";
+			}
+
+		while(snowLine.length < width)
+		{
+			bool isCorner(size_t x, size_t y)
+			{
+				if(x == 0 || x == width-1 || y == 0 || y == height-1)
+					return false;
+				auto around = [terrain[y-1][x], terrain[y+1][x], terrain[y][x-1], terrain[y][x+1]];
+				auto diagonalAround = [terrain[y-1][x-1], terrain[y+1][x-1], terrain[y-1][x+1], terrain[y+1][x+1]];
+				return !around.canFind("water") && diagonalAround.canFind("water");
+			}
+
+			auto snow = snowLine[$-1];
+			snowLine ~= snow;
+			int attempts = 0;
+			do
+			{
+				snowLine[$-1] = snow + [-1, 0, 1][dice([
+					snow > height/6 ? 1 : 0, // Chance to go more north
+					1, // Chance to stay
+					snow < height/3 ? 1 : 0 // Chance to go more south
+				])];
+				attempts++;
+			} while(isCorner(snowLine.length-1, snowLine[$-1]-1) && attempts < 10);
+
+			auto sand = sandLine[$-1];
+			sandLine ~= sand;
+			do
+			{
+				sandLine[$-1] = sand + [-1, 0, 1][dice([
+					sand > 2*height/3 ? 1 : 0, // Chance to go more north
+					1, // Chance to stay
+					sand < 5*height/6 ? 1 : 0 // Chance to go more south
+				])];
+				attempts++;
+			} while(isCorner(sandLine.length-1, sandLine[$-1]) && attempts < 10);
+		}
+
+		foreach(y; 1 .. height-1)
+			foreach(x; 1 .. width-1)
+				if(terrain[y][x] == "land")
 					terrain[y][x] = y.predSwitch!`a<b`(
 						snowLine[x], "snow",
 						sandLine[x], "grass",
 						"sand"
 					);
-
-				}
-			}
 	}
 
 	private void updateTiles()
