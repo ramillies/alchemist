@@ -17,7 +17,8 @@ class ConfigFiles
 		foreach(name, path; [
 			"textures" : "data/textures",
 			"overworld tiles" : "data/overworld-tiles",
-			"settings" : "settings"
+			"settings" : "settings",
+			"world terrain" : "data/world-gen"
 		])
 		{
 			File f;
@@ -76,7 +77,7 @@ class Images
 		{
 			textures[name] = new Texture;
 			textures[name].loadFromFile("data/" ~ file.get!string);
-			textures[name].setSmooth(true);
+			textures[name].setSmooth(false);
 		}
 		writefln("Loaded textures: %s", textures.byKey);
 	}

@@ -7,6 +7,7 @@ import std.stdio;
 import std.json;
 import std.format;
 import std.math;
+import std.typecons;
 
 import tilemap;
 import resources;
@@ -14,6 +15,7 @@ import settings;
 
 import boilerplate;
 import dsfml.graphics;
+import luad.all;
 
 alias Pos = Vector2!size_t;
 
@@ -23,14 +25,16 @@ class World: Drawable
 	{
 		@Read size_t _width, _height;
 		@Read double _landFraction;
-		Tilemap tiles;
+		Tilemap tiles, featureTiles, roadTiles;
+		Sprite[] mountains;
 
-		int[][] tilenumbers;
 	}
 
 	const TILESIZE = 48;
 
 	string[][] terrain;
+	string[][] features;
+	bool[][] roads;
 	size_t[][] islandDivisions;
 
 	mixin(GenerateAll);
@@ -43,6 +47,9 @@ class World: Drawable
 
 		terrain = _height.iota.map!((x) => "water".repeat(_width).array).array;
 		islandDivisions = _height.iota.map!((x) => (cast(size_t)0).repeat(_width).array).array;
+		tiles = new Tilemap;
+		featureTiles = new Tilemap;
+		roadTiles = new Tilemap;
 	}
 
 	string terrainAt(Pos pos) { return terrain[pos.y][pos.x]; }
@@ -66,8 +73,26 @@ class World: Drawable
 				.randomSample(numCells, width*height).array;
 		bool[] land = chain(true.repeat(18), false.repeat(numCells - 18)).array.randomCover.array;
 
-		size_t[] snowLine = [ height/4 ];
-		size_t[] sandLine = [ 3*height/4 ];
+		auto conf = ConfigFiles.get("world terrain");
+		int maxAttempts = conf["maxAttempts"].get!int;
+		auto lua = new LuaState;
+		lua.openLibs;
+		lua["height"] = height;
+		lua["width"] = width;
+		lua["landFraction"] = landFraction;
+		lua.doString(format(`function snowStart() return %s end`, conf["snow"]["start"].str));
+		auto snowStart = lua.get!(size_t delegate())("snowStart");
+		lua.doString(format(`function sandStart() return %s end`, conf["sand"]["start"].str));
+		auto sandStart = lua.get!(size_t delegate())("sandStart");
+		lua.doString(format(`function voronoiDistance(X, Y, centerX, centerY) return %s end`, conf["voronoiDistance"].str));
+		auto voronoiDistance = lua.get!(double delegate(in size_t, in size_t, in size_t, in size_t))("voronoiDistance");
+		lua.doString(format(`function advanceSnow(current) return %s end`, conf["snow"]["advanceProbabilities"].str));
+		auto advanceSnow = lua.get!(double[] delegate(in size_t))("advanceSnow");
+		lua.doString(format(`function advanceSand(current) return %s end`, conf["sand"]["advanceProbabilities"].str));
+		auto advanceSand = lua.get!(double[] delegate(in size_t))("advanceSand");
+
+		size_t[] snowLine = [ snowStart() ];
+		size_t[] sandLine = [ sandStart() ];
 		foreach(y; 0 .. height)
 			foreach(x; 0 .. width)
 				terrain[y][x] = "water";
@@ -75,7 +100,7 @@ class World: Drawable
 		foreach(y; 1 .. height-1)
 			foreach(x; 1 .. width-1)
 			{
-				auto closest = kernels.map!((k) => (k.x - x)^^2 + (k.y - y)^^2).array.minIndex;
+				auto closest = kernels.map!((k) => voronoiDistance(x, y, k.x, k.y)).array.minIndex;
 				islandDivisions[y][x] = closest;
 				if(land[closest])
 					terrain[y][x] = "land";
@@ -97,11 +122,7 @@ class World: Drawable
 			int attempts = 0;
 			do
 			{
-				snowLine[$-1] = snow + [-1, 0, 1][dice([
-					snow > height/6 ? 1 : 0, // Chance to go more north
-					1, // Chance to stay
-					snow < height/3 ? 1 : 0 // Chance to go more south
-				])];
+				snowLine[$-1] = snow + [-1, 0, 1][dice(advanceSnow(snow))];
 				attempts++;
 			} while(isCorner(snowLine.length-1, snowLine[$-1]-1) && attempts < 10);
 
@@ -109,11 +130,7 @@ class World: Drawable
 			sandLine ~= sand;
 			do
 			{
-				sandLine[$-1] = sand + [-1, 0, 1][dice([
-					sand > 2*height/3 ? 1 : 0, // Chance to go more north
-					1, // Chance to stay
-					sand < 5*height/6 ? 1 : 0 // Chance to go more south
-				])];
+				sandLine[$-1] = sand + [-1, 0, 1][dice(advanceSand(sand))];
 				attempts++;
 			} while(isCorner(sandLine.length-1, sandLine[$-1]) && attempts < 10);
 		}
@@ -130,11 +147,113 @@ class World: Drawable
 	
 	void addTerrainFeatures()
 	{
+		features = terrain.map!((row) => row.map!((x) => x == "water" ? "water" : "plain").array).array;
+		roads = height.iota.map!((x) => false.repeat(width).array).array;
+		bool[][] mask;
 
+		auto lua = new LuaState;
+		lua.openLibs;
+		lua["height"] = height;
+		lua["width"] = width;
+		lua["landFraction"] = landFraction;
+		lua["terrainAt"] = delegate string (size_t x, size_t y) { return terrain[y][x]; };
+		lua["adjacentTerrain"] = delegate string[] (size_t x, size_t y) { return adjacent(Pos(x,y)).map!((p) => terrain[p.y][p.x]).array; };
+		lua["diagonallyAdjacentTerrain"] = delegate string[] (size_t x, size_t y) { return [Pos(x-1,y-1),Pos(x-1,y+1),Pos(x+1,y-1),Pos(x+1,y+1)].map!((p) => terrain[p.y][p.x]).array; };
+
+		auto conf = ConfigFiles.get("world terrain");
+
+		void makeMask(bool delegate(size_t, size_t) condition)
+		{
+			mask = features.map!((row) => row.map!((x) => x == "plain").array).array;
+			foreach(y; 0 .. height)
+				foreach(x; 0 .. width)
+					if(!condition(x,y))
+						mask[y][x] = false;
+		}
+
+		void distribute(string what, int amount, int radius)
+		{
+			if(amount == 0 || !mask.any!`a.any`)
+				return;
+			auto randomSquare = cartesianProduct(width.iota, height.iota).map!((x) => Pos(x[0], x[1])).filter!((p) => mask[p.y][p.x]).array.choice;
+			features[randomSquare.y][randomSquare.x] = what;
+			foreach(y; 0 .. height)
+				foreach(x; 0 .. width)
+					if((x-randomSquare.x)^^2 + (y-randomSquare.y)^^2 <= radius^^2)
+						mask[y][x] = false;
+			distribute(what, amount-1, radius);
+		}
+
+		void fill(string what, int amount, bool delegate(size_t, size_t) condition)
+		{
+			auto squares = cartesianProduct(width.iota, height.iota)
+				.map!((x) => Pos(x[0], x[1]))
+				.filter!((p) => features[p.y][p.x] == "plain" && adjacent(p).map!((r) => features[r.y][r.x]).canFind(what) && condition(p.x, p.y))
+				.array;
+			if(amount == 0 || squares.empty) return;
+			auto target = squares.choice;
+			features[target.y][target.x] = what;
+			fill(what, amount-1, condition);
+		}
+
+		lua["makeMask"] = &makeMask;
+		lua["distribute"] = delegate void(LuaTable t) { return distribute(t.get!string("feature"), t.get!int("number"), t.get!int("exclusionRadius")); };
+		lua["fill"] = delegate void(LuaTable t) { return fill(t.get!string("feature"), t.get!int("number"), t.get!(bool delegate(size_t, size_t))("condition")); };
+
+		lua.doString(conf["fillFeatures"].str);
+
+		void makeRoads(int amount)
+		{
+			Tuple!(Pos, Pos)[] builtRoads;
+			foreach(n; 0 .. amount)
+			{
+				writefln("built roads: %s", builtRoads);
+				auto startSquare = cartesianProduct(width.iota, height.iota).map!((x) => Pos(x[0], x[1])).filter!((p) => ["city", "castle"].canFind(features[p.y][p.x])).array.choice;
+				int[][] pathLen = height.iota.map!((x) => (int.max).repeat(width).array).array;
+				pathLen[startSquare.y][startSquare.x] = 0;
+				Pos[] queue = [ startSquare ];
+				Pos[] forbidden = builtRoads.filter!((x) => x[0].x == startSquare.x && x[0].y == startSquare.y).map!((x) => x[1]).array;
+				writefln("start square: %s, forbidden %s", startSquare, forbidden);
+				do
+				{
+					auto toExpand = queue[0];
+					queue = queue.remove(0);
+					foreach(adj; adjacent(toExpand))
+						if(!canFind(forbidden, adj) && canFind(["plain", "city", "village", "castle"], features[adj.y][adj.x]))
+						{
+							if(pathLen[adj.y][adj.x] == int.max)
+								queue ~= adj;
+							pathLen[adj.y][adj.x] = min(pathLen[adj.y][adj.x], pathLen[toExpand.y][toExpand.x]+1);
+						}
+				} while(!queue.empty && !canFind(["city", "castle", "village"], features[queue[0].y][queue[0].x]));
+				if(!queue.empty)
+				{
+					roads[queue[0].y][queue[0].x] = true;
+					roads[startSquare.y][startSquare.x] = true;
+					Pos pathPoint = queue[0];
+					do
+					{
+						auto searchFor = pathLen[pathPoint.y][pathPoint.x] - 1;
+						foreach(adj; adjacent(pathPoint))
+							if(pathLen[adj.y][adj.x] == searchFor)
+							{
+								pathPoint = adj;
+								roads[adj.y][adj.x] = true;
+								break;
+							}
+					} while(pathLen[pathPoint.y][pathPoint.x] != 0);
+					builtRoads ~= tuple(queue[0], startSquare);
+					builtRoads ~= tuple(startSquare, queue[0]);
+				}
+			}
+		}
+
+		makeRoads(10);
 	}
 
-	private void updateTiles()
+	void updateTiles()
 	{
+		int[][] tilenumbers, featureTileNumbers, roadTileNumbers;
 		auto tileNames = ConfigFiles.get("overworld tiles");
 		int getTile(string name)
 		{
@@ -218,17 +337,113 @@ class World: Drawable
 				tilenumbers[y][x] = (supposedTilename in tileNames) ? getTile(supposedTilename) : getTile(here);
 			}
 		tiles.load(Images.texture("world tileset"), Vector2u(48, 48), tilenumbers);
-	}
 
-	void prepareDrawing()
-	{
-		tiles = new Tilemap;
-		updateTiles();
+		featureTileNumbers = (3*height).iota.map!((x) => 335.repeat(3*width).array).array;
+		foreach(y; 0 .. height)
+			foreach(x; 0 .. width)
+				if(features[y][x] == "mountains")
+				{
+					Sprite s = new Sprite;
+					s.setTexture(Images.texture("world mountains"));
+					s.origin = Vector2f(TILESIZE, TILESIZE);
+					s.position = Vector2f(3*x*TILESIZE, 3*y*TILESIZE);
+					if(terrain[y][x] == "snow")
+						s.textureRect = IntRect(6*TILESIZE, 0, 6*TILESIZE, 6*TILESIZE);
+					else
+						s.textureRect = IntRect(0, 0, 6*TILESIZE, 6*TILESIZE);
+					mountains ~= s;
+				}
+				else if(features[y][x] == "city" || features[y][x] == "castle" || features[y][x] == "grass hill" || features[y][x] == "cliff")
+				{
+					foreach(k; 0 .. 3)
+						foreach(l; 0 .. 3)
+							featureTileNumbers[3*y + l][3*x + k] = getTile(format("%s %s%s", features[y][x], k, l));
+				}
+				else if(features[y][x] == "village")
+					foreach(k; 0 .. 2)
+						foreach(l; 0 .. 2)
+							featureTileNumbers[3*y + l][3*x + k + 1] = getTile(format("%s %s%s", features[y][x], k, l));
+		bool[][] forest = (3*height).iota.map!((y) => (3*height).iota.map!((x) => features[y/3][x/3] == "forest").array).array;
+		
+		foreach(y; 3 .. 3*(height-1))
+			foreach(x; 3 .. 3*(width-1))
+				if(forest[y][x])
+				{
+					auto around = [ forest[y-1][x], forest[y][x+1], forest[y+1][x], forest[y][x-1] ];
+					auto diagonalAround = [ forest[y-1][x-1], forest[y-1][x+1], forest[y+1][x-1], forest[y+1][x+1] ];
+					auto terrainType = terrain[y/3][x/3];
+					auto standardForest = format("forest %s", terrainType);
+
+					int safeGetTile(string name)
+					{
+						if(name in tileNames)
+							return getTile(name);
+						else
+						{
+							writefln("Bad forest tile name '%s'", name);
+							return getTile(standardForest);
+						}
+					}
+
+					if(around.count(false) == 0)
+					{
+						if(diagonalAround.count(false) == 0)
+							featureTileNumbers[y][x] = getTile(format("forest %s", terrainType));
+						else
+							foreach(k, v; diagonalAround)
+								if(v == false)
+									featureTileNumbers[y][x] = safeGetTile(format("forest %s diagonal %s", terrainType, ["NW", "NE", "SW", "ES" ][k]));
+					}
+					else
+					{
+						char[] directions;
+						foreach(k, v; around)
+							if(v == false)
+								directions ~= "NESW"[k];
+						featureTileNumbers[y][x] = safeGetTile(format("forest %s %s", terrainType, directions));
+					}
+				}
+
+		featureTiles.load(Images.texture("world tileset"), Vector2u(48, 48), featureTileNumbers);
+		roadTileNumbers = (3*height).iota.map!((x) => 335.repeat(3*width).array).array;
+		foreach(y; 0 .. height)
+			foreach(x; 0 .. width)
+				if(roads[y][x])
+				{
+					char[] directions;
+					if(roads[y-1][x])
+					{
+						roadTileNumbers[3*y][3*x+1] = getTile("road NS");
+						directions ~= "N";
+					}
+					if(roads[y][x+1])
+					{
+						roadTileNumbers[3*y+1][3*x+2] = getTile("road EW");
+						directions ~= "E";
+					}
+					if(roads[y+1][x])
+					{
+						roadTileNumbers[3*y+2][3*x+1] = getTile("road NS");
+						directions ~= "S";
+					}
+					if(roads[y][x-1])
+					{
+						roadTileNumbers[3*y+1][3*x] = getTile("road EW");
+						directions ~= "W";
+					}
+					roadTileNumbers[3*y+1][3*x+1] = getTile(format("road %s", directions));
+				}
+		writefln("Roads:\n%s", roads.map!((r) => r.map!((x) => x ? '#' : '.').array).join("\n"));
+		roadTiles.load(Images.texture("world tileset"), Vector2u(48, 48), roadTileNumbers);
+		writefln("After load roads.");
 	}
 
 	override void draw(RenderTarget target, RenderStates states)
 	{
 		target.draw(tiles, states);
+		mountains.each!((m) => target.draw(m, states));
+		target.draw(roadTiles, states);
+		target.draw(featureTiles, states);
 		if(Settings.drawGrid)
 		{
 			Vertex[] lines;

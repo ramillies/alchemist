@@ -53,6 +53,7 @@ class LoadingScreen: Screen
 		{
 			World w = new World(30, 30, .4);
 			w.makeTerrain;
+			w.addTerrainFeatures;
 
 			Mainloop.changeScreen(new GameScreen(w));
 		}

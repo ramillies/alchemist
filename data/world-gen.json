@@ -1,0 +1,13 @@
+{
+	"snow": {
+		"start": "height/4",
+		"advanceProbabilities": "{current > height/6 and 1 or 0, 1, current < height/3 and 1 or 0}"
+	},
+	"sand": {
+		"start": "3*height/4",
+		"advanceProbabilities": "{current > 2*height/3 and 1 or 0, 1, current < 5*height/6 and 1 or 0}"
+	},
+	"voronoiDistance": "(X - centerX)*(X - centerX) + (Y - centerY)*(Y - centerY)",
+	"maxAttempts": 10,
+	"fillFeatures": "dofile('data/scripts/world-terrain-features.lua')"
+}

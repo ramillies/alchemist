@@ -11,6 +11,7 @@
 		"painlessjson": "~>1.4.0"
 	},
 	"description": "An Alchemist's journey",
-	"license": "gpl",
+	"license": "MIT",
+	"lflags": [ "-llua5.1" ],
 	"name": "alchemist"
 }

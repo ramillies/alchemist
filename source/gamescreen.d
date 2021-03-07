@@ -36,10 +36,7 @@ class GameScreen: Screen
 		text.position = Vector2f(0, 0);
 
 		world = w;
-		writefln("World: %s", world);
 		ocean = new Water(to!int(ceil(world.width/2.)), to!int(world.height));
-
-		writefln("Constructed game screen");
 	}
 
 	override void setWindow(RenderWindow w)
@@ -53,7 +50,7 @@ class GameScreen: Screen
 		maxZoom = min(1.*world.pixelSize.x/camera.size.x, 1.*world.pixelSize.y/camera.size.y) - .01;
 		zoom = min(1, maxZoom);
 		camera.zoom(zoom);
-		world.prepareDrawing;
+		world.updateTiles;
 
 		minimap = new View(FloatRect(0, 0, world.pixelSize.x, world.pixelSize.y));
 	}
