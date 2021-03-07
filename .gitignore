@@ -11,6 +11,10 @@
 *.a
 *.lib
 
+# Vim swap and undo files
+.*.swp
+.*.un*
+
 # Executables
 *.exe
 
@@ -22,3 +26,6 @@ docs/
 
 # Code coverage
 *.lst
+
+tags
+alchemist

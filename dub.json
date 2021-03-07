@@ -1,0 +1,16 @@
+{
+	"authors": [
+		"glorfindel"
+	],
+	"copyright": "Copyright © 2021, glorfindel",
+	"dependencies": {
+		"boilerplate": "~>1.6.0",
+		"dsfml": "~>2.1.1",
+		"luad": "~master",
+		"mofile": "~>0.2.1",
+		"painlessjson": "~>1.4.0"
+	},
+	"description": "An Alchemist's journey",
+	"license": "gpl",
+	"name": "alchemist"
+}

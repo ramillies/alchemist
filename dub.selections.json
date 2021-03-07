@@ -1,0 +1,13 @@
+{
+	"fileVersion": 1,
+	"versions": {
+		"boilerplate": "1.6.0",
+		"dsfml": "2.1.1",
+		"dunit": "1.0.16",
+		"luad": "~master",
+		"mofile": "0.2.1",
+		"painlessjson": "1.4.0",
+		"painlesstraits": "0.3.0",
+		"unit-threaded": "1.0.11"
+	}
+}
