@@ -3,6 +3,8 @@ import std.string;
 import std.json;
 import std.exception;
 
+import resources;
+
 class Settings
 {
 	static bool drawGrid = true;
@@ -10,17 +12,7 @@ class Settings
 
 	static void load()
 	{
-		File listfile;
-		try
-		{
-			listfile = File("settings.json", "r");
-		}
-		catch(std.exception.ErrnoException e)
-		{
-			return;
-		}
-		auto list = listfile.byLine.join("\n").parseJSON;
-
+		auto list = ConfigFiles.get("settings");
 		drawGrid = list["drawGrid"].get!bool;
 		gameLogShown = list["gameLogShown"].get!bool;
 	}

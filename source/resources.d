@@ -1,8 +1,48 @@
 import std.stdio;
 import std.string;
 import std.json;
+import std.exception;
 
 import dsfml.graphics;
+
+class ConfigFiles
+{
+	private static JSONValue[string] files;
+	private static JSONValue missing;
+
+	static void load()
+	{
+		missing = parseJSON("{}");
+
+		foreach(name, path; [
+			"textures" : "data/textures",
+			"overworld tiles" : "data/overworld-tiles",
+			"settings" : "settings"
+		])
+		{
+			File f;
+			try
+			{
+				f = File(path ~ ".json", "r");
+			}
+			catch(std.exception.ErrnoException e)
+			{
+				writefln("ERROR! Could not open configuration file '%s'!", path);
+				continue;
+			}
+			files[name] = f.byLine.join("\n").parseJSON;
+		}
+	}
+
+	static JSONValue[string] get(string name)
+	{
+		return files.get(name, missing).object;
+	}
+
+	static void unload()
+	{
+	}
+}
 
 class Fonts
 {
@@ -32,13 +72,11 @@ class Images
 		miss.display;
 		missing = cast(Texture) miss.getTexture;
 
-		File listfile = File("data/textures.json", "r");
-		auto list = listfile.byLine.join("\n").parseJSON;
-		foreach(name, file; list.get!(JSONValue[string]))
+		foreach(name, file; ConfigFiles.get("textures"))
 		{
 			textures[name] = new Texture;
 			textures[name].loadFromFile("data/" ~ file.get!string);
-			textures[name].setSmooth(false);
+			textures[name].setSmooth(true);
 		}
 		writefln("Loaded textures: %s", textures.byKey);
 	}

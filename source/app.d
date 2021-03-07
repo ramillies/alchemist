@@ -14,6 +14,7 @@ import dsfml.graphics;
 
 void main()
 {
+	ConfigFiles.load;
 	Settings.load;
 	auto win = new RenderWindow(VideoMode.getDesktopMode, "Alchemist");
 	win.setVerticalSyncEnabled(true);

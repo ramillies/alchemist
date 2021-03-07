@@ -52,7 +52,7 @@ class LoadingScreen: Screen
 		if(stage == 2)
 		{
 			World w = new World(30, 30, .4);
-			w.makeIslands;
+			w.makeTerrain;
 
 			Mainloop.changeScreen(new GameScreen(w));
 		}

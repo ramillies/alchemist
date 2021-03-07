@@ -58,7 +58,7 @@ class World: Drawable
 		return result;
 	}
 
-	void makeIslands()
+	void makeTerrain()
 	{
 		size_t numCells = to!size_t(18/landFraction) + 1;
 		Pos[] kernels = cartesianProduct(_width.iota, _height.iota)
@@ -127,11 +127,15 @@ class World: Drawable
 						"sand"
 					);
 	}
+	
+	void addTerrainFeatures()
+	{
+
+	}
 
 	private void updateTiles()
 	{
-		File listfile = File("data/overworld-tiles.json", "r");
-		auto tileNames = listfile.byLine.join("\n").parseJSON.object;
+		auto tileNames = ConfigFiles.get("overworld tiles");
 		int getTile(string name)
 		{
 			return tileNames[name].get!int;
@@ -198,11 +202,8 @@ class World: Drawable
 					foreach(k, v; diagonalAround)
 						if(v == "water")
 						{
-							writefln("[%s, %s] here: %s, around %s, other %s", x, y, here, diagonalAround, v);
 							auto supposedTilename = format("%s/%s diagonal %s", here, v, ["NW", "NE", "ES", "SW"][k]);
-							writefln("Trying diagonal with name '%s'", supposedTilename);
 							tilenumbers[y][x] = (supposedTilename in tileNames) ? getTile(supposedTilename) : getTile(here);
-							writefln("Gave tilenumber %s", tilenumbers[y][x]);
 							continue inner;
 						}
 				}
