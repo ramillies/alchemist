@@ -2,6 +2,6 @@
 	"herb meadow": {
 		"name": "Herb Meadow",
 		"description": "",
-		"scripts": "dofile('scripts/herb-meadow.lua')"
-	},
+		"script": "dofile('data/scripts/herb-meadow.lua')"
+	}
 }

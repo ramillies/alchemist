@@ -15,6 +15,7 @@ import world;
 import water;
 import settings;
 import player;
+import place;
 
 import dsfml.graphics;
 
@@ -62,6 +63,14 @@ class GameScreen: Screen
 
 		minimap = new View(FloatRect(0, 0, world.pixelSize.x, world.pixelSize.y));
 		camera.center = Vector2f(3*World.TILESIZE*player.x + 3*World.TILESIZE/2, 3*World.TILESIZE*player.y + 3*World.TILESIZE/2);
+
+
+		Place blah = Place.fromJSON(10, 10, ConfigFiles.get("places")["herb meadow"]);
+		foreach(n; 0 .. 50)
+		{
+			writefln("In day %s, the description was '%s'.", n, blah.description);
+			blah.newDay;
+		}
 	}
 
 	override void event(Event e)

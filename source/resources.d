@@ -19,7 +19,8 @@ class ConfigFiles
 			"overworld tiles" : "data/overworld-tiles",
 			"settings" : "settings",
 			"world terrain" : "data/world-gen",
-			"movement" : "data/movement"
+			"movement" : "data/movement",
+			"places" : "data/places"
 		])
 		{
 			File f;

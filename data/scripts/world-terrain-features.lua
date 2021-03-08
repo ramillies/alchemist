@@ -75,7 +75,7 @@ distribute{ feature = "castle", number = math.ceil(land/120), exclusionRadius = 
 
 makeRoads{ roadFraction = 0.5 }
 
-makeMask(function (x, y) return terrainAt(x, y) == "sand" and mountainsAllowed(x, y) and not roadAt(x, y) end, false)
+makeMask(function (x, y) return terrainAt(x, y) == "sand" and featureAt(x, y) == "plain" and mountainsAllowed(x, y) and not roadAt(x, y) end, false)
 distribute{ decoration = "dune", number = math.ceil(land/60), exclusionRadius = 1 }
-makeMask(function (x, y) return terrainAt(x, y) == "sand" and not roadAt(x, y) end, false)
+makeMask(function (x, y) return terrainAt(x, y) == "sand" and featureAt(x, y) == "plain" and not roadAt(x, y) end, false)
 distribute{ decoration = "cactuses", number = math.ceil(land/10), exclusionRadius = 1 }
