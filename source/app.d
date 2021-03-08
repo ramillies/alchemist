@@ -16,7 +16,7 @@ void main()
 {
 	ConfigFiles.load;
 	Settings.load;
-	auto win = new RenderWindow(VideoMode.getDesktopMode, "Alchemist");
+	auto win = new RenderWindow(VideoMode.getDesktopMode, "Alchemist", Window.Style.None);
 	win.setVerticalSyncEnabled(true);
 
 	Mainloop.win = win;

@@ -22,7 +22,7 @@ import dsfml.graphics;
 
 class GameScreen: Screen
 {
-	private ReactiveText realtime, gametime;
+	private ReactiveText[] texts;
 	private World world;
 	private Water ocean;
 	private View camera, minimap;
@@ -34,12 +34,9 @@ class GameScreen: Screen
 	this(World w)
 	{
 		world = w;
-		realtime = new ReactiveText;
-		gametime = new ReactiveText;
 
 		ocean = new Water(to!int(ceil(world.width/2.)), to!int(world.height));
 		auto startPos = cartesianProduct(world.width.iota, world.height.iota).filter!((x) => world.features[x[1]][x[0]] == "city").array.choice;
-		writefln("Starting pos %s", startPos);
 		player = new Player(startPos[0], startPos[1]);
 	}
 
@@ -59,23 +56,28 @@ class GameScreen: Screen
 		minimap = new View(FloatRect(0, 0, world.pixelSize.x, world.pixelSize.y));
 		camera.center = Vector2f(3*World.TILESIZE*player.x + 3*World.TILESIZE/2, 3*World.TILESIZE*player.y + 3*World.TILESIZE/2);
 
-		realtime.setFont(Fonts.text);
-		realtime.setCharacterSize(20);
-		realtime.setColor(Color.White);
-		realtime.setRelativeOrigin(Vector2f(.5f, .5f));
-		realtime.positionCallback = () => Vector2f(.925*win.size.x, .025*win.size.y);
-		realtime.stringCallback = delegate string()
+		texts = 3.iota.map!((x) => new ReactiveText).array;
+		foreach(text; texts)
+		{
+			text.setFont(Fonts.text);
+			text.setCharacterSize(30);
+			text.setColor(Color.White);
+			text.setRelativeOrigin(Vector2f(.5f, .5f));
+		}
+
+		texts[0].setCharacterSize(20);
+		texts[0].positionCallback = () => Vector2f(.925*win.size.x, .025*win.size.y);
+		texts[0].stringCallback = delegate string()
 		{
 			auto systime = std.datetime.systime.Clock.currTime;
 			return format("%02u:%02u", systime.hour, systime.minute);
 		};
 
-		gametime.setFont(Fonts.text);
-		gametime.setCharacterSize(30);
-		gametime.setColor(Color.White);
-		gametime.setRelativeOrigin(Vector2f(.5f, .5f));
-		gametime.positionCallback = () => Vector2f(.925*win.size.x, .95*win.size.y);
-		gametime.stringCallback = () => format("Day %s", world.days);
+		texts[1].positionCallback = () => Vector2f(.925*win.size.x, .95*win.size.y);
+		texts[1].stringCallback = () => format("Day %s", world.days);
+
+		texts[2].positionCallback = () => Vector2f(.925*win.size.x, .5*win.size.y);
+		texts[2].stringCallback = () => format("Win size: %s", win.size);
 	}
 
 	override void event(Event e)
@@ -117,8 +119,7 @@ class GameScreen: Screen
 			camera.move(Vector2f(0, 1024*dt));
 		ocean.update(dt);
 
-		realtime.update;
-		gametime.update;
+		texts.each!((t) => t.update);
 	}
 
 	override void draw()
@@ -151,8 +152,8 @@ class GameScreen: Screen
 		win.draw(rect);
 
 		win.view = win.getDefaultView;
-		win.draw(realtime);
-		win.draw(gametime);
+
+		texts.each!((t) => win.draw(t));
 	}
 
 	override void finish()

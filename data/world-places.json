@@ -1,0 +1,8 @@
+{
+	"forest": {
+		"placeChance": 0.33,
+		"places": [
+			{ "place": "herb meadow", "relativeChance": 1 }
+		]
+	}
+}

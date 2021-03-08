@@ -20,7 +20,8 @@ class ConfigFiles
 			"settings" : "settings",
 			"world terrain" : "data/world-gen",
 			"movement" : "data/movement",
-			"places" : "data/places"
+			"places" : "data/places",
+			"world places" : "data/world-places.json"
 		])
 		{
 			File f;
