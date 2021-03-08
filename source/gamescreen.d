@@ -6,6 +6,7 @@ import std.stdio;
 import std.format;
 import std.math;
 import std.conv;
+import std.datetime.systime;
 
 import mainloop;
 import resources;
@@ -13,30 +14,37 @@ import tilemap;
 import world;
 import water;
 import settings;
+import player;
 
 import dsfml.graphics;
 
 class GameScreen: Screen
 {
-	private Text text;
+	private Text realtime, gametime;
 	private World world;
 	private Water ocean;
 	private View camera, minimap;
 	private double zoom, maxZoom;
+	private Player player;
 
 	private RenderWindow win;
 
 	this(World w)
 	{
-		text = new Text;
-		text.setFont(Fonts.gentium);
-		text.setCharacterSize(30);
-		text.setColor = Color.Red;
-		auto bounds = text.getGlobalBounds;
-		text.position = Vector2f(0, 0);
+		realtime = new Text;
+		realtime.setFont(Fonts.text);
+		realtime.setCharacterSize(20);
+		realtime.setColor(Color.White);
+		gametime = new Text;
+		gametime.setFont(Fonts.text);
+		gametime.setCharacterSize(30);
+		gametime.setColor(Color.White);
 
 		world = w;
 		ocean = new Water(to!int(ceil(world.width/2.)), to!int(world.height));
+		auto startPos = cartesianProduct(world.width.iota, world.height.iota).filter!((x) => world.features[x[1]][x[0]] == "city").array.choice;
+		writefln("Starting pos %s", startPos);
+		player = new Player(startPos[0], startPos[1]);
 	}
 
 	override void setWindow(RenderWindow w)
@@ -53,6 +61,7 @@ class GameScreen: Screen
 		world.updateTiles;
 
 		minimap = new View(FloatRect(0, 0, world.pixelSize.x, world.pixelSize.y));
+		camera.center = Vector2f(3*World.TILESIZE*player.x + 3*World.TILESIZE/2, 3*World.TILESIZE*player.y + 3*World.TILESIZE/2);
 	}
 
 	override void event(Event e)
@@ -70,6 +79,14 @@ class GameScreen: Screen
 				Settings.drawGrid = !Settings.drawGrid;
 			if(e.key.code == Keyboard.Key.BackSpace)
 				Settings.gameLogShown = !Settings.gameLogShown;
+			if(e.key.code == Keyboard.Key.W || e.key.code == Keyboard.Key.Up)
+				attemptMove(0, -1);
+			if(e.key.code == Keyboard.Key.A || e.key.code == Keyboard.Key.Left)
+				attemptMove(-1, 0);
+			if(e.key.code == Keyboard.Key.S || e.key.code == Keyboard.Key.Down)
+				attemptMove(0, 1);
+			if(e.key.code == Keyboard.Key.D || e.key.code == Keyboard.Key.Right)
+				attemptMove(1, 0);
 		}
 	}
 
@@ -85,6 +102,17 @@ class GameScreen: Screen
 		if(mouse.y > win.size.y*19/20)
 			camera.move(Vector2f(0, 1024*dt));
 		ocean.update(dt);
+
+		gametime.setString(format("Day %s", world.days));
+		auto bounds = gametime.getGlobalBounds;
+		gametime.origin = Vector2f(bounds.width/2, bounds.height/2);
+		gametime.position = Vector2f(.925*win.size.x, .95*win.size.y);
+
+		auto systime = std.datetime.systime.Clock.currTime;
+		realtime.setString(format("%s:%s", systime.hour, systime.minute));
+		bounds = realtime.getGlobalBounds;
+		realtime.origin = Vector2f(bounds.width/2, bounds.height/2);
+		realtime.position = Vector2f(.925*win.size.x, .025*win.size.y);
 	}
 
 	override void draw()
@@ -99,9 +127,10 @@ class GameScreen: Screen
 
 		win.draw(ocean);
 		win.draw(world);
+		win.draw(player);
 
 		win.view = minimap;
-		minimap.viewport = FloatRect(.875f, 0f, .10f, .10f*win.size.x/win.size.y);
+		minimap.viewport = FloatRect(.875f, .05f, .10f, .10f*win.size.x/win.size.y);
 		win.draw(ocean);
 		bool grid = Settings.drawGrid;
 		Settings.drawGrid = false;
@@ -116,10 +145,23 @@ class GameScreen: Screen
 		win.draw(rect);
 
 		win.view = win.getDefaultView;
+		win.draw(realtime);
+		win.draw(gametime);
 	}
 
 	override void finish()
 	{
+	}
+
+	private void attemptMove(int dx, int dy)
+	{
+		if(world.passable(player.x + dx, player.y + dy))
+		{
+			player.x += dx;
+			player.y += dy;
+			world.passTimeForMove(player.x, player.y);
+		}
+		camera.center = Vector2f(3*World.TILESIZE*player.x + 3*World.TILESIZE/2, 3*World.TILESIZE*player.y + 3*World.TILESIZE/2);
 	}
 
 	private void normalizeCamera()

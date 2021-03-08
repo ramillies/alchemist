@@ -1,0 +1,7 @@
+{
+	"herb meadow": {
+		"name": "Herb Meadow",
+		"description": "",
+		"scripts": "dofile('scripts/herb-meadow.lua')"
+	},
+}

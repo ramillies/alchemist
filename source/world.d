@@ -25,12 +25,13 @@ class World: Drawable
 	{
 		@Read size_t _width, _height;
 		@Read double _landFraction;
+		@Read double _days;
 		Tilemap tiles, featureTiles, roadTiles, decorationTiles;
 		Sprite[] mountains;
 
 	}
 
-	const TILESIZE = 48;
+	static const TILESIZE = 48;
 
 	string[][] terrain;
 	string[][] features;
@@ -45,6 +46,7 @@ class World: Drawable
 		_width = w;
 		_height = h;
 		_landFraction = landFrac;
+		_days = 0;
 
 		terrain = _height.iota.map!((x) => "water".repeat(_width).array).array;
 		islandDivisions = _height.iota.map!((x) => (cast(size_t)0).repeat(_width).array).array;
@@ -65,6 +67,63 @@ class World: Drawable
 		if(pos.y > 0) result ~= Pos(pos.x, pos.y-1);
 		if(pos.y < height-1) result ~= Pos(pos.x, pos.y + 1);
 		return result;
+	}
+
+	bool passable(size_t x, size_t y)
+	{
+		if(features[y][x] in ConfigFiles.get("movement"))
+			return ConfigFiles.get("movement")[features[y][x]]["passable"].get!bool;
+		else
+			return true;
+	}
+
+	void passTimeForMove(size_t x, size_t y)
+	{
+		if(roads[y][x] && "road" in ConfigFiles.get("movement"))
+			passTime(ConfigFiles.get("movement")["road"]["movementCost"].get!double);
+		else if(features[y][x] in ConfigFiles.get("movement"))
+			passTime(ConfigFiles.get("movement")[features[y][x]]["movementCost"].get!double);
+		else
+			passTime(1.);
+	}
+
+	void passTime(double dt)
+	{
+		_days += dt;
+	}
+
+
+	override void draw(RenderTarget target, RenderStates states)
+	{
+		target.draw(tiles, states);
+		mountains.each!((m) => target.draw(m, states));
+		target.draw(roadTiles, states);
+		target.draw(featureTiles, states);
+		target.draw(decorationTiles, states);
+		if(Settings.drawGrid)
+		{
+			Vertex[] lines;
+			foreach(k; 0 .. width+1)
+			{
+				Vertex v = Vertex();
+				v.position = Vector2f(3*k*TILESIZE, 0);
+				v.color = Color(128, 0, 0, 100);
+				lines ~= v;
+				v.position = Vector2f(3*k*TILESIZE, height*3*TILESIZE);
+				lines ~= v;
+			}
+			foreach(k; 0 .. height+1)
+			{
+				Vertex v = Vertex();
+				v.position = Vector2f(0, 3*k*TILESIZE);
+				v.color = Color(128, 0, 0, 100);
+				lines ~= v;
+				v.position = Vector2f(width*3*TILESIZE, 3*k*TILESIZE);
+				lines ~= v;
+			}
+		
+			target.draw(lines, PrimitiveType.Lines, states);
+		}
 	}
 
 	void makeTerrain()
@@ -509,39 +568,6 @@ class World: Drawable
 							)
 								decorationTileNumbers[3*y + l][3*x + k] = getTile(uniform01.predSwitch!`a<b`(1/9., "cactus 1", 2/9., "cactus 2", "water"));
 		decorationTiles.load(Images.texture("world tileset"), Vector2u(48, 48), decorationTileNumbers);
-	}
-
-	override void draw(RenderTarget target, RenderStates states)
-	{
-		target.draw(tiles, states);
-		mountains.each!((m) => target.draw(m, states));
-		target.draw(roadTiles, states);
-		target.draw(featureTiles, states);
-		target.draw(decorationTiles, states);
-		if(Settings.drawGrid)
-		{
-			Vertex[] lines;
-			foreach(k; 0 .. 3*width+1)
-			{
-				Vertex v = Vertex();
-				v.position = Vector2f(k*TILESIZE, 0);
-				v.color = k % 3 == 0 ? Color.Red : Color.Black;
-				lines ~= v;
-				v.position = Vector2f(k*TILESIZE, height*3*TILESIZE);
-				lines ~= v;
-			}
-			foreach(k; 0 .. 3*height+1)
-			{
-				Vertex v = Vertex();
-				v.position = Vector2f(0, k*TILESIZE);
-				v.color = k % 3 == 0 ? Color.Red : Color.Black;
-				lines ~= v;
-				v.position = Vector2f(width*3*TILESIZE, k*TILESIZE);
-				lines ~= v;
-			}
-		
-			target.draw(lines, PrimitiveType.Lines, states);
-		}
 	}
 	
 }
