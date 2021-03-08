@@ -19,7 +19,6 @@ class Water: Drawable
 
 	this(int w, int h, double fps = 12.0)
 	{
-		writefln("width %d, height %d", w, h);
 		foreach(k; 0 .. 21)
 		{
 			animation ~= new Tilemap;

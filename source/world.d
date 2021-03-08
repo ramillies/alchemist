@@ -175,6 +175,7 @@ class World: Drawable
 
 		void distribute(string what, int amount, int radius)
 		{
+			//writefln("Distributing %s × %s, mask:\n%s", amount, what, mask.map!((r) => r.map!((x) => x ? '.' : '#').array).join("\n"));
 			if(amount == 0 || !mask.any!`a.any`)
 				return;
 			auto randomSquare = cartesianProduct(width.iota, height.iota).map!((x) => Pos(x[0], x[1])).filter!((p) => mask[p.y][p.x]).array.choice;
@@ -214,12 +215,18 @@ class World: Drawable
 						roads[y][x] = rule(x, y);
 		}
 
-		void makeRoads()
+		void makeRoads(double fraction)
 		{
-			Pos[][] sets = cartesianProduct(width.iota, height.iota).map!((x) => Pos(x[0], x[1])).filter!((p) => ["city", "castle", "village"].canFind(features[p.y][p.x])).map!((x) => [x]).array;
+			Pos[][] sets = cartesianProduct(width.iota, height.iota)
+				.filter!((x) => uniform01() <= fraction)
+				.map!((x) => Pos(x[0], x[1]))
+				.filter!((p) => ["city", "castle", "village"].canFind(features[p.y][p.x]))
+				.map!((x) => [x]).array;
 			while(sets.length > 1)
 			{
-				writefln("sets: %s", sets);
+				char[][] setmap = height.iota.map!((x) => '.'.repeat(width).array).array;
+				foreach(k, v; sets)
+					v.each!((x) => setmap[x.y][x.x] = k.to!string(36)[0]);
 				int[][] pathLen = height.iota.map!((x) => (int.max).repeat(width).array).array;
 				sets[0].each!((p) => pathLen[p.y][p.x] = 0);
 				Pos[] queue = sets[0];
@@ -234,7 +241,7 @@ class World: Drawable
 								queue ~= adj;
 							pathLen[adj.y][adj.x] = min(pathLen[adj.y][adj.x], pathLen[toExpand.y][toExpand.x]+1);
 						}
-				} while(! (queue.empty || sets[1..$-1].any!((set) => set.canFind(queue[0])) ) );
+				} while(! (queue.empty || sets[1..$].any!((set) => set.canFind(queue[0])) ) );
 
 				if(queue.empty)
 				{
@@ -246,14 +253,12 @@ class World: Drawable
 				sets ~= sets[0] ~ sets[hitSet];
 				sets = sets.remove(0, hitSet);
 
-				writefln("hit set: %s", hitSet, pathLen);
 				
 				roads[queue[0].y][queue[0].x] = true;
 				Pos step = queue[0];
 				do
 				{
 					auto searchFor = pathLen[step.y][step.x] - 1;
-					writefln("step: %s, searching for %s", step, searchFor);
 					step = adjacent(step).filter!((p) => pathLen[p.y][p.x] == searchFor).front;
 					roads[step.y][step.x] = true;
 					sets[$-1] ~= step;
@@ -264,7 +269,7 @@ class World: Drawable
 		lua["makeMask"] = &makeMask;
 		lua["distribute"] = delegate void(LuaTable t) { return distribute(t.get!string("feature"), t.get!int("number"), t.get!int("exclusionRadius")); };
 		lua["fill"] = delegate void(LuaTable t) { return fill(t.get!string("feature"), t.get!int("number"), t.get!(bool delegate(size_t, size_t))("condition")); };
-		lua["makeRoads"] = delegate void() { return makeRoads(); };
+		lua["makeRoads"] = delegate void(LuaTable t) { return makeRoads(t.get!double("roadFraction")); };
 		lua["roadAt"] = delegate bool(size_t x, size_t y) { return roads[y][x]; };
 		lua["featureCellularAutomaton"] = delegate void(LuaTable t) { return featureCellularAutomaton(t.get!int("iterations"), t.get!(string delegate(size_t,size_t)[])("rules")); };
 		lua["roadCellularAutomaton"] = delegate void(LuaTable t) { return roadCellularAutomaton(t.get!int("iterations"), t.get!(bool delegate(size_t,size_t)[])("rules")); };
@@ -471,9 +476,7 @@ class World: Drawable
 					}
 					roadTileNumbers[3*y+1][3*x+1] = getTile(format("road %s", directions));
 				}
-		writefln("Roads:\n%s", roads.map!((r) => r.map!((x) => x ? '#' : '.').array).join("\n"));
 		roadTiles.load(Images.texture("world tileset"), Vector2u(48, 48), roadTileNumbers);
-		writefln("After load roads.");
 	}
 
 	override void draw(RenderTarget target, RenderStates states)

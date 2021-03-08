@@ -45,7 +45,7 @@ featureCellularAutomaton{
 					end
 				end
 			end
-			if featureAt(x, y) == "plain" and sum >= 4 then
+			if featureAt(x, y) == "plain" and sum >= 4 and forestAllowed(x, y) then
 				return "forest"
 			elseif featureAt(x, y) == "forest" and sum < 2 then
 				return "plain"
@@ -61,12 +61,19 @@ distribute{ feature = "grass hill", number = math.ceil(land/40), exclusionRadius
 makeMask(function (x, y) return terrainAt(x, y) == "sand" and mountainsAllowed(x, y) end)
 distribute{ feature = "cliff", number = math.ceil(land/30), exclusionRadius = 5 }
 
+makeMask(function (x, y)
+	local sum = 0
+	for k, v in pairs(adjacentTerrain(x,y)) do
+		if v == "water" then sum = sum + 1 end
+	end
+	return settlementAllowed(x,y) and (water or math.random() < 0.33)
+end)
+distribute{ feature = "city", number = math.ceil(land/150), exclusionRadius = 8 }
 makeMask(settlementAllowed)
-distribute{ feature = "city", number = math.ceil(land/250), exclusionRadius = 8 }
 distribute{ feature = "village", number = math.ceil(land/60), exclusionRadius = 4 }
-distribute{ feature = "castle", number = math.ceil(land/100), exclusionRadius = 4 }
+distribute{ feature = "castle", number = math.ceil(land/120), exclusionRadius = 6 }
 
-makeRoads{ number = math.ceil(math.pow(land*(1/60+1/100+1/250), 2))/6 }
+makeRoads{ roadFraction = 0.5 }
 
 makeMask(function (x, y) return terrainAt(x, y) == "sand" and mountainsAllowed(x, y) and not roadAt(x, y) end)
 distribute{ feature = "dune", number = math.ceil(land/60), exclusionRadius = 1 }
