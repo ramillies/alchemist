@@ -1,5 +1,7 @@
 {
 	"world tileset": "images/tileset-upscaled.png",
 	"world mountains": "images/mountains-upscaled.png",
-	"world water": "images/animated-water.png"
+	"world water": "images/animated-water.png",
+	"monsters": "images/monsters.png",
+	"people": "images/people.png"
 }
