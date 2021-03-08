@@ -21,9 +21,10 @@ class LoadingScreen: Screen
 		Fonts.load;
 
 		text = new Text;
-		text.setFont(Fonts.gentium);
+		text.setFont(Fonts.heading);
 		text.setCharacterSize(80);
 		text.setColor(Color.Red);
+		text.setStyle(Text.Style.Bold);
 	}
 
 	override void setWindow(RenderWindow w)

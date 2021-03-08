@@ -18,7 +18,8 @@ class ConfigFiles
 			"textures" : "data/textures",
 			"overworld tiles" : "data/overworld-tiles",
 			"settings" : "settings",
-			"world terrain" : "data/world-gen"
+			"world terrain" : "data/world-gen",
+			"movement" : "data/movement"
 		])
 		{
 			File f;
@@ -47,12 +48,14 @@ class ConfigFiles
 
 class Fonts
 {
-	static Font gentium;
+	static Font text, heading;
 
 	static void load()
 	{
-		gentium = new Font;
-		gentium.loadFromFile("data/fonts/gentium.ttf");
+		text = new Font;
+		text.loadFromFile("data/fonts/EBGaramond08-Regular.ttf");
+		heading = new Font;
+		heading.loadFromFile("data/fonts/EBGaramondSC08-Regular.ttf");
 	}
 
 	static void unload()
