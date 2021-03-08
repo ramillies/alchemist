@@ -51,7 +51,7 @@ class LoadingScreen: Screen
 		}
 		if(stage == 2)
 		{
-			World w = new World(30, 30, .4);
+			World w = new World(40, 40, .4);
 			w.makeTerrain;
 			w.addTerrainFeatures;
 

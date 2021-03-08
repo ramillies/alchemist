@@ -157,7 +157,9 @@ class World: Drawable
 		lua["width"] = width;
 		lua["landFraction"] = landFraction;
 		lua["terrainAt"] = delegate string (size_t x, size_t y) { return terrain[y][x]; };
+		lua["featureAt"] = delegate string (size_t x, size_t y) { return features[y][x]; };
 		lua["adjacentTerrain"] = delegate string[] (size_t x, size_t y) { return adjacent(Pos(x,y)).map!((p) => terrain[p.y][p.x]).array; };
+		lua["adjacentFeatures"] = delegate string[] (size_t x, size_t y) { return adjacent(Pos(x,y)).map!((p) => features[p.y][p.x]).array; };
 		lua["diagonallyAdjacentTerrain"] = delegate string[] (size_t x, size_t y) { return [Pos(x-1,y-1),Pos(x-1,y+1),Pos(x+1,y-1),Pos(x+1,y+1)].map!((p) => terrain[p.y][p.x]).array; };
 
 		auto conf = ConfigFiles.get("world terrain");
@@ -196,59 +198,78 @@ class World: Drawable
 			fill(what, amount-1, condition);
 		}
 
-		lua["makeMask"] = &makeMask;
-		lua["distribute"] = delegate void(LuaTable t) { return distribute(t.get!string("feature"), t.get!int("number"), t.get!int("exclusionRadius")); };
-		lua["fill"] = delegate void(LuaTable t) { return fill(t.get!string("feature"), t.get!int("number"), t.get!(bool delegate(size_t, size_t))("condition")); };
-
-		lua.doString(conf["fillFeatures"].str);
-
-		void makeRoads(int amount)
+		void featureCellularAutomaton(int iterations, string delegate(size_t x, size_t y)[] rules)
 		{
-			Tuple!(Pos, Pos)[] builtRoads;
-			foreach(n; 0 .. amount)
+			foreach(y; 1 .. height-1)
+				foreach(x; 1 .. width-1)
+					foreach(rule; rules)
+						features[y][x] = rule(x, y);
+		}
+
+		void roadCellularAutomaton(int iterations, bool delegate(size_t x, size_t y)[] rules)
+		{
+			foreach(y; 1 .. height-1)
+				foreach(x; 1 .. width-1)
+					foreach(rule; rules)
+						roads[y][x] = rule(x, y);
+		}
+
+		void makeRoads()
+		{
+			Pos[][] sets = cartesianProduct(width.iota, height.iota).map!((x) => Pos(x[0], x[1])).filter!((p) => ["city", "castle", "village"].canFind(features[p.y][p.x])).map!((x) => [x]).array;
+			while(sets.length > 1)
 			{
-				writefln("built roads: %s", builtRoads);
-				auto startSquare = cartesianProduct(width.iota, height.iota).map!((x) => Pos(x[0], x[1])).filter!((p) => ["city", "castle"].canFind(features[p.y][p.x])).array.choice;
+				writefln("sets: %s", sets);
 				int[][] pathLen = height.iota.map!((x) => (int.max).repeat(width).array).array;
-				pathLen[startSquare.y][startSquare.x] = 0;
-				Pos[] queue = [ startSquare ];
-				Pos[] forbidden = builtRoads.filter!((x) => x[0].x == startSquare.x && x[0].y == startSquare.y).map!((x) => x[1]).array;
-				writefln("start square: %s, forbidden %s", startSquare, forbidden);
+				sets[0].each!((p) => pathLen[p.y][p.x] = 0);
+				Pos[] queue = sets[0];
 				do
 				{
 					auto toExpand = queue[0];
 					queue = queue.remove(0);
 					foreach(adj; adjacent(toExpand))
-						if(!canFind(forbidden, adj) && canFind(["plain", "city", "village", "castle"], features[adj.y][adj.x]))
+						if(canFind(["plain", "city", "village", "castle"], features[adj.y][adj.x]))
 						{
 							if(pathLen[adj.y][adj.x] == int.max)
 								queue ~= adj;
 							pathLen[adj.y][adj.x] = min(pathLen[adj.y][adj.x], pathLen[toExpand.y][toExpand.x]+1);
 						}
-				} while(!queue.empty && !canFind(["city", "castle", "village"], features[queue[0].y][queue[0].x]));
-				if(!queue.empty)
+				} while(! (queue.empty || sets[1..$-1].any!((set) => set.canFind(queue[0])) ) );
+
+				if(queue.empty)
 				{
-					roads[queue[0].y][queue[0].x] = true;
-					roads[startSquare.y][startSquare.x] = true;
-					Pos pathPoint = queue[0];
-					do
-					{
-						auto searchFor = pathLen[pathPoint.y][pathPoint.x] - 1;
-						foreach(adj; adjacent(pathPoint))
-							if(pathLen[adj.y][adj.x] == searchFor)
-							{
-								pathPoint = adj;
-								roads[adj.y][adj.x] = true;
-								break;
-							}
-					} while(pathLen[pathPoint.y][pathPoint.x] != 0);
-					builtRoads ~= tuple(queue[0], startSquare);
-					builtRoads ~= tuple(startSquare, queue[0]);
+					sets = sets.remove(0);
+					continue;
 				}
+
+				size_t hitSet = iota(1, sets.length).filter!((x) => sets[x].canFind(queue[0])).front;
+				sets ~= sets[0] ~ sets[hitSet];
+				sets = sets.remove(0, hitSet);
+
+				writefln("hit set: %s", hitSet, pathLen);
+				
+				roads[queue[0].y][queue[0].x] = true;
+				Pos step = queue[0];
+				do
+				{
+					auto searchFor = pathLen[step.y][step.x] - 1;
+					writefln("step: %s, searching for %s", step, searchFor);
+					step = adjacent(step).filter!((p) => pathLen[p.y][p.x] == searchFor).front;
+					roads[step.y][step.x] = true;
+					sets[$-1] ~= step;
+				} while(pathLen[step.y][step.x] != 0);
 			}
 		}
 
-		makeRoads(10);
+		lua["makeMask"] = &makeMask;
+		lua["distribute"] = delegate void(LuaTable t) { return distribute(t.get!string("feature"), t.get!int("number"), t.get!int("exclusionRadius")); };
+		lua["fill"] = delegate void(LuaTable t) { return fill(t.get!string("feature"), t.get!int("number"), t.get!(bool delegate(size_t, size_t))("condition")); };
+		lua["makeRoads"] = delegate void() { return makeRoads(); };
+		lua["roadAt"] = delegate bool(size_t x, size_t y) { return roads[y][x]; };
+		lua["featureCellularAutomaton"] = delegate void(LuaTable t) { return featureCellularAutomaton(t.get!int("iterations"), t.get!(string delegate(size_t,size_t)[])("rules")); };
+		lua["roadCellularAutomaton"] = delegate void(LuaTable t) { return roadCellularAutomaton(t.get!int("iterations"), t.get!(bool delegate(size_t,size_t)[])("rules")); };
+
+		lua.doString(conf["fillFeatures"].str);
 	}
 
 	void updateTiles()
@@ -257,6 +278,11 @@ class World: Drawable
 		auto tileNames = ConfigFiles.get("overworld tiles");
 		int getTile(string name)
 		{
+			if(!(name in tileNames))
+			{
+				writefln("WARNING! Tile '%s' could not be found.", name);
+				return 335;
+			}
 			return tileNames[name].get!int;
 		}
 
@@ -354,15 +380,27 @@ class World: Drawable
 					mountains ~= s;
 				}
 				else if(features[y][x] == "city" || features[y][x] == "castle" || features[y][x] == "grass hill" || features[y][x] == "cliff")
-				{
 					foreach(k; 0 .. 3)
 						foreach(l; 0 .. 3)
 							featureTileNumbers[3*y + l][3*x + k] = getTile(format("%s %s%s", features[y][x], k, l));
-				}
 				else if(features[y][x] == "village")
 					foreach(k; 0 .. 2)
 						foreach(l; 0 .. 2)
 							featureTileNumbers[3*y + l][3*x + k + 1] = getTile(format("%s %s%s", features[y][x], k, l));
+				else if(features[y][x] == "dune")
+					foreach(k; 0 .. 4)
+						foreach(l; 0 .. 2)
+							featureTileNumbers[3*y + l + 1][3*x + k] = getTile(format("dune %s%s", k, l));
+				else if(features[y][x] == "cactuses")
+					foreach(k; 0 .. 3)
+						foreach(l; 0 .. 3)
+							if(!(k==0 && terrain[y][x-1] == "water") &&
+								!(k==2 && terrain[y][x+1] == "water") &&
+								!(l==0 && terrain[y-1][x] == "water") &&
+								!(l==2 && terrain[y+1][x] == "water")
+							)
+								featureTileNumbers[3*y + l][3*x + k] = getTile(uniform01.predSwitch!`a<b`(1/9., "cactus 1", 2/9., "cactus 2", "water"));
+
 		bool[][] forest = (3*height).iota.map!((y) => (3*height).iota.map!((x) => features[y/3][x/3] == "forest").array).array;
 		
 		foreach(y; 3 .. 3*(height-1))
