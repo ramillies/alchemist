@@ -25,7 +25,7 @@ class World: Drawable
 	{
 		@Read size_t _width, _height;
 		@Read double _landFraction;
-		Tilemap tiles, featureTiles, roadTiles;
+		Tilemap tiles, featureTiles, roadTiles, decorationTiles;
 		Sprite[] mountains;
 
 	}
@@ -34,6 +34,7 @@ class World: Drawable
 
 	string[][] terrain;
 	string[][] features;
+	string[][] decorations;
 	bool[][] roads;
 	size_t[][] islandDivisions;
 
@@ -50,6 +51,7 @@ class World: Drawable
 		tiles = new Tilemap;
 		featureTiles = new Tilemap;
 		roadTiles = new Tilemap;
+		decorationTiles = new Tilemap;
 	}
 
 	string terrainAt(Pos pos) { return terrain[pos.y][pos.x]; }
@@ -149,6 +151,7 @@ class World: Drawable
 	{
 		features = terrain.map!((row) => row.map!((x) => x == "water" ? "water" : "plain").array).array;
 		roads = height.iota.map!((x) => false.repeat(width).array).array;
+		decorations = height.iota.map!((x) => "nothing".repeat(width).array).array;
 		bool[][] mask;
 
 		auto lua = new LuaState;
@@ -164,27 +167,33 @@ class World: Drawable
 
 		auto conf = ConfigFiles.get("world terrain");
 
-		void makeMask(bool delegate(size_t, size_t) condition)
+		void makeMask(bool delegate(size_t, size_t) condition, bool feature)
 		{
-			mask = features.map!((row) => row.map!((x) => x == "plain").array).array;
+			if(feature)
+				mask = features.map!((row) => row.map!((x) => x == "plain").array).array;
+			else
+				mask = decorations.map!((row) => row.map!((x) => x == "nothing").array).array;
 			foreach(y; 0 .. height)
 				foreach(x; 0 .. width)
 					if(!condition(x,y))
 						mask[y][x] = false;
 		}
 
-		void distribute(string what, int amount, int radius)
+		void distribute(string what, int amount, int radius, bool feature)
 		{
 			//writefln("Distributing %s × %s, mask:\n%s", amount, what, mask.map!((r) => r.map!((x) => x ? '.' : '#').array).join("\n"));
 			if(amount == 0 || !mask.any!`a.any`)
 				return;
 			auto randomSquare = cartesianProduct(width.iota, height.iota).map!((x) => Pos(x[0], x[1])).filter!((p) => mask[p.y][p.x]).array.choice;
-			features[randomSquare.y][randomSquare.x] = what;
+			if(feature)
+				features[randomSquare.y][randomSquare.x] = what;
+			else
+				decorations[randomSquare.y][randomSquare.x] = what;
 			foreach(y; 0 .. height)
 				foreach(x; 0 .. width)
 					if((x-randomSquare.x)^^2 + (y-randomSquare.y)^^2 <= radius^^2)
 						mask[y][x] = false;
-			distribute(what, amount-1, radius);
+			distribute(what, amount-1, radius, feature);
 		}
 
 		void fill(string what, int amount, bool delegate(size_t, size_t) condition)
@@ -267,7 +276,13 @@ class World: Drawable
 		}
 
 		lua["makeMask"] = &makeMask;
-		lua["distribute"] = delegate void(LuaTable t) { return distribute(t.get!string("feature"), t.get!int("number"), t.get!int("exclusionRadius")); };
+		lua["distribute"] = delegate void(LuaTable t)
+		{
+			if(!t["feature"].isNil)
+				return distribute(t.get!string("feature"), t.get!int("number"), t.get!int("exclusionRadius"), true);
+			if(!t["decoration"].isNil)
+				return distribute(t.get!string("decoration"), t.get!int("number"), t.get!int("exclusionRadius"), false);
+		};
 		lua["fill"] = delegate void(LuaTable t) { return fill(t.get!string("feature"), t.get!int("number"), t.get!(bool delegate(size_t, size_t))("condition")); };
 		lua["makeRoads"] = delegate void(LuaTable t) { return makeRoads(t.get!double("roadFraction")); };
 		lua["roadAt"] = delegate bool(size_t x, size_t y) { return roads[y][x]; };
@@ -279,7 +294,7 @@ class World: Drawable
 
 	void updateTiles()
 	{
-		int[][] tilenumbers, featureTileNumbers, roadTileNumbers;
+		int[][] tilenumbers, featureTileNumbers, roadTileNumbers, decorationTileNumbers;
 		auto tileNames = ConfigFiles.get("overworld tiles");
 		int getTile(string name)
 		{
@@ -477,6 +492,23 @@ class World: Drawable
 					roadTileNumbers[3*y+1][3*x+1] = getTile(format("road %s", directions));
 				}
 		roadTiles.load(Images.texture("world tileset"), Vector2u(48, 48), roadTileNumbers);
+		decorationTileNumbers = (3*height).iota.map!((x) => 335.repeat(3*width).array).array;
+		foreach(y; 0 .. height)
+			foreach(x; 0 .. width)
+				if(decorations[y][x] == "dune")
+					foreach(k; 0 .. 4)
+						foreach(l; 0 .. 2)
+							decorationTileNumbers[3*y + l + 1][3*x + k] = getTile(format("dune %s%s", k, l));
+				else if(decorations[y][x] == "cactuses")
+					foreach(k; 0 .. 3)
+						foreach(l; 0 .. 3)
+							if(!(k==0 && terrain[y][x-1] == "water") &&
+								!(k==2 && terrain[y][x+1] == "water") &&
+								!(l==0 && terrain[y-1][x] == "water") &&
+								!(l==2 && terrain[y+1][x] == "water")
+							)
+								decorationTileNumbers[3*y + l][3*x + k] = getTile(uniform01.predSwitch!`a<b`(1/9., "cactus 1", 2/9., "cactus 2", "water"));
+		decorationTiles.load(Images.texture("world tileset"), Vector2u(48, 48), decorationTileNumbers);
 	}
 
 	override void draw(RenderTarget target, RenderStates states)
@@ -485,6 +517,7 @@ class World: Drawable
 		mountains.each!((m) => target.draw(m, states));
 		target.draw(roadTiles, states);
 		target.draw(featureTiles, states);
+		target.draw(decorationTiles, states);
 		if(Settings.drawGrid)
 		{
 			Vertex[] lines;

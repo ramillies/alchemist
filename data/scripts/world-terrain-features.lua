@@ -27,11 +27,11 @@ end
 
 land = width * height * landFraction
 
-makeMask(mountainsAllowed)
+makeMask(mountainsAllowed, true)
 distribute{ feature = "mountains", number = 5, exclusionRadius = 14 }
 fill{ feature = "mountains", number = math.ceil(land*.08), condition = mountainsAllowed }
 
-makeMask(forestAllowed)
+makeMask(forestAllowed, true)
 distribute{ feature = "forest", number = math.ceil(land*.3), exclusionRadius = 0 }
 featureCellularAutomaton{
 	iterations = 2,
@@ -56,10 +56,10 @@ featureCellularAutomaton{
 	}
 }
 
-makeMask(function (x, y) return terrainAt(x, y) == "grass" and mountainsAllowed(x, y) end)
-distribute{ feature = "grass hill", number = math.ceil(land/40), exclusionRadius = 5 }
-makeMask(function (x, y) return terrainAt(x, y) == "sand" and mountainsAllowed(x, y) end)
-distribute{ feature = "cliff", number = math.ceil(land/30), exclusionRadius = 5 }
+makeMask(function (x, y) return terrainAt(x, y) == "grass" and mountainsAllowed(x, y) end, true)
+distribute{ feature = "grass hill", number = math.ceil(land/40), exclusionRadius = 3 }
+makeMask(function (x, y) return terrainAt(x, y) == "sand" and mountainsAllowed(x, y) end, true)
+distribute{ feature = "cliff", number = math.ceil(land/30), exclusionRadius = 3 }
 
 makeMask(function (x, y)
 	local sum = 0
@@ -67,15 +67,15 @@ makeMask(function (x, y)
 		if v == "water" then sum = sum + 1 end
 	end
 	return settlementAllowed(x,y) and (water or math.random() < 0.33)
-end)
+end, true)
 distribute{ feature = "city", number = math.ceil(land/150), exclusionRadius = 8 }
-makeMask(settlementAllowed)
+makeMask(settlementAllowed, true)
 distribute{ feature = "village", number = math.ceil(land/60), exclusionRadius = 4 }
 distribute{ feature = "castle", number = math.ceil(land/120), exclusionRadius = 6 }
 
 makeRoads{ roadFraction = 0.5 }
 
-makeMask(function (x, y) return terrainAt(x, y) == "sand" and mountainsAllowed(x, y) and not roadAt(x, y) end)
-distribute{ feature = "dune", number = math.ceil(land/60), exclusionRadius = 1 }
-makeMask(function (x, y) return terrainAt(x, y) == "sand" and not roadAt(x, y) end)
-distribute{ feature = "cactuses", number = math.ceil(land/10), exclusionRadius = 1 }
+makeMask(function (x, y) return terrainAt(x, y) == "sand" and mountainsAllowed(x, y) and not roadAt(x, y) end, false)
+distribute{ decoration = "dune", number = math.ceil(land/60), exclusionRadius = 1 }
+makeMask(function (x, y) return terrainAt(x, y) == "sand" and not roadAt(x, y) end, false)
+distribute{ decoration = "cactuses", number = math.ceil(land/10), exclusionRadius = 1 }
