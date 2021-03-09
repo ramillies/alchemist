@@ -20,8 +20,16 @@ function place:newDay()
 end
 
 function place:enter(player)
-	print("Herb meadow entered.")
 	player:giveItems({ [self.herbKey] = self.herbs })
+	local sep = ""
+	local herbList = ""
+	for k, v in pairs(player:getItems()) do
+		if v > 0 then
+			herbList = herbList .. sep .. string.format("%d × %s", v, Herbs[k].name)
+			sep = ", "
+		end
+	end
+	messagebox("New herbs!", string.format("You picked up %d %s here.\nNow you have %s.", self.herbs, Herbs[self.herbKey].name, herbList))
 	self.herbs = 0
 	self:updateDescription()
 end

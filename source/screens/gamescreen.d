@@ -35,8 +35,6 @@ class GameScreen: Screen
 
 	private RenderWindow win;
 
-	private bool popup;
-
 	this(World w, GameTime t)
 	{
 		world = w;
@@ -45,7 +43,6 @@ class GameScreen: Screen
 		ocean = new Water(to!int(ceil(world.width/2.)), to!int(world.height));
 		auto startPos = cartesianProduct(world.width.iota, world.height.iota).filter!((x) => world.features[x[1]][x[0]] == "city").array.choice;
 		player = new Player(startPos[0], startPos[1]);
-		popup = false;
 	}
 
 	override void setWindow(RenderWindow w)
@@ -151,11 +148,6 @@ class GameScreen: Screen
 		texts.each!((t) => t.update);
 		cursor.outlineThickness = 8*zoom;
 		cursor.position = Vector2f(3*World.TILESIZE * mouseSquare().x, 3*World.TILESIZE * mouseSquare().y);
-		if(!popup)
-		{
-			Mainloop.pushScreen(new MessageBox("A message box!", "This is my new message box!"));
-			popup = true;
-		}
 	}
 
 	override void draw()

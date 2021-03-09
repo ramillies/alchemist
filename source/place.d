@@ -8,6 +8,7 @@ import resources;
 import util;
 import gametime;
 import player;
+import luapopups;
 
 import boilerplate;
 import luad.all;
@@ -69,6 +70,7 @@ class Place
 		result.luaPutInto(result.lua.get!LuaTable("place"));
 		ConfigFiles.luaPutInto(result.lua, ["places", "herbs", "movement"]);
 		result.lua.doString(jv["script"].str);
+		putPopupsIntoLua(result.lua);
 		return result;
 	}
 }

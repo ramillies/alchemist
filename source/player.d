@@ -1,3 +1,5 @@
+import std.algorithm;
+
 import world;
 import resources;
 import util;
@@ -40,9 +42,9 @@ class Player: Drawable
 			foreach(key, val; given)
 			{
 				if(key in me.items)
-					me.items[key] += val;
+					me.items[key] = max(0, me.items[key]+val);
 				else
-					me.items[key] = val;
+					me.items[key] = max(0, val);
 
 			}
 		};
