@@ -19,6 +19,7 @@ class Place
 		string _name, _description;
 	}
 	LuaState lua;
+	bool revealed;
 
 	@property size_t x() { return _x; }
 	@property size_t y() { return _y; }
@@ -29,6 +30,7 @@ class Place
 	this(size_t x, size_t y, string n, string d)
 	{
 		_x = x; _y = y; _name = n; _description = d;
+		revealed = true;
 		lua = new LuaState;
 		lua.openLibs;
 	}
@@ -45,12 +47,16 @@ class Place
 		obj["setName"] = delegate void(LuaTable t, string x) { string2ptr!Place(t.get!string("ptr"))._name = x; };
 		obj["getDescription"] = delegate string(LuaTable t) { return string2ptr!Place(t.get!string("ptr"))._description; };
 		obj["setDescription"] = delegate void(LuaTable t, string x) { string2ptr!Place(t.get!string("ptr"))._description = x; };
+		obj["isRevealed"] = delegate bool(LuaTable t) { return string2ptr!Place(t.get!string("ptr")).revealed; };
+		obj["reveal"] = delegate void(LuaTable t, bool b) { string2ptr!Place(t.get!string("ptr")).revealed = b; };
 	}
 
 	static Place byName(size_t x, size_t y, string name)
 	{
 		JSONValue jv = ConfigFiles.get("places")[name];
 		Place result = new Place(x, y, jv["name"].str, jv["description"].str);
+		if("revealed" in jv)
+			result.revealed = jv["revealed"].boolean;
 		result.lua.doString(`place = { }`);
 		result.luaPutInto(result.lua.get!LuaTable("place"));
 		ConfigFiles.luaPutInto(result.lua, ["places", "herbs", "movement"]);

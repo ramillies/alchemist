@@ -1,4 +1,9 @@
 {
+	"nothing": {
+		"name": "",
+		"description": "There is nothing of interest here.",
+		"script": "function place:init() end; function place:newDay() end; function place:enter() end"
+	},
 	"herb meadow": {
 		"name": "Herb Meadow",
 		"description": "",

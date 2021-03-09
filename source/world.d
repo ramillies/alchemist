@@ -631,10 +631,16 @@ class World: Drawable
 			foreach(x; 0 .. width)
 			{
 				if(!(features[y][x] in table))
+				{
+					places ~= Place.byName(x, y, "nothing");
 					continue;
+				}
 				auto subtab = table[features[y][x]].object;
 				if(uniform01() > subtab["placeChance"].get!double)
+				{
+					places ~= Place.byName(x, y, "nothing");
 					continue;
+				}
 				string[] placeList;
 				double[] chanceList;
 				foreach(row; subtab["places"].array)
