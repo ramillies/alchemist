@@ -1,7 +1,26 @@
 {
-	"world tileset": "images/tileset-upscaled.png",
-	"world mountains": "images/mountains-upscaled.png",
-	"world water": "images/animated-water.png",
-	"monsters": "images/monsters.png",
-	"people": "images/people.png"
+	"world tileset": {
+		"path": "images/tileset-upscaled.png",
+		"tilesize": [ 48, 48 ]
+	},
+	"world mountains": {
+		"path": "images/mountains-upscaled.png",
+		"tilesize": [ 48, 48 ]
+	},
+	"world water": {
+		"path": "images/animated-water.png",
+		"tilesize": [ 288, 144 ]
+	},
+	"monsters": {
+		"path": "images/monsters.png",
+		"tilesize": [ 108, 108 ]
+	},
+	"people": {
+		"path": "images/people.png",
+		"tilesize": [ 108, 108 ]
+	},
+	"items": {
+		"path": "images/items.png",
+		"tilesize": [ 96, 96 ]
+	}
 }

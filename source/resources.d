@@ -98,12 +98,17 @@ class Images
 		foreach(name, file; ConfigFiles.get("textures"))
 		{
 			textures[name] = new Texture;
-			textures[name].loadFromFile("data/" ~ file.get!string);
+			textures[name].loadFromFile("data/" ~ file["path"].get!string);
 			textures[name].setSmooth(false);
 		}
 		writefln("Loaded textures: %s", textures.byKey);
 	}
 
 	static Texture texture(string name) { return textures.get(name, missing); }
+	static Vector2u tileSizeFor(string name)
+	{
+		auto list = ConfigFiles.get("textures");
+		return (name in list) ? Vector2u(list[name]["tilesize"][0].get!uint, list[name]["tilesize"][1].get!uint) : Vector2u(0u, 0u);
+	}
 	static void unload() { }
 }

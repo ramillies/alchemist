@@ -11,12 +11,14 @@ class Player: Drawable
 {
 	size_t x, y;
 	int[string] items;
+	int coins;
 	private Sprite sprite;
 
 	this(size_t x, size_t y)
 	{
 		this.x = x;
 		this.y = y;
+		coins = 0;
 		sprite = new Sprite;
 		sprite.setTexture(Images.texture("people"));
 		sprite.setTileNumber(5, Vector2u(108, 108));
@@ -50,6 +52,9 @@ class Player: Drawable
 		};
 		obj["getItems"] = delegate int[string](LuaTable t) { return string2ptr!Player(t.get!string("ptr")).items; };
 		obj["setItems"] = delegate void(LuaTable t, int[string] x) { string2ptr!Player(t.get!string("ptr")).items = x; };
+		obj["getCoins"] = delegate int(LuaTable t) { return string2ptr!Player(t.get!string("ptr")).coins; };
+		obj["setCoins"] = delegate void(LuaTable t, int x) { string2ptr!Player(t.get!string("ptr")).coins = x; };
+		obj["giveCoins"] = delegate void(LuaTable t, int x) { auto me = string2ptr!Player(t.get!string("ptr")); me.coins = max(0, me.coins + x); };
 	}
 
 	override void draw(RenderTarget target, RenderStates states)
