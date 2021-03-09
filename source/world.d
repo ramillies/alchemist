@@ -12,6 +12,9 @@ import std.typecons;
 import tilemap;
 import resources;
 import settings;
+import place;
+import util;
+import gametime;
 
 import boilerplate;
 import dsfml.graphics;
@@ -25,10 +28,9 @@ class World: Drawable
 	{
 		@Read size_t _width, _height;
 		@Read double _landFraction;
-		@Read double _days;
 		Tilemap tiles, featureTiles, roadTiles, decorationTiles;
 		Sprite[] mountains;
-
+		GameTime time;
 	}
 
 	static const TILESIZE = 48;
@@ -39,6 +41,8 @@ class World: Drawable
 	bool[][] roads;
 	size_t[][] islandDivisions;
 
+	Place[] places;
+
 	mixin(GenerateAll);
 
 	this(size_t w, size_t h, double landFrac)
@@ -46,7 +50,6 @@ class World: Drawable
 		_width = w;
 		_height = h;
 		_landFraction = landFrac;
-		_days = 0;
 
 		terrain = _height.iota.map!((x) => "water".repeat(_width).array).array;
 		islandDivisions = _height.iota.map!((x) => (cast(size_t)0).repeat(_width).array).array;
@@ -69,6 +72,8 @@ class World: Drawable
 		return result;
 	}
 
+	void setGameTime(GameTime t) { time = t; }
+
 	bool passable(size_t x, size_t y)
 	{
 		if(features[y][x] in ConfigFiles.get("movement"))
@@ -87,11 +92,33 @@ class World: Drawable
 			passTime(1.);
 	}
 
-	void passTime(double dt)
+	void passTime(double dt) { if(time !is null) time.advance(dt); }
+
+	string terrainToString(Vector2u pos)
 	{
-		_days += dt;
+		if(terrain[pos.y][pos.x] == "water")
+			return "Water";
+		string[string] terrainNames = [ "sand": "Desert", "snow": "Snowland", "grass": "Grassland" ];
+		string[string] featureNames = [ "plain": "Plains", "forest": "Forest", "mountains": "Mountains",
+			"grass hill": "Hill", "cliff": "Cliff", "city": "City", "village": "Village", "castle": "Castle" ];
+		return format("%s %s%s",
+			terrainNames.get(terrain[pos.y][pos.x], "Unknown"),
+			featureNames.get(features[pos.y][pos.x], "Unknown"),
+			roads[pos.y][pos.x] ? " Road" : ""
+		);
 	}
 
+	string placeName(Vector2u pos)
+	{
+		auto f = places.filter!((p) => p.x == pos.x && p.y == pos.y);
+		return f.empty ? "" : f.front.name;
+	}
+
+	string placeDescription(Vector2u pos)
+	{
+		auto f = places.filter!((p) => p.x == pos.x && p.y == pos.y);
+		return f.empty ? "" : f.front.description;
+	}
 
 	override void draw(RenderTarget target, RenderStates states)
 	{
@@ -568,6 +595,57 @@ class World: Drawable
 							)
 								decorationTileNumbers[3*y + l][3*x + k] = getTile(uniform01.predSwitch!`a<b`(1/9., "cactus 1", 2/9., "cactus 2", "water"));
 		decorationTiles.load(Images.texture("world tileset"), Vector2u(48, 48), decorationTileNumbers);
+	}
+
+	void luaPutInto(LuaTable obj)
+	{
+		obj["ptr"] = ptr2string(cast(void *) this);
+		obj["terrainAt"] = delegate string (LuaTable t, size_t x, size_t y)
+		{
+			World me = string2ptr!World(t.get!string("ptr"));
+			return (x >=0 && x < me.width && y >=0 && y < me.height) ? me.terrain[y][x] : "";
+		};
+		obj["featureAt"] = delegate string (LuaTable t, size_t x, size_t y)
+		{
+			World me = string2ptr!World(t.get!string("ptr"));
+			return (x >=0 && x < me.width && y >=0 && y < me.height) ? me.features[y][x] : "";
+		};
+		obj["roadAt"] = delegate bool (LuaTable t, size_t x, size_t y)
+		{
+			World me = string2ptr!World(t.get!string("ptr"));
+			return (x >=0 && x < me.width && y >=0 && y < me.height) ? me.roads[y][x] : false;
+		};
+		obj["decorationAt"] = delegate string (LuaTable t, size_t x, size_t y)
+		{
+			World me = string2ptr!World(t.get!string("ptr"));
+			return (x >=0 && x < me.width && y >=0 && y < me.height) ? me.decorations[y][x] : "";
+		};
+	}
+
+	void generatePlaces()
+	{
+		auto table = ConfigFiles.get("world places");
+		foreach(y; 0 .. height)
+			foreach(x; 0 .. width)
+			{
+				if(!(features[y][x] in table))
+					continue;
+				auto subtab = table[features[y][x]].object;
+				if(uniform01() > subtab["placeChance"].get!double)
+					continue;
+				string[] placeList;
+				double[] chanceList;
+				foreach(row; subtab["places"].array)
+				{
+					placeList ~= row["place"].str;
+					chanceList ~= row["relativeChance"].get!double;
+				}
+
+				auto chosenName = placeList[dice(chanceList)];
+				places ~= Place.byName(x, y, chosenName);				
+				if(time !is null)
+					time.onNewDay(&(places[$-1].newDay));
+			}
 	}
 	
 }
