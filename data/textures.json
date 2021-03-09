@@ -1,26 +1,32 @@
 {
 	"world tileset": {
 		"path": "images/tileset-upscaled.png",
-		"tilesize": [ 48, 48 ]
+		"tilesize": [ 48, 48 ],
+		"tilecount": 336
 	},
 	"world mountains": {
 		"path": "images/mountains-upscaled.png",
-		"tilesize": [ 48, 48 ]
+		"tilesize": [ 48, 48 ],
+		"tilecount": 100
 	},
 	"world water": {
 		"path": "images/animated-water.png",
-		"tilesize": [ 288, 144 ]
+		"tilesize": [ 288, 144 ],
+		"tilecount": 21
 	},
 	"monsters": {
 		"path": "images/monsters.png",
-		"tilesize": [ 108, 108 ]
+		"tilesize": [ 108, 108 ],
+		"tilecount": 417
 	},
 	"people": {
 		"path": "images/people.png",
-		"tilesize": [ 108, 108 ]
+		"tilesize": [ 108, 108 ],
+		"tilecount": 379
 	},
 	"items": {
 		"path": "images/items.png",
-		"tilesize": [ 96, 96 ]
+		"tilesize": [ 96, 96 ],
+		"tilecount": 68
 	}
 }

@@ -105,10 +105,15 @@ class Images
 	}
 
 	static Texture texture(string name) { return textures.get(name, missing); }
-	static Vector2u tileSizeFor(string name)
+	static Vector2u tileSize(string name)
 	{
 		auto list = ConfigFiles.get("textures");
 		return (name in list) ? Vector2u(list[name]["tilesize"][0].get!uint, list[name]["tilesize"][1].get!uint) : Vector2u(0u, 0u);
+	}
+	static uint tileCount(string name)
+	{
+		auto list = ConfigFiles.get("textures");
+		return (name in list) ? list[name]["tilecount"].get!uint : 0;
 	}
 	static void unload() { }
 }
