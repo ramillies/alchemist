@@ -21,7 +21,7 @@ class ConfigFiles
 			"world terrain" : "data/world-gen",
 			"movement" : "data/movement",
 			"places" : "data/places",
-			"world places" : "data/world-places.json"
+			"world places" : "data/world-places"
 		])
 		{
 			File f;
@@ -31,7 +31,7 @@ class ConfigFiles
 			}
 			catch(std.exception.ErrnoException e)
 			{
-				writefln("ERROR! Could not open configuration file '%s'!", path);
+				writefln("ERROR! Could not open configuration file '%s.json'!", path);
 				continue;
 			}
 			files[name] = f.byLine.join("\n").parseJSON;

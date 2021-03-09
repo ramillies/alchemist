@@ -6,6 +6,7 @@ import mainloop;
 import resources;
 import gamescreen;
 import world;
+import gametime;
 
 import dsfml.graphics;
 
@@ -55,8 +56,11 @@ class LoadingScreen: Screen
 			World w = new World(40, 40, .4);
 			w.makeTerrain;
 			w.addTerrainFeatures;
+			GameTime t = new GameTime;
+			w.setGameTime(t);
+			w.generatePlaces;
 
-			Mainloop.changeScreen(new GameScreen(w));
+			Mainloop.changeScreen(new GameScreen(w, t));
 		}
 	}
 

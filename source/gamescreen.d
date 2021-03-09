@@ -17,6 +17,7 @@ import settings;
 import player;
 import place;
 import reacttext;
+import gametime;
 
 import dsfml.graphics;
 
@@ -28,12 +29,15 @@ class GameScreen: Screen
 	private View camera, minimap;
 	private double zoom, maxZoom;
 	private Player player;
+	private RectangleShape cursor;
+	private GameTime time;
 
 	private RenderWindow win;
 
-	this(World w)
+	this(World w, GameTime t)
 	{
 		world = w;
+		time = t;
 
 		ocean = new Water(to!int(ceil(world.width/2.)), to!int(world.height));
 		auto startPos = cartesianProduct(world.width.iota, world.height.iota).filter!((x) => world.features[x[1]][x[0]] == "city").array.choice;
@@ -53,10 +57,15 @@ class GameScreen: Screen
 		camera.zoom(zoom);
 		world.updateTiles;
 
+		cursor = new RectangleShape(Vector2f(3*World.TILESIZE*1f, 3*World.TILESIZE*1f));
+		cursor.outlineThickness = 8*zoom;
+		cursor.fillColor = Color(225, 188, 0, 80);
+		cursor.outlineColor = Color(140, 117, 0);
+
 		minimap = new View(FloatRect(0, 0, world.pixelSize.x, world.pixelSize.y));
 		camera.center = Vector2f(3*World.TILESIZE*player.x + 3*World.TILESIZE/2, 3*World.TILESIZE*player.y + 3*World.TILESIZE/2);
 
-		texts = 3.iota.map!((x) => new ReactiveText).array;
+		texts = 5.iota.map!((x) => new ReactiveText).array;
 		foreach(text; texts)
 		{
 			text.setFont(Fonts.text);
@@ -74,10 +83,20 @@ class GameScreen: Screen
 		};
 
 		texts[1].positionCallback = () => Vector2f(.925*win.size.x, .95*win.size.y);
-		texts[1].stringCallback = () => format("Day %s", world.days);
+		texts[1].stringCallback = () => time.uiString;
 
-		texts[2].positionCallback = () => Vector2f(.925*win.size.x, .5*win.size.y);
-		texts[2].stringCallback = () => format("Win size: %s", win.size);
+		texts[2].positionCallback = () => Vector2f(.925*win.size.x, .25*win.size.y);
+		texts[2].stringCallback = () => mouseOver() == MouseOver.Map ? world.terrainToString(mouseSquare()) : "";
+
+		texts[3].setFont(Fonts.heading);
+		texts[3].setCharacterSize(35);
+		texts[3].positionCallback = () => Vector2f(.925*win.size.x, .33*win.size.y);
+		texts[3].stringCallback = () => mouseOver() == MouseOver.Map ? world.placeName(mouseSquare()) : "";
+
+		texts[4].positionCallback = () => Vector2f(.85*win.size.x, .37*win.size.y);
+		texts[4].disableRelativeOrigin();
+		texts[4].setCharacterSize(25);
+		texts[4].stringCallback = () => mouseOver() == MouseOver.Map ? world.placeDescription(mouseSquare()) : "";
 	}
 
 	override void event(Event e)
@@ -120,6 +139,8 @@ class GameScreen: Screen
 		ocean.update(dt);
 
 		texts.each!((t) => t.update);
+		cursor.outlineThickness = 8*zoom;
+		cursor.position = Vector2f(3*World.TILESIZE * mouseSquare().x, 3*World.TILESIZE * mouseSquare().y);
 	}
 
 	override void draw()
@@ -135,6 +156,8 @@ class GameScreen: Screen
 		win.draw(ocean);
 		win.draw(world);
 		win.draw(player);
+		if(mouseOver == MouseOver.Map)
+			win.draw(cursor);
 
 		win.view = minimap;
 		minimap.viewport = FloatRect(.875f, .05f, .10f, .10f*win.size.x/win.size.y);
@@ -177,5 +200,39 @@ class GameScreen: Screen
 			clamp(camera.center.x, camera.size.x/2, world.pixelSize.x - camera.size.x/2),
 			clamp(camera.center.y, camera.size.y/2, world.pixelSize.y - camera.size.y/2)
 		);
+	}
+
+	private enum MouseOver { Map, GameLog, InfoPanel }
+	private MouseOver mouseOver()
+	{
+		auto mouse = Mouse.getPosition(win);
+		if(Settings.gameLogShown)
+		{
+			if(FloatRect(0f, 0f, .85 * win.size.x, .75 * win.size.y).contains(mouse))
+				return MouseOver.Map;
+			else if(FloatRect(0, .75*win.size.y, .85*win.size.x, win.size.y).contains(mouse))
+				return MouseOver.GameLog;
+			else
+				return MouseOver.InfoPanel;
+
+		}
+		else
+		{
+			if(FloatRect(0f, 0f, .85 * win.size.x, win.size.y).contains(mouse))
+				return MouseOver.Map;
+			else
+				return MouseOver.InfoPanel;
+		}
+	}
+
+	private Vector2u mouseSquare()
+	{
+		if(mouseOver() == MouseOver.Map)
+		{
+			auto pt = win.mapPixelToCoords(Mouse.getPosition(win), camera);
+			return Vector2u(to!uint(pt.x/3/World.TILESIZE), to!uint(pt.y/3/World.TILESIZE));
+		}
+		else
+			return Vector2u(0, 0);
 	}
 }
