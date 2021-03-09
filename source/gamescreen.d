@@ -72,6 +72,7 @@ class GameScreen: Screen
 			text.setCharacterSize(30);
 			text.setColor(Color.White);
 			text.setRelativeOrigin(Vector2f(.5f, .5f));
+			text.boxWidth = .15*win.size.x - 10;
 		}
 
 		texts[0].setCharacterSize(20);
@@ -90,11 +91,13 @@ class GameScreen: Screen
 
 		texts[3].setFont(Fonts.heading);
 		texts[3].setCharacterSize(35);
-		texts[3].positionCallback = () => Vector2f(.925*win.size.x, .33*win.size.y);
+		texts[3].setRelativeOrigin(Vector2f(.5f, 1f));
+		texts[3].setStyle(Text.Style.Bold);
+		texts[3].positionCallback = () => Vector2f(.925*win.size.x, .35*win.size.y);
 		texts[3].stringCallback = () => mouseOver() == MouseOver.Map ? world.placeName(mouseSquare()) : "";
 
-		texts[4].positionCallback = () => Vector2f(.85*win.size.x, .37*win.size.y);
-		texts[4].disableRelativeOrigin();
+		texts[4].positionCallback = () => Vector2f(.925*win.size.x, .37*win.size.y);
+		texts[4].setRelativeOrigin(Vector2f(.5f, 0f));
 		texts[4].setCharacterSize(25);
 		texts[4].stringCallback = () => mouseOver() == MouseOver.Map ? world.placeDescription(mouseSquare()) : "";
 	}

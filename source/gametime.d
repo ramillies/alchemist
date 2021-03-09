@@ -33,6 +33,6 @@ class GameTime
 		day = to!int(days);
 		month = day/28; day -= 28*month;
 		year = month/12; month -= 12*year;
-		return format("Day %d, month %d ,year %d", day+1, month+1, year+1);
+		return format("Day %d, month %d, year %d", day+1, month+1, year+1);
 	}
 }

@@ -1,3 +1,9 @@
+import std.string;
+import std.algorithm;
+import std.array;
+import std.math;
+import std.stdio;
+
 import boilerplate;
 import dsfml.graphics;
 
@@ -12,6 +18,7 @@ class ReactiveText: Text
 		@Write Vector2f delegate() _positionCallback;
 		@Read bool _relativeOriginAllowed;
 		@Read Vector2f _relativeOrigin;
+		@Read @Write double _boxWidth;
 	}
 
 	mixin(GenerateFieldAccessors);
@@ -26,6 +33,7 @@ class ReactiveText: Text
 		_positionCallback = delegate Vector2f () { return this.position; };
 		_relativeOrigin = Vector2f(0f, 0f);
 		_relativeOriginAllowed = false;
+		_boxWidth = 0.;
 	}
 
 	private void updatePosition()
@@ -35,6 +43,41 @@ class ReactiveText: Text
 			auto bounds = this.getLocalBounds();
 			this.origin = Vector2f(bounds.width*_relativeOrigin.x, bounds.height*_relativeOrigin.y);
 		}
+	}
+
+	private void linebreaks(string t)
+	{
+		if(t == "") { this.setString(""); return; }
+		auto words = t.split.array;
+		double[] widths;
+		foreach(n; 0 .. words.length)
+		{
+			this.setString(words[0..n+1].join(" ").idup);
+			widths ~= this.getLocalBounds.width - (widths.empty ? 0 : widths.sum);
+		}
+
+		double optimal = widths.sum / ceil(widths.sum/boxWidth);
+		char[] broken;
+		double w = 0;
+		foreach(k, v; widths)
+		{
+			if(w + v > boxWidth)
+			{
+				broken ~= (w == 0 ? "" : "\n") ~ words[k] ~ (w == 0 ? "\n" : "");
+				w = (w == 0) ? 0 : v;
+			}
+			else if(optimal <= (w+v))
+			{
+				broken ~= words[k] ~ "\n";
+				w = 0;
+			}
+			else
+			{
+				broken ~= words[k] ~ " ";
+				w += v;
+			}
+		}
+		this.setString(broken.idup);
 	}
 
 	void setRelativeOrigin(Vector2f u)
@@ -47,11 +90,14 @@ class ReactiveText: Text
 
 	void update()
 	{
-		this.setString(_stringCallback());
 		this.setColor(_colorCallback());
 		this.setStyle(_styleCallback());
 		this.setCharacterSize(_sizeCallback());
 		this.position = _positionCallback();
+		if(boxWidth != 0.)
+			linebreaks(_stringCallback());
+		else
+			this.setString(_stringCallback());
 
 		updatePosition();
 	}
