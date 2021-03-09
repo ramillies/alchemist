@@ -15,12 +15,16 @@ class Place
 {
 	private
 	{
-		@Read size_t _x, _y;
-		@Read string _name, _description;
-		LuaState lua;
+		size_t _x, _y;
+		string _name, _description;
 	}
+	LuaState lua;
 
-	mixin(GenerateAll);
+	@property size_t x() { return _x; }
+	@property size_t y() { return _y; }
+	@property string name() { return _name; }
+	@property string description() { return _description; }
+
 
 	this(size_t x, size_t y, string n, string d)
 	{
@@ -30,6 +34,7 @@ class Place
 	}
 
 	void newDay(GameTime t) { lua.doString(`place:newDay()`); }
+	void init() { lua.doString(`place:init()`); }
 
 	void luaPutInto(LuaTable obj)
 	{
@@ -48,8 +53,8 @@ class Place
 		Place result = new Place(x, y, jv["name"].str, jv["description"].str);
 		result.lua.doString(`place = { }`);
 		result.luaPutInto(result.lua.get!LuaTable("place"));
+		ConfigFiles.luaPutInto(result.lua, ["places", "herbs", "movement"]);
 		result.lua.doString(jv["script"].str);
-		result.lua.doString(`place:init()`);
 		return result;
 	}
 }

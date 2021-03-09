@@ -597,8 +597,10 @@ class World: Drawable
 		decorationTiles.load(Images.texture("world tileset"), Vector2u(48, 48), decorationTileNumbers);
 	}
 
-	void luaPutInto(LuaTable obj)
+	void luaPutInto(LuaState lua)
 	{
+		lua.doString(`World = {}`);
+		auto obj = lua.get!LuaTable("World");
 		obj["ptr"] = ptr2string(cast(void *) this);
 		obj["terrainAt"] = delegate string (LuaTable t, size_t x, size_t y)
 		{
@@ -643,6 +645,8 @@ class World: Drawable
 
 				auto chosenName = placeList[dice(chanceList)];
 				places ~= Place.byName(x, y, chosenName);				
+				this.luaPutInto(places[$-1].lua);
+				places[$-1].init;
 				if(time !is null)
 					time.onNewDay(&(places[$-1].newDay));
 			}

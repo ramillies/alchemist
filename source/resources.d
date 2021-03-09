@@ -1,7 +1,11 @@
+import std.algorithm;
 import std.stdio;
 import std.string;
 import std.json;
 import std.exception;
+import std.regex;
+
+import luad.all;
 
 import dsfml.graphics;
 
@@ -21,7 +25,8 @@ class ConfigFiles
 			"world terrain" : "data/world-gen",
 			"movement" : "data/movement",
 			"places" : "data/places",
-			"world places" : "data/world-places"
+			"world places" : "data/world-places",
+			"herbs" : "data/herbs"
 		])
 		{
 			File f;
@@ -38,14 +43,26 @@ class ConfigFiles
 		}
 	}
 
-	static JSONValue[string] get(string name)
+	static void luaPutInto(LuaState lua, string[] includeFiles)
 	{
-		return files.get(name, missing).object;
+		foreach(file; includeFiles)
+		{
+			if(!(file in files))
+			{
+				writefln("WARNING! Tried to include a nonexistent config file '%s' into lua.", file);
+				continue;
+			}
+			auto re = ctRegex!(`"[^"]+":`, "g");
+			lua.doString(format(`%s = %s`,
+				file.split.map!`a.capitalize`.join, // world terrain => WorldTerrain etc.
+				// rewrite the keys to agree with Lua table syntax
+				files[file].toString.replaceAll!((c) => format("[%s] = ", c.hit.strip(":")))(re)
+			));
+		}
 	}
 
-	static void unload()
-	{
-	}
+	static JSONValue[string] get(string name) { return files.get(name, missing).object; }
+	static void unload() { }
 }
 
 class Fonts
@@ -60,9 +77,7 @@ class Fonts
 		heading.loadFromFile("data/fonts/EBGaramondSC08-Regular.ttf");
 	}
 
-	static void unload()
-	{
-	}
+	static void unload() { }
 }
 
 class Images
@@ -87,34 +102,6 @@ class Images
 		writefln("Loaded textures: %s", textures.byKey);
 	}
 
-	static Texture texture(string name)
-	{
-		return textures.get(name, missing);
-	}
-
-	static void unload()
-	{
-	}
+	static Texture texture(string name) { return textures.get(name, missing); }
+	static void unload() { }
 }
-
-/*
-class Things
-{
-	private static JSONValue[string] things;
-
-	static void load()
-	{
-		File listfile = File("data/objects.json", "r");
-		things = listfile.byLine.join("\n").parseJSON.object;
-	}
-
-	static JSONValue thing(string name)
-	{
-		return things.get(name, parseJSON(`{ "texture": "missing", "textureRect": [ 0, 0, 0, 0 ] }`));
-	}
-
-	static void unload()
-	{
-	}
-}
-*/
