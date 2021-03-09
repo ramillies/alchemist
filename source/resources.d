@@ -67,7 +67,7 @@ class ConfigFiles
 
 class Fonts
 {
-	static Font text, heading;
+	static Font text, heading, italic;
 
 	static void load()
 	{
@@ -75,6 +75,8 @@ class Fonts
 		text.loadFromFile("data/fonts/EBGaramond08-Regular.ttf");
 		heading = new Font;
 		heading.loadFromFile("data/fonts/EBGaramondSC08-Regular.ttf");
+		italic = new Font;
+		italic.loadFromFile("data/fonts/EBGaramond08-Italic.ttf");
 	}
 
 	static void unload() { }

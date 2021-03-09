@@ -7,6 +7,7 @@ import std.stdio;
 import resources;
 import util;
 import gametime;
+import player;
 
 import boilerplate;
 import luad.all;
@@ -37,6 +38,13 @@ class Place
 
 	void newDay(GameTime t) { lua.doString(`place:newDay()`); }
 	void init() { lua.doString(`place:init()`); }
+	void enter(Player p)
+	{
+		auto callback = lua.get!(void delegate(LuaTable, LuaTable))("place", "enter");
+		LuaTable playerObj = lua.loadString(`return {}`).call!LuaTable();
+		p.luaPutInto(playerObj);
+		callback(lua.get!LuaTable("place"), playerObj);
+	}
 
 	void luaPutInto(LuaTable obj)
 	{

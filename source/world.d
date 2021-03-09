@@ -15,6 +15,7 @@ import settings;
 import place;
 import util;
 import gametime;
+import player;
 
 import boilerplate;
 import dsfml.graphics;
@@ -118,6 +119,12 @@ class World: Drawable
 	{
 		auto f = places.filter!((p) => p.x == pos.x && p.y == pos.y);
 		return f.empty ? "" : f.front.description;
+	}
+
+	void enterPlace(Player p)
+	{
+		auto f = places.filter!((a) => a.x == p.x && a.y == p.y);
+		if(!f.empty) f.front.enter(p);
 	}
 
 	override void draw(RenderTarget target, RenderStates states)

@@ -18,6 +18,7 @@ import player;
 import place;
 import reacttext;
 import gametime;
+import messagebox;
 
 import dsfml.graphics;
 
@@ -34,6 +35,8 @@ class GameScreen: Screen
 
 	private RenderWindow win;
 
+	private bool popup;
+
 	this(World w, GameTime t)
 	{
 		world = w;
@@ -42,6 +45,7 @@ class GameScreen: Screen
 		ocean = new Water(to!int(ceil(world.width/2.)), to!int(world.height));
 		auto startPos = cartesianProduct(world.width.iota, world.height.iota).filter!((x) => world.features[x[1]][x[0]] == "city").array.choice;
 		player = new Player(startPos[0], startPos[1]);
+		popup = false;
 	}
 
 	override void setWindow(RenderWindow w)
@@ -100,6 +104,7 @@ class GameScreen: Screen
 		texts[4].setRelativeOrigin(Vector2f(.5f, 0f));
 		texts[4].setCharacterSize(25);
 		texts[4].stringCallback = () => mouseOver() == MouseOver.Map ? world.placeDescription(mouseSquare()) : "";
+
 	}
 
 	override void event(Event e)
@@ -125,6 +130,8 @@ class GameScreen: Screen
 				attemptMove(0, 1);
 			if(e.key.code == Keyboard.Key.D || e.key.code == Keyboard.Key.Right)
 				attemptMove(1, 0);
+			if(e.key.code == Keyboard.Key.Return)
+				world.enterPlace(player);
 		}
 	}
 
@@ -144,6 +151,11 @@ class GameScreen: Screen
 		texts.each!((t) => t.update);
 		cursor.outlineThickness = 8*zoom;
 		cursor.position = Vector2f(3*World.TILESIZE * mouseSquare().x, 3*World.TILESIZE * mouseSquare().y);
+		if(!popup)
+		{
+			Mainloop.pushScreen(new MessageBox("A message box!", "This is my new message box!"));
+			popup = true;
+		}
 	}
 
 	override void draw()
@@ -233,7 +245,10 @@ class GameScreen: Screen
 		if(mouseOver() == MouseOver.Map)
 		{
 			auto pt = win.mapPixelToCoords(Mouse.getPosition(win), camera);
-			return Vector2u(to!uint(pt.x/3/World.TILESIZE), to!uint(pt.y/3/World.TILESIZE));
+			return Vector2u(
+				to!uint(clamp(pt.x/3/World.TILESIZE, 0, world.width-1)),
+				to!uint(clamp(pt.y/3/World.TILESIZE, 0, world.height-1))
+			);
 		}
 		else
 			return Vector2u(0, 0);
