@@ -45,39 +45,43 @@ class ReactiveText: Text
 		}
 	}
 
-	private void linebreaks(string t)
+	private void linebreaks(string txt)
 	{
-		if(t == "") { this.setString(""); return; }
-		auto words = t.split.array;
-		double[] widths;
-		foreach(n; 0 .. words.length)
+		string doBreaking(string t)
 		{
-			this.setString(words[0..n+1].join(" ").idup);
-			widths ~= this.getLocalBounds.width - (widths.empty ? 0 : widths.sum);
-		}
+			if(t == "") return "";
+			auto words = t.split.array;
+			double[] widths;
+			foreach(n; 0 .. words.length)
+			{
+				this.setString(words[0..n+1].join(" ").idup);
+				widths ~= this.getLocalBounds.width - (widths.empty ? 0 : widths.sum);
+			}
 
-		double optimal = widths.sum / ceil(widths.sum/boxWidth);
-		char[] broken;
-		double w = 0;
-		foreach(k, v; widths)
-		{
-			if(w + v > boxWidth)
+			double optimal = widths.sum / ceil(widths.sum/boxWidth);
+			char[] broken;
+			double w = 0;
+			foreach(k, v; widths)
 			{
-				broken ~= (w == 0 ? "" : "\n") ~ words[k] ~ (w == 0 ? "\n" : "");
-				w = (w == 0) ? 0 : v;
+				if(w + v > boxWidth)
+				{
+					broken ~= (w == 0 ? "" : "\n") ~ words[k] ~ (w == 0 ? "\n" : "");
+					w = (w == 0) ? 0 : v;
+				}
+				else if(optimal <= (w+v))
+				{
+					broken ~= words[k] ~ "\n";
+					w = 0;
+				}
+				else
+				{
+					broken ~= words[k] ~ " ";
+					w += v;
+				}
 			}
-			else if(optimal <= (w+v))
-			{
-				broken ~= words[k] ~ "\n";
-				w = 0;
-			}
-			else
-			{
-				broken ~= words[k] ~ " ";
-				w += v;
-			}
+			return broken.idup;
 		}
-		this.setString(broken.idup);
+		this.setString(txt.split("\n").map!((a) => doBreaking(a)).join("\n").idup);
 	}
 
 	void setRelativeOrigin(Vector2f u)

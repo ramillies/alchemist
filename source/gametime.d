@@ -27,6 +27,7 @@ class GameTime
 	}
 
 	void onNewDay(void delegate (GameTime) callback) { callbacks ~= callback; }
+
 	string uiString()
 	{
 		int year, month, day;
