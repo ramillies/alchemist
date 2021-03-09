@@ -1,26 +1,32 @@
 {
 	"snowbelle": {
 		"name": "Snowbelle",
+		"placeCondition": "return World:terrainAt(place:getX(), place:getY()) == 'snow'",
 		"description": "This blue flower can be found blooming even in the middle of the harshest winters and deadliest blizzards. People of the north are often looking for it because powder from this flower is known to have strong alchemical properties."
 	},
 	"grasp of winter": {
 		"name": "Grasp of Winter",
+		"placeCondition": "return World:terrainAt(place:getX(), place:getY()) == 'snow'",
 		"description": "Brave explorers that venture far north often bring back unique stories about ice giants, white bears, weird white-bearded men wearing red, and of course about Grasp of Winter, a fascinating flower that can survive without water and sun. If you listen closely, you can hear the clinging of ice emanating from it."
 	},
 	"deadly nightshade": {
 		"name": "Deadly Nightshade",
+		"placeCondition": "return World:terrainAt(place:getX(), place:getY()) == 'grass'",
 		"description": "A favorite tool of assassins and witches, this innocently looking plant is in truth far from innocent. With high dosage, it can kill a grown man in a matter of seconds, but skilled alchemists use it to brew potions with effects sometimes very unexpected for a plant this deadly."
 	},
 	"black lotus": {
 		"name": "Black Lotus",
+		"placeCondition": "return World:terrainAt(place:getX(), place:getY()) == 'grass'",
 		"description": "Mages often seek this flower, because of its special property to restore magical energy with small to no drawbacks. Because of the simplicity of its usage, almost all wizards have a small supply of it at all times. It’s also a very potent ingredient for potion brewing so potion makers are often seen looking for it."
 	},
 	"piece of heaven": {
 		"name": "Piece of Heaven",
-		"description": "This bright flower, which is often described as small sun, is collected by the clergy for their religious rituals, so the beautiful smell of it can be often smelled in churches and cathedrals all over the world. Once the petals are separated, they can be used to make tea or potent potions, if you know how to brew them."
+		"placeCondition": "return World:terrainAt(place:getX(), place:getY()) == 'grass'",
+		"description": "This bright flower, which is often described as small sun, is collected by the clergy for their religious rituals, so its beautiful smell can be often found in churches and cathedrals all over the world. Once the petals are separated, they can be used to make tea or potent potions, if you know how to brew them."
 	},
 	"desert rose": {
 		"name": "Desert Rose",
+		"placeCondition": "return World:terrainAt(place:getX(), place:getY()) == 'sand'",
 		"description": "Even the hot sun of the southern deserts cannot diminish the beauty of this radiant flower. Often a mere sight of it can enhearten travelers lost in neverending sands and dunes. It is also the only thing in the desert that welcomes the sun, as its blossoms always turn to face it."
 	}
 }

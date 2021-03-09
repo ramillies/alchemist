@@ -3,7 +3,9 @@ function place:init()
 	self.maxHerbs = 10
 	local keys = {}
 	for k, v in pairs(Herbs) do
-		table.insert(keys, k)
+		if loadstring(v.placeCondition)() then
+			table.insert(keys, k)
+		end
 	end
 	self.herbKey = keys[1 + math.floor(#keys * math.random())]
 	self:setName(string.format("%s Meadow", Herbs[self.herbKey].name))
