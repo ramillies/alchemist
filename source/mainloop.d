@@ -1,4 +1,5 @@
 import std.range;
+import std.stdio;
 import dsfml.graphics;
 
 interface Screen
@@ -37,10 +38,12 @@ class Mainloop
 		s.init;
 		clock.restart;
 		screens ~= s;
+		writefln("Now having %s screens", screens);
 	}
 
 	static void popScreen()
 	{
+		writefln("Now having %s screens", screens);
 		if(!screens.empty)
 		{
 			screens[$-1].finish;
@@ -58,7 +61,8 @@ class Mainloop
 			Event e;
 			while(win.pollEvent(e))
 				screens[$-1].event(e);
-			screens[$-1].update(clock.getElapsedTime.total!"hnsecs" * 1e-7);
+			foreach(s; screens)
+				s.update(clock.getElapsedTime.total!"hnsecs" * 1e-7);
 			clock.restart;
 
 			win.clear;
