@@ -659,6 +659,7 @@ class World: Drawable
 				auto chosenName = placeList[dice(chanceList)];
 				places ~= Place.byName(x, y, chosenName);				
 				this.luaPutInto(places[$-1].lua);
+				time.luaPutInto(places[$-1].lua);
 				places[$-1].init;
 				if(time !is null)
 					time.onNewDay(&(places[$-1].newDay));

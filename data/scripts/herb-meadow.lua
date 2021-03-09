@@ -35,5 +35,5 @@ function place:enter(player)
 end
 
 function place:updateDescription()
-	self:setDescription(string.format("You can gather %d herbs here.", self.herbs))
+	self:setDescription(string.format("You can gather %d herbs here.", self.herbs, Time:day()))
 end

@@ -5,6 +5,8 @@ import std.format;
 import std.stdio;
 
 import boilerplate;
+import util;
+import luad.all;
 
 class GameTime
 {
@@ -35,5 +37,14 @@ class GameTime
 		month = day/28; day -= 28*month;
 		year = month/12; month -= 12*year;
 		return format("Day %d, month %d, year %d", day+1, month+1, year+1);
+	}
+
+	void luaPutInto(LuaState lua)
+	{
+		lua.doString(`Time = {}`);
+		auto obj = lua.get!LuaTable("Time");
+		obj["ptr"] = ptr2string(cast(void *) this);
+		obj["day"] = delegate double (LuaTable t) { return string2ptr!GameTime(t.get!string("ptr")).days; };
+		obj["advance"] = delegate void (LuaTable t, double dt) { string2ptr!GameTime(t.get!string("ptr")).advance(dt); };
 	}
 }
