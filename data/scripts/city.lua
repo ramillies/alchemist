@@ -36,6 +36,12 @@ function place:init()
 		table.insert(self.buildings, allowedBuildings[index])
 		table.remove(allowedBuildings, index)
 	end
+
+	for k, v in pairs(self.buildings) do
+		if type(v.onInit) == "function" then
+			v:onInit()
+		end
+	end
 		
 	self.name = cityNames[math.random(1, #cityNames)]
 	self:setName(self.name)
@@ -53,6 +59,11 @@ function place:newDay()
 			break
 		end
 	end
+	for k, v in pairs(self.buildings) do
+		if type(v.onNewDay) == "function" then
+			v:onNewDay()
+		end
+	end
 end
 
 function place:enter(player)
@@ -63,7 +74,7 @@ function place:enter(player)
 		table.insert(choices, {
 			text = string.format("Visit %s%s.", v.name, v.description and " (" .. v.description .. ")" or ""),
 			disabled = v.onVisit == nil,
-			callback = v.onVisit,
+			callback = function () v:onVisit(player) end,
 			popBox = false
 		})
 	end
@@ -79,6 +90,15 @@ function place:updateDescription()
 	for n = 1, #self.buildings do
 		desc = desc .. string.format("      %s\n", self.buildings[n].name)
 	end
+	local repRank = ""
+	if self.reputation < -78 then repRank = "Hated"
+	elseif self.reputation < -46 then repRank = "Feared"
+	elseif self.reputation < -14 then repRank = "Disliked"
+	elseif self.reputation < 14 then repRank = "Ignored"
+	elseif self.reputation < 46 then repRank = "Liked"
+	elseif self.reputation < 78 then repRank = "Loved"
+	else repRank = "Adored" end
+	desc = desc .. "\n" .. string.format("You are %s here (%d).", repRank, self.reputation);
 	self:setDescription(desc)
 end
 
@@ -126,4 +146,17 @@ function place:numberOfCustomers(name)
 		end
 	end
 	return count
+end
+
+function place:addReputation(x)
+	self.reputation = self.reputation + x
+	if self.reputation > 100 then
+		self.reputation = 100
+	elseif self.reputation < -100 then
+		self.reputation = -100
+	end
+end
+
+function place:adjustedCost(cost)
+	return cost * 3 ^ (-self.reputation/100)
 end

@@ -42,10 +42,52 @@ buildings = {
 		onVisit = function () messagebox("Library", "You enjoy a good read at the local library.") end,
 	},
 	["adventurers guild"] = {
-		name = "Adventurer's Guild",
+		name = "Adventurers' Guild",
 		allowedIn = "city",
 		description = "Buy potion ingredients.",
-		onVisit = function () messagebox("Adventurers' Guild", "You enjoy a good chat with the local adventurers.") end,
+		onInit = function (self)
+			self.parts = {}
+			self.keys = {}
+			self.costPerPart = math.random(15, 25)
+			for k, v in pairs(Ingredients) do
+				self.parts[k] = 0
+				table.insert(self.keys, k)
+			end
+		end,
+		onVisit = function (self, player)
+			choices = { { text = "Nothing" } }
+			for k, v in pairs(self.parts) do
+				if v > 0 then
+					local n = v
+					while n >= 1 do
+						local cost = place:adjustedCost(n*self.costPerPart)
+						local num = n
+						table.insert(choices, {
+							text = string.format("Buy %d× %s for %d gold", n, Ingredients[k].name, cost),
+							disabled = player:getCoins() < cost,
+							tileset = Ingredients[k].tileset,
+							tilenumber = Ingredients[k].tilenumber,
+							callback = function ()
+								messagebox("Ingredients Purchased",
+									string.format("You purchased %d %s for %d gold.", num, Ingredients[k].name, cost))
+								player:giveItems{[k] = num}
+								player:giveCoins(-cost)
+								self.parts[k] = self.parts[k] - num
+							end
+						})
+						n = math.floor(n/2)
+					end
+				end
+			end
+			choicebox("Adventurers' Guild", "This is one of the guilds that adventurers found to help them sell the more obscure pieces of their loot. Obviously it is often possible to get decent alchemical ingredients there... for a price.\nWhat would you like to buy?",
+			choices)
+		end,
+		onNewDay = function (self)
+			if math.random() < 0.01 then
+				local loot = self.keys[math.random(1, #self.keys)]
+				self.parts[loot] = self.parts[loot] + math.random(2, 5)
+			end
+		end
 	},
 	["foremans house"] = {
 		name = "Foreman's House",

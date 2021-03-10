@@ -68,7 +68,7 @@ class Place
 			result.revealed = jv["revealed"].boolean;
 		result.lua.doString(`place = { }`);
 		result.luaPutInto(result.lua.get!LuaTable("place"));
-		ConfigFiles.luaPutInto(result.lua, ["places", "herbs", "movement"]);
+		ConfigFiles.luaPutInto(result.lua, ["places", "herbs", "movement", "ingredients", "potions", "items"]);
 		result.lua.doString(jv["script"].str);
 		putPopupsIntoLua(result.lua);
 		return result;

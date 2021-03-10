@@ -629,6 +629,18 @@ class World: Drawable
 			World me = string2ptr!World(t.get!string("ptr"));
 			return (x >=0 && x < me.width && y >=0 && y < me.height) ? me.decorations[y][x] : "";
 		};
+		obj["placeAt"] = delegate LuaTable (LuaTable t, size_t x, size_t y)
+		{
+			World me = string2ptr!World(t.get!string("ptr"));
+			if(x < 0 && x >= me.width && y < 0 && y >= me.height)
+				return lua.loadString("return {}").call!LuaTable();
+			auto place = places.filter!((a) => a.x == x && a.y == y);
+			if(place.empty)
+				return lua.loadString("return {}").call!LuaTable();
+			return place.front.lua.get!LuaTable("place");
+		};
+		obj["getWidth"] = delegate size_t (LuaTable t) { return string2ptr!World(t.get!string("ptr")).width; };
+		obj["getHeight"] = delegate size_t (LuaTable t) { return string2ptr!World(t.get!string("ptr")).height; };
 	}
 
 	void generatePlaces()
