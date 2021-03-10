@@ -19,15 +19,28 @@ struct Choice
 	string text;
 	void delegate() callback;
 	ReactiveText textRendering;
+	bool disabled;
 
 	static Choice fromLuaTable(LuaTable obj)
 	{
-		if(obj["tileset"].isNil || obj["tilenumber"].isNil || !Images.exists(obj.get!string("tileset")))
-			return Choice(cast(CoolSprite) null, obj.get!string("text"), obj.get!(void delegate())("callback"), new ReactiveText);
-		CoolSprite spr = new CoolSprite;
-		spr.setTextureByName(obj.get!string("tileset"));
-		spr.tilenumber = obj.get!uint("tilenumber");
-		return Choice(spr, obj.get!string("text"), obj.get!(void delegate())("callback"), new ReactiveText);
+		CoolSprite sprite;
+		string text = "";
+		void delegate() callback = delegate void() { };
+		ReactiveText t = new ReactiveText;
+		bool disabled = false;
+		
+		if(!obj["text"].isNil) text = obj.get!string("text");
+		if(!obj["callback"].isNil) callback = obj.get!(void delegate())("callback");
+		if(!obj["disabled"].isNil) disabled = obj.get!bool("disabled");
+		if(!obj["tileset"].isNil && Images.exists(obj.get!string("tileset")))
+		{
+			sprite = new CoolSprite;
+			sprite.setTextureByName(obj.get!string("tileset"));
+			if(!obj["tilenumber"].isNil)
+				sprite.tilenumber = obj.get!int("tilenumber");
+		}
+
+		return Choice(sprite, text, callback, t, disabled);
 	}
 }
 
@@ -92,7 +105,10 @@ class ChoiceBox: Screen
 				setFont(Fonts.text);
 				sizeCallback = () => 35;
 				boxWidth = win.size.x/2 - ROWHEIGHT;
-				setColor(Color.White);
+				if(choice.disabled)
+					setColor(Color(100, 100, 100));
+				else
+					setColor(Color.White);
 				setRelativeOrigin(Vector2f(0f, .5f));
 				position = Vector2f(ROWHEIGHT+20, n*ROWHEIGHT + ROWHEIGHT/2);
 				setString(choice.text);
@@ -105,6 +121,8 @@ class ChoiceBox: Screen
 					position = Vector2f(ROWHEIGHT/2, ROWHEIGHT/2 + n*ROWHEIGHT);
 					auto bound = getLocalBounds();
 					scale = Vector2f(ROWHEIGHT/bound.height, ROWHEIGHT/bound.height);
+					if(choice.disabled)
+						color = Color(100, 100, 100);
 				}
 			}
 		}
@@ -124,7 +142,7 @@ class ChoiceBox: Screen
 			camera.center = Vector2f(camera.center.x, clamp(camera.center.y - ROWHEIGHT*e.mouseWheel.delta, camera.size.y/2, max(choices.length*ROWHEIGHT - camera.size.y/2, camera.size.y/2)));
 		if(e.type == Event.EventType.MouseButtonPressed)
 		{
-			if(e.mouseButton.button == Mouse.Button.Left && mouseRow() != -1)
+			if(e.mouseButton.button == Mouse.Button.Left && mouseRow() != -1 && !choices[mouseRow()].disabled)
 			{
 				Mainloop.popScreen;
 				choices[mouseRow()].callback();
@@ -164,7 +182,7 @@ class ChoiceBox: Screen
 				win.draw(c.sprite);
 			win.draw(c.textRendering);
 		}
-		if(mouseRow() != -1)
+		if(mouseRow() != -1 && !choices[mouseRow()].disabled)
 		{
 			cursor.position = Vector2f(0f, ROWHEIGHT*mouseRow());
 			win.draw(cursor);
