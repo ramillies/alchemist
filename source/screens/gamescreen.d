@@ -44,6 +44,7 @@ class GameScreen: Screen
 		ocean = new Water(to!int(ceil(world.width/2.)), to!int(world.height));
 		auto startPos = cartesianProduct(world.width.iota, world.height.iota).filter!((x) => world.features[x[1]][x[0]] == "city").array.choice;
 		player = new Player(startPos[0], startPos[1]);
+		player.coins = 10000;
 	}
 
 	override void setWindow(RenderWindow w)
@@ -67,7 +68,7 @@ class GameScreen: Screen
 		minimap = new View(FloatRect(0, 0, world.pixelSize.x, world.pixelSize.y));
 		camera.center = Vector2f(3*World.TILESIZE*player.x + 3*World.TILESIZE/2, 3*World.TILESIZE*player.y + 3*World.TILESIZE/2);
 
-		texts = 5.iota.map!((x) => new ReactiveText).array;
+		texts = 6.iota.map!((x) => new ReactiveText).array;
 		foreach(text; texts)
 		{
 			text.setFont(Fonts.text);
@@ -78,7 +79,8 @@ class GameScreen: Screen
 		}
 
 		texts[0].setCharacterSize(20);
-		texts[0].positionCallback = () => Vector2f(.925*win.size.x, .025*win.size.y);
+		texts[0].positionCallback = () => Vector2f(.925*win.size.x, 0f);
+		texts[0].setRelativeOrigin(Vector2f(.5f, 0f));
 		texts[0].stringCallback = delegate string()
 		{
 			auto systime = std.datetime.systime.Clock.currTime;
@@ -102,6 +104,14 @@ class GameScreen: Screen
 		texts[4].setRelativeOrigin(Vector2f(.5f, 0f));
 		texts[4].setCharacterSize(25);
 		texts[4].stringCallback = () => mouseOver() == MouseOver.Map ? world.placeDescription(mouseSquare()) : "";
+
+		with(texts[5])
+		{
+			setColor(Color(225, 188, 0));
+			setRelativeOrigin(Vector2f(.5f, 1f));
+			positionCallback = () => Vector2f(.925*win.size.x, .05*win.size.y - 5);
+			stringCallback = () => format("%s", player.coins);
+		}
 
 	}
 

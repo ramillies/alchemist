@@ -36,7 +36,7 @@ class ReactiveText: Text
 		if(_relativeOriginAllowed)
 		{
 			auto bounds = this.getLocalBounds();
-			this.origin = Vector2f(bounds.width*_relativeOrigin.x, bounds.height*_relativeOrigin.y);
+			this.origin = Vector2f(bounds.left, bounds.top) + Vector2f(bounds.width*_relativeOrigin.x, bounds.height*_relativeOrigin.y);
 		}
 	}
 
