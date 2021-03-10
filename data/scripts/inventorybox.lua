@@ -4,9 +4,10 @@ function inventorybox(player, heading, msg, callback)
 		if count > 0 then
 			local name = Herbs[item].name
 			local tile = Herbs[item].tilenumber
+			local tileset = Herbs[item].tileset
 			table.insert(choices, {
 				text = string.format("%s (you have %d)", name, count),
-				tileset = "items",
+				tileset = tileset,
 				tilenumber = tile,
 				callback = function () callback(item) end
 			})
