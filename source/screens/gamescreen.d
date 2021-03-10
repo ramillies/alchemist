@@ -150,6 +150,8 @@ class GameScreen: Screen
 		cursor.position = Vector2f(3*World.TILESIZE * mouseSquare().x, 3*World.TILESIZE * mouseSquare().y);
 	}
 
+	override void updateInactive(double dt) { ocean.update(dt); }
+
 	override void draw()
 	{
 		if(Settings.gameLogShown)

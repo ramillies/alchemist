@@ -19,7 +19,7 @@ struct Choice
 	string text;
 	void delegate() callback;
 	ReactiveText textRendering;
-	bool disabled;
+	bool disabled, popBox;
 
 	static Choice fromLuaTable(LuaTable obj)
 	{
@@ -28,10 +28,12 @@ struct Choice
 		void delegate() callback = delegate void() { };
 		ReactiveText t = new ReactiveText;
 		bool disabled = false;
+		bool popBox = true;
 		
 		if(!obj["text"].isNil) text = obj.get!string("text");
 		if(!obj["callback"].isNil) callback = obj.get!(void delegate())("callback");
 		if(!obj["disabled"].isNil) disabled = obj.get!bool("disabled");
+		if(!obj["popBox"].isNil) popBox = obj.get!bool("popBox");
 		if(!obj["tileset"].isNil && Images.exists(obj.get!string("tileset")))
 		{
 			sprite = new CoolSprite;
@@ -40,7 +42,7 @@ struct Choice
 				sprite.tilenumber = obj.get!int("tilenumber");
 		}
 
-		return Choice(sprite, text, callback, t, disabled);
+		return Choice(sprite, text, callback, t, disabled, popBox);
 	}
 }
 
@@ -144,7 +146,8 @@ class ChoiceBox: Screen
 		{
 			if(e.mouseButton.button == Mouse.Button.Left && mouseRow() != -1 && !choices[mouseRow()].disabled)
 			{
-				Mainloop.popScreen;
+				if(choices[mouseRow()].popBox)
+					Mainloop.popScreen;
 				choices[mouseRow()].callback();
 			}
 		}
@@ -155,6 +158,8 @@ class ChoiceBox: Screen
 		texts.each!((t) => t.update);
 		choices.each!((c) => c.textRendering.update);
 	}
+
+	override void updateInactive(double dt) { }
 
 	override void draw()
 	{
@@ -188,6 +193,7 @@ class ChoiceBox: Screen
 			win.draw(cursor);
 		}
 
+		win.view = win.getDefaultView.dup;
 	}
 
 	private int mouseRow()

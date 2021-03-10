@@ -67,6 +67,7 @@ class MessageBox: Screen
 	}
 
 	override void update(double dt) { texts.each!((t) => t.update); }
+	override void updateInactive(double dt) { }
 
 	override void draw()
 	{

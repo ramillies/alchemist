@@ -15,12 +15,12 @@ buildings = {
 	},
 	["inn"] = {
 		name = "Inn",
-		description = "You can recruit followers here.",
+		description = "Recruit followers",
 		onVisit = function () messagebox("Inn", "You enjoy a good pint of ale in the local inn.") end,
 	},
 	["shipyard"] = {
 		name = "Shipyard",
-		description = "You can move to another city with shipyard from here.",
+		description = "Sail to another city with shipyard",
 		onVisit = function () messagebox("Shipyard", "You enjoy the nice sight of sea and ships.") end,
 	},
 	["guardhouse"] = {
@@ -38,13 +38,13 @@ buildings = {
 	["library"] = {
 		name = "Library",
 		allowedIn = "city",
-		description = "You can find some potion-making information here.",
+		description = "Find potion-making lore",
 		onVisit = function () messagebox("Library", "You enjoy a good read at the local library.") end,
 	},
 	["adventurers guild"] = {
 		name = "Adventurer's Guild",
 		allowedIn = "city",
-		description = "Sells potion ingredients.",
+		description = "Buy potion ingredients.",
 		onVisit = function () messagebox("Adventurers' Guild", "You enjoy a good chat with the local adventurers.") end,
 	},
 	["foremans house"] = {
@@ -73,7 +73,7 @@ buildings = {
 	["secluded shack"] = {
 		name = "Secluded Shack",
 		allowedIn = "village",
-		description = "Sells herbs.",
+		description = "Buy herbs",
 		onVisit = function () messagebox("Secluded Shack", "You enjoy a good chat with the local evil witch.") end,
 	},
 	["central tower"] = {

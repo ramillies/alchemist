@@ -8,6 +8,7 @@ interface Screen
 	void setWindow(RenderWindow win);
 	void event(Event e);
 	void update(double dt);
+	void updateInactive(double dt);
 	void draw();
 	void finish();
 }
@@ -61,8 +62,11 @@ class Mainloop
 			Event e;
 			while(win.pollEvent(e))
 				screens[$-1].event(e);
-			foreach(s; screens)
-				s.update(clock.getElapsedTime.total!"hnsecs" * 1e-7);
+			foreach(n, s; screens)
+				if(n == screens.length-1)
+					s.update(clock.getElapsedTime.total!"hnsecs" * 1e-7);
+				else
+					s.updateInactive(clock.getElapsedTime.total!"hnsecs" * 1e-7);
 			clock.restart;
 
 			win.clear;

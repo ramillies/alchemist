@@ -64,6 +64,8 @@ class LoadingScreen: Screen
 		}
 	}
 
+	override void updateInactive(double dt) { }
+
 	override void draw()
 	{
 		if(stage == 1)
