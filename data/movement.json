@@ -5,38 +5,38 @@
 	},
 	"plain": {
 		"passable": true,
-		"movementCost": 1
+		"movementCost": 0.5
 	},
 	"city": {
 		"passable": true,
-		"movementCost": 1
+		"movementCost": 0.5
 	},
 	"village": {
 		"passable": true,
-		"movementCost": 1
+		"movementCost": 0.5
 	},
 	"castle": {
 		"passable": true,
-		"movementCost": 1
+		"movementCost": 0.5
 	},
 	"forest": {
 		"passable": true,
-		"movementCost": 2
+		"movementCost": 1
 	},
 	"mountains": {
 		"passable": true,
-		"movementCost": 3
+		"movementCost": 2
 	},
 	"grass hill": {
 		"passable": true,
-		"movementCost": 2
+		"movementCost": 1
 	},
 	"cliff": {
 		"passable": true,
-		"movementCost": 3
+		"movementCost": 2
 	},
 	"road": {
 		"passable": true,
-		"movementCost": 0.5
+		"movementCost": 0.25
 	}
 }
