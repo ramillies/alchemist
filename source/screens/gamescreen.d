@@ -19,6 +19,7 @@ import place;
 import reacttext;
 import gametime;
 import messagebox;
+import choicebox;
 
 import dsfml.graphics;
 
@@ -129,6 +130,17 @@ class GameScreen: Screen
 				attemptMove(1, 0);
 			if(e.key.code == Keyboard.Key.Return)
 				world.enterPlace(player);
+			if(e.key.code == Keyboard.Key.R)
+				Mainloop.pushScreen(new ChoiceBox("Wait",
+					"You can let pass some time if you want — the world around you will still go on. There is no other advantage.",
+					[
+						Choice(null, "Do not wait", delegate void() { }, new ReactiveText),
+						Choice(null, "Wait one week", delegate void() { time.advance(7); }, new ReactiveText),
+						Choice(null, "Wait one month ", delegate void() { time.advance(28); }, new ReactiveText),
+						Choice(null, "Wait three months", delegate void() { time.advance(84); }, new ReactiveText),
+						Choice(null, "Wait one year", delegate void() { time.advance(336); }, new ReactiveText),
+					]
+				));
 		}
 	}
 

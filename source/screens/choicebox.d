@@ -19,7 +19,7 @@ struct Choice
 	string text;
 	void delegate() callback;
 	ReactiveText textRendering;
-	bool disabled, popBox;
+	bool disabled = false, popBox = true;
 
 	static Choice fromLuaTable(LuaTable obj)
 	{
@@ -65,7 +65,6 @@ class ChoiceBox: Screen
 
 	override void init()
 	{
-		writefln("Initing choicebox");
 		texts = 3.iota.map!((x) => new ReactiveText).array;
 		foreach(txt; texts)
 		{
@@ -101,7 +100,6 @@ class ChoiceBox: Screen
 
 		foreach(n, choice; choices)
 		{
-			writefln("\tChoice %s: %s", n, choice);
 			with(choice.textRendering)
 			{
 				setFont(Fonts.text);
