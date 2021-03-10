@@ -105,6 +105,7 @@ class Images
 	}
 
 	static Texture texture(string name) { return textures.get(name, missing); }
+	static bool exists(string name) { return (name in textures) ? true : false; }
 	static Vector2u tileSize(string name)
 	{
 		auto list = ConfigFiles.get("textures");

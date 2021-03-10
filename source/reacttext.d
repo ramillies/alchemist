@@ -26,11 +26,6 @@ class ReactiveText: Text
 	this()
 	{
 		super();
-		_stringCallback = delegate string() { return this.getString(); };
-		_colorCallback = delegate Color() { return this.getColor(); };
-		_styleCallback = delegate Text.Style () { return this.getStyle(); };
-		_sizeCallback = delegate uint () { return this.getCharacterSize(); };
-		_positionCallback = delegate Vector2f () { return this.position; };
 		_relativeOrigin = Vector2f(0f, 0f);
 		_relativeOriginAllowed = false;
 		_boxWidth = 0.;
@@ -81,7 +76,7 @@ class ReactiveText: Text
 			}
 			return broken.idup;
 		}
-		this.setString(txt.split("\n").map!((a) => doBreaking(a)).join("\n").idup);
+		this.setString(txt.split("\n").map!((a) => doBreaking(a).strip("\n")).join("\n").idup);
 	}
 
 	void setRelativeOrigin(Vector2f u)
@@ -94,14 +89,15 @@ class ReactiveText: Text
 
 	void update()
 	{
-		this.setColor(_colorCallback());
-		this.setStyle(_styleCallback());
-		this.setCharacterSize(_sizeCallback());
-		this.position = _positionCallback();
+		if(_colorCallback !is null) this.setColor(_colorCallback());
+		if(_styleCallback !is null) this.setStyle(_styleCallback());
+		if(_sizeCallback !is null) this.setCharacterSize(_sizeCallback());
+		if(_positionCallback !is null) this.position = _positionCallback();
+		string t = (_stringCallback is null) ? this.getString() : _stringCallback();
 		if(boxWidth != 0.)
-			linebreaks(_stringCallback());
+			linebreaks(t);
 		else
-			this.setString(_stringCallback());
+			this.setString(t);
 
 		updatePosition();
 	}

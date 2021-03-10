@@ -20,6 +20,13 @@ function place:newDay()
 end
 
 function place:enter(player)
+	choicebox("Herbs!", string.format("There are %d %s here. Grab them?", self.herbs, Herbs[self.herbKey].name), {
+		{ text = "Yes!", callback = function () self:grabHerbs(player) end },
+		{ text = "Nope...", callback = function () end },
+	} )
+end
+
+function place:grabHerbs(player)
 	player:giveItems({ [self.herbKey] = self.herbs })
 	local sep = ""
 	local herbList = ""
