@@ -2,396 +2,528 @@
 	"fire resistance potion": {
 		"name": "fire resistance potion",
 		"description": "fire resistance potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 1,
 		"alignment": "good"
 	},
 	"earth resistance potion": {
 		"name": "earth resistance potion",
 		"description": "earth resistance potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 1,
 		"alignment": "good"
 	},
 	"water resistance potion": {
 		"name": "water resistance potion",
 		"description": "water resistance potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 1,
 		"alignment": "good"
 	},
 	"air resistance potion": {
 		"name": "air resistance potion",
 		"description": "air resistance potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 1,
 		"alignment": "good"
 	},
 	"satiate potion": {
 		"name": "satiate potion",
 		"description": "satiate potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 1,
 		"alignment": "good"
 	},
 	"heal potion": {
 		"name": "heal potion",
 		"description": "heal potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 1,
 		"alignment": "good"
 	},
 	"defense potion": {
 		"name": "defense potion",
 		"description": "defense potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 1,
 		"alignment": "good"
 	},
 	"courage potion": {
 		"name": "courage potion",
 		"description": "courage potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 1,
 		"alignment": "good"
 	},
 	"strength potion": {
 		"name": "strength potion",
 		"description": "strength potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 1,
 		"alignment": "good"
 	},
 	"accuracy potion": {
 		"name": "accuracy potion",
 		"description": "accuracy potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 1,
 		"alignment": "good"
 	},
 	"speed potion": {
 		"name": "speed potion",
 		"description": "speed potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 1,
 		"alignment": "good"
 	},
 	"underwater breathing potion": {
 		"name": "underwater breathing potion",
 		"description": "underwater breathing potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 1,
 		"alignment": "good"
 	},
 	"lower fire resistance potion": {
 		"name": "lower fire resistance potion",
 		"description": "lower fire resistance potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 1,
 		"alignment": "evil"
 	},
 	"lower earth resistance potion": {
 		"name": "lower earth resistance potion",
 		"description": "lower earth resistance potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 1,
 		"alignment": "evil"
 	},
 	"lower water resistance potion": {
 		"name": "lower water resistance potion",
 		"description": "lower water resistance potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 1,
 		"alignment": "evil"
 	},
 	"lower air resistance potion": {
 		"name": "lower air resistance potion",
 		"description": "lower air resistance potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 1,
 		"alignment": "evil"
 	},
 	"hunger potion": {
 		"name": "hunger potion",
 		"description": "hunger potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 1,
 		"alignment": "evil"
 	},
 	"poison potion": {
 		"name": "poison potion",
 		"description": "poison potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 1,
 		"alignment": "evil"
 	},
 	"vulnerability potion": {
 		"name": "vulnerability potion",
 		"description": "vulnerability potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 1,
 		"alignment": "evil"
 	},
 	"fear potion": {
 		"name": "fear potion",
 		"description": "fear potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 1,
 		"alignment": "evil"
 	},
 	"weakness potion": {
 		"name": "weakness potion",
 		"description": "weakness potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 1,
 		"alignment": "evil"
 	},
 	"inaccuracy potion": {
 		"name": "inaccuracy potion",
 		"description": "inaccuracy potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 1,
 		"alignment": "evil"
 	},
 	"slow potion": {
 		"name": "slow potion",
 		"description": "slow potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 1,
 		"alignment": "evil"
 	},
 	"gas breathing potion": {
 		"name": "gas breathing potion",
 		"description": "gas breathing potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 1,
 		"alignment": "evil"
 	},
 	"battle frenzy potion": {
 		"name": "battle frenzy potion",
 		"description": "battle frenzy potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 2,
 		"alignment": "good"
 	},
 	"critical hit potion": {
 		"name": "critical hit potion",
 		"description": "critical hit potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 2,
 		"alignment": "good"
 	},
 	"penetrating potion": {
 		"name": "penetrating potion",
 		"description": "penetrating potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 2,
 		"alignment": "good"
 	},
 	"levitation potion": {
 		"name": "levitation potion",
 		"description": "levitation potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 2,
 		"alignment": "good"
 	},
 	"water walk potion": {
 		"name": "water walk potion",
 		"description": "water walk potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 2,
 		"alignment": "good"
 	},
 	"tentacles potion": {
 		"name": "tentacles potion",
 		"description": "tentacles potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 2,
 		"alignment": "good"
 	},
 	"fire breath potion": {
 		"name": "fire breath potion",
 		"description": "fire breath potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 2,
 		"alignment": "good"
 	},
 	"fire shield potion": {
 		"name": "fire shield potion",
 		"description": "fire shield potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 2,
 		"alignment": "good"
 	},
 	"regeneration potion": {
 		"name": "regeneration potion",
 		"description": "regeneration potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 2,
 		"alignment": "good"
 	},
 	"panacea potion": {
 		"name": "panacea potion",
 		"description": "panacea potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 2,
 		"alignment": "good"
 	},
 	"fortitude potion": {
 		"name": "fortitude potion",
 		"description": "fortitude potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 2,
 		"alignment": "good"
 	},
 	"mind resistance potion": {
 		"name": "mind resistance potion",
 		"description": "mind resistance potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 2,
 		"alignment": "good"
 	},
 	"depression potion": {
 		"name": "depression potion",
 		"description": "depression potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 2,
 		"alignment": "evil"
 	},
 	"critical miss potion": {
 		"name": "critical miss potion",
 		"description": "critical miss potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 2,
 		"alignment": "evil"
 	},
 	"lower penetration potion": {
 		"name": "lower penetration potion",
 		"description": "lower penetration potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 2,
 		"alignment": "evil"
 	},
 	"hold on ground potion": {
 		"name": "hold on ground potion",
 		"description": "hold on ground potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 2,
 		"alignment": "evil"
 	},
 	"hold potion": {
 		"name": "hold potion",
 		"description": "hold potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 2,
 		"alignment": "evil"
 	},
 	"transform into frog potion": {
 		"name": "transform into frog potion",
 		"description": "transform into frog potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 2,
 		"alignment": "evil"
 	},
 	"fire swallow potion": {
 		"name": "fire swallow potion",
 		"description": "fire swallow potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 2,
 		"alignment": "evil"
 	},
 	"alchemist fire potion": {
 		"name": "alchemist fire potion",
 		"description": "alchemist fire potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 2,
 		"alignment": "evil"
 	},
 	"degeneration potion": {
 		"name": "degeneration potion",
 		"description": "degeneration potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 2,
 		"alignment": "evil"
 	},
 	"illness potion": {
 		"name": "illness potion",
 		"description": "illness potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 2,
 		"alignment": "evil"
 	},
 	"clumsy potion": {
 		"name": "clumsy potion",
 		"description": "clumsy potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 2,
 		"alignment": "evil"
 	},
 	"love potion": {
 		"name": "love potion",
 		"description": "love potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 2,
 		"alignment": "evil"
 	},
 	"dragon fury potion": {
 		"name": "dragon fury potion",
 		"description": "dragon fury potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 3,
 		"alignment": "good"
 	},
 	"wings potion": {
 		"name": "wings potion",
 		"description": "wings potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 3,
 		"alignment": "good"
 	},
 	"unleash kraken potion": {
 		"name": "unleash kraken potion",
 		"description": "unleash kraken potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 3,
 		"alignment": "good"
 	},
 	"steal attack potion": {
 		"name": "steal attack potion",
 		"description": "steal attack potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 3,
 		"alignment": "good"
 	},
 	"stasis potion": {
 		"name": "stasis potion",
 		"description": "stasis potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 3,
 		"alignment": "good"
 	},
 	"vampiric potion": {
 		"name": "vampiric potion",
 		"description": "vampiric potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 3,
 		"alignment": "good"
 	},
 	"sleep potion": {
 		"name": "sleep potion",
 		"description": "sleep potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 3,
 		"alignment": "evil"
 	},
 	"atrophy potion": {
 		"name": "atrophy potion",
 		"description": "atrophy potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 3,
 		"alignment": "evil"
 	},
 	"plague potion": {
 		"name": "plague potion",
 		"description": "plague potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 3,
 		"alignment": "evil"
 	},
 	"petrify potion": {
 		"name": "petrify potion",
 		"description": "petrify potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 3,
 		"alignment": "evil"
 	},
 	"smoke of hopelessness potion": {
 		"name": "smoke of hopelessness potion",
 		"description": "smoke of hopelessness potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 3,
 		"alignment": "evil"
 	},
 	"power drain potion": {
 		"name": "power drain potion",
 		"description": "power drain potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 3,
 		"alignment": "evil"
 	},
 	"doppelganger potion": {
 		"name": "doppelganger potion",
 		"description": "doppelganger potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 4,
 		"alignment": "good"
 	},
 	"time loop potion": {
 		"name": "time loop potion",
 		"description": "time loop potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 4,
 		"alignment": "good"
 	},
 	"angel of death potion": {
 		"name": "angel of death potion",
 		"description": "angel of death potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 4,
 		"alignment": "good"
 	},
 	"paralysis potion": {
 		"name": "paralysis potion",
 		"description": "paralysis potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 4,
 		"alignment": "evil"
 	},
 	"mega curse potion": {
 		"name": "mega curse potion",
 		"description": "mega curse potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 4,
 		"alignment": "evil"
 	},
 	"death vortex potion": {
 		"name": "death vortex potion",
 		"description": "death vortex potion",
+		"tileset": "items",
+		"tilenumber": 66,
 		"level": 4,
 		"alignment": "evil"
 	}

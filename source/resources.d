@@ -27,7 +27,8 @@ class ConfigFiles
 			"places" : "data/places",
 			"world places" : "data/world-places",
 			"herbs" : "data/herbs",
-			"potions" : "data/potions"
+			"potions" : "data/potions",
+			"ingredients": "data/ingredients"
 		])
 		{
 			File f;
@@ -42,6 +43,12 @@ class ConfigFiles
 			}
 			files[name] = f.byLine.join("\n").parseJSON;
 		}
+		auto r = get("herbs").dup;
+		foreach(k, v; get("ingredients"))
+			r[k] = v;
+		foreach(k, v; get("potions"))
+			r[k] = v;
+		files["items"] = r;
 	}
 
 	static void luaPutInto(LuaState lua, string[] includeFiles)
