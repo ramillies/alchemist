@@ -29,7 +29,7 @@ class MessageBox: Screen
 		{
 			txt.setFont(Fonts.text);
 			txt.setColor(Color.White);
-			txt.boxWidth = win.size.x/2;
+			txt.boxWidth = win.size.x/2 - 50;
 		}
 		with(texts[0])
 		{
@@ -53,7 +53,7 @@ class MessageBox: Screen
 			setFont(Fonts.italic);
 			setCharacterSize(25);
 			setRelativeOrigin(Vector2f(.5f, 1f));
-			positionCallback = () => Vector2f(.5*win.size.x, .75*win.size.y - 5);
+			positionCallback = () => Vector2f(.5*win.size.x, .75*win.size.y - 10);
 			stringCallback = () => "(Press any key or mouse button to get rid of this popup.)";
 		}
 	}

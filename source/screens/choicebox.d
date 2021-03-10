@@ -70,7 +70,7 @@ class ChoiceBox: Screen
 		{
 			txt.setFont(Fonts.text);
 			txt.setColor(Color.White);
-			txt.boxWidth = win.size.x/2;
+			txt.boxWidth = win.size.x/2 - 50;
 		}
 		with(texts[0])
 		{
@@ -79,14 +79,14 @@ class ChoiceBox: Screen
 			setColor(Color.Red);
 			setStyle(Text.Style.Bold);
 			setRelativeOrigin(Vector2f(.5f, 0f));
-			positionCallback = () => Vector2f(.5*win.size.x, .25*win.size.y + 5);
+			positionCallback = () => Vector2f(.5*win.size.x, .05*win.size.y + 5);
 			stringCallback = () => heading;
 		}
 		with(texts[1])
 		{
 			setCharacterSize(40);
 			setRelativeOrigin(Vector2f(.5f, 0f));
-			positionCallback = () => Vector2f(.5*win.size.x, .35*win.size.y);
+			positionCallback = () => Vector2f(.5*win.size.x, .12*win.size.y);
 			stringCallback = () => msg;
 		}
 		with(texts[2])
@@ -94,8 +94,8 @@ class ChoiceBox: Screen
 			setFont(Fonts.italic);
 			setCharacterSize(25);
 			setRelativeOrigin(Vector2f(.5f, 1f));
-			positionCallback = () => Vector2f(.5*win.size.x, .75*win.size.y - 5);
-			stringCallback = () => "(Scroll and click with mouse or scroll with PgUp/PgDn and hit the indicated key combination.)";
+			positionCallback = () => Vector2f(.5*win.size.x, .95*win.size.y - 10);
+			stringCallback = () => "(Scroll and click with mouse.)";
 		}
 
 		foreach(n, choice; choices)
@@ -127,8 +127,8 @@ class ChoiceBox: Screen
 			}
 		}
 
-		camera = new View(FloatRect(0, 0, .45 * win.size.x, .26 * win.size.y));
-		camera.viewport = FloatRect(.275f, .46f, .45f, .26f);
+		camera = new View(FloatRect(0, 0, .45 * win.size.x, .66 * win.size.y));
+		camera.viewport = FloatRect(.275f, .32f, .45f, .60f);
 
 		cursor = new RectangleShape(Vector2f(.45*win.size.x, ROWHEIGHT));
 		cursor.fillColor = Color(225, 188, 0, 80);
@@ -161,11 +161,11 @@ class ChoiceBox: Screen
 
 	override void draw()
 	{
-		RectangleShape r = new RectangleShape(Vector2f(.5 * win.size.x, .5*win.size.y));
+		RectangleShape r = new RectangleShape(Vector2f(.5 * win.size.x, .9*win.size.y));
 		r.fillColor = Color.Black;
 		r.outlineThickness = win.size.x/100;
 		r.outlineColor = Color.Red;
-		r.position = Vector2f(.25*win.size.x, .25*win.size.y);
+		r.position = Vector2f(.25*win.size.x, .04*win.size.y);
 
 		win.draw(r);
 		texts.each!((t) => win.draw(t));
@@ -174,7 +174,7 @@ class ChoiceBox: Screen
 		{
 			RectangleShape bar = new RectangleShape(Vector2f(10f, camera.size.y ^^ 2 /ROWHEIGHT/choices.length));
 			bar.fillColor = Color.Red;
-			bar.position = Vector2f(.7375*win.size.x - 5, .46*win.size.y + camera.size.y * (camera.center.y - camera.size.y/2)/choices.length/ROWHEIGHT);
+			bar.position = Vector2f(.7375*win.size.x - 5, .26*win.size.y + camera.size.y * (camera.center.y - camera.size.y/2)/choices.length/ROWHEIGHT);
 			win.draw(bar);
 		}
 

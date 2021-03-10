@@ -172,7 +172,13 @@ class GameScreen: Screen
 		cursor.position = Vector2f(3*World.TILESIZE * mouseSquare().x, 3*World.TILESIZE * mouseSquare().y);
 	}
 
-	override void updateInactive(double dt) { ocean.update(dt); }
+	override void updateInactive(double dt)
+	{
+		ocean.update(dt);
+		texts[0].update;
+		texts[1].update;
+		texts[5].update;
+	}
 
 	override void draw()
 	{

@@ -121,7 +121,7 @@ end
 function place:numberOfCustomers(name)
 	local count = 0
 	for k, v in pairs(self.customers) do
-		if v.name == "name" then
+		if v.name == name then
 			count = count + 1
 		end
 	end
