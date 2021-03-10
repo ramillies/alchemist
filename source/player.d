@@ -26,6 +26,8 @@ class Player: Drawable
 
 		foreach(herb; ConfigFiles.get("herbs").keys)
 			items[herb] = 0;
+		foreach(ingredient; ConfigFiles.get("ingredients").keys)
+			items[ingredient] = 0;
 		foreach(potion; ConfigFiles.get("potions").keys)
 			items[potion] = 0;
 	}

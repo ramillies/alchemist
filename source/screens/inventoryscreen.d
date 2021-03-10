@@ -7,12 +7,12 @@ import std.format;
 import std.math;
 import std.conv;
 import std.datetime.systime;
+import std.json;
 
 import mainloop;
 import resources;
 import tilemap;
-import world;
-import water;
+import coolsprite;
 import settings;
 import player;
 import place;
@@ -25,11 +25,36 @@ import dsfml.graphics;
 
 class InventoryScreen: Screen
 {
-	private ReactiveText[] texts;
+	private ReactiveText[] texts, numbers;
+	private CoolSprite[] sprites;
 	private Player player;
 	private GameTime time;
 	private int cellsize;
 	private RectangleShape[] boxes;
+	private const string[] itemList = [
+		// Herbs
+		"snowbelle", "grasp of winter", "black lotus", "deadly nightshade", "piece of heaven", "desert rose",
+		// Monster parts
+		"fire spirit part", "water spirit part", "earth spirit part", "air spirit part", "lurking webtrapper part",
+		"watcher of eons part", "screeching shellturtle part", "horrid shadesplitter part", "spawn of raknas part",
+		"rumbling rocksmasher part", "nimble terrorfly part", "amphibious leecher part",
+		// Good potions level 1 to 4
+		"fire resistance potion", "earth resistance potion", "water resistance potion", "air resistance potion",
+		"satiate potion", "heal potion", "defense potion", "courage potion", "strength potion", "accuracy potion",
+		"speed potion", "underwater breathing potion", "battle frenzy potion", "critical hit potion", "penetrating potion",
+		"levitation potion", "water walk potion", "tentacles potion", "fire breath potion", "fire shield potion",
+		"regeneration potion", "panacea potion", "fortitude potion", "mind resistance potion", "dragon fury potion",
+		"wings potion", "unleash kraken potion", "steal attack potion", "stasis potion", "vampiric potion",
+		"doppelganger potion", "time loop potion", "angel of death potion",
+		// Evil potions ditto
+		"lower fire resistance potion", "lower earth resistance potion", "lower water resistance potion", "lower air resistance potion",
+		"hunger potion", "poison potion", "vulnerability potion", "fear potion", "weakness potion", "inaccuracy potion",
+		"slow potion", "gas breathing potion", "depression potion", "critical miss potion", "lower penetration potion",
+		"hold on ground potion", "hold potion", "transform into frog potion", "fire swallow potion", "alchemist fire potion",
+		"degeneration potion", "illness potion", "clumsy potion", "love potion", "sleep potion", "atrophy potion", "plague potion",
+		"petrify potion", "smoke of hopelessness potion", "power drain potion", "paralysis potion", "mega curse potion",
+		"death vortex potion"
+	];
 
 	private RenderWindow win;
 
@@ -70,13 +95,15 @@ class InventoryScreen: Screen
 		texts[2].setCharacterSize(35);
 		texts[2].setRelativeOrigin(Vector2f(.5f, 1f));
 		texts[2].setStyle(Text.Style.Bold);
-		texts[2].positionCallback = () => Vector2f(.925*win.size.x, .35*win.size.y);
-		texts[2].stringCallback = () => "Potion of Whatever";
+		texts[2].positionCallback = () => Vector2f(.865*win.size.x, .15*win.size.y);
+		texts[2].setString("");
+		texts[2].boxWidth = .27*win.size.x - 10;
 
-		texts[3].positionCallback = () => Vector2f(.925*win.size.x, .37*win.size.y);
+		texts[3].positionCallback = () => Vector2f(.865*win.size.x, .17*win.size.y);
 		texts[3].setRelativeOrigin(Vector2f(.5f, 0f));
 		texts[3].setCharacterSize(25);
-		texts[3].stringCallback = () => "Description, blah blah blah.";
+		texts[3].setString("");
+		texts[3].boxWidth = .27*win.size.x - 10;
 
 		with(texts[4])
 		{
@@ -110,12 +137,31 @@ class InventoryScreen: Screen
 
 		void makeCellAt(float x, float y)
 		{
+			static int n = 0;
 			auto r = new RectangleShape(Vector2f(cellsize, cellsize));
 			r.outlineThickness = -3;
 			r.outlineColor = Color.Red;
 			r.fillColor = Color(0, 0, 0, 0);
 			r.position = Vector2f(x, y);
 			boxes ~= r;
+			auto t = new ReactiveText;
+			t.setFont(Fonts.text);
+			t.setCharacterSize(35);
+			t.setRelativeOrigin(Vector2f(1f, 1f));
+			t.position = Vector2f(x + .95*cellsize, y + .95*cellsize);
+			t.setColor(Color.White);
+			t.setString("0");
+			numbers ~= t;
+			auto s = new CoolSprite;
+			JSONValue[string] record = ConfigFiles.get("items")[itemList[n]].object;
+			string set = record["tileset"].str;
+			s.setTextureByName(set);
+			s.tilenumber = record["tilenumber"].get!int;
+			s.position = Vector2f(x + .05*cellsize, y + .05*cellsize);
+			Vector2u size = Images.tileSize(set);
+			s.scale = Vector2f(cellsize*.9/size.x, cellsize*.9/size.y);
+			sprites ~= s;
+			n++;
 		}
 		// Boxes for herbs
 		foreach(n; 0 .. 6)
@@ -151,14 +197,34 @@ class InventoryScreen: Screen
 
 	override void update(double dt)
 	{
+		auto mousePos = Mouse.getPosition(win);
+		texts[2].setString("");
+		texts[3].setString("");
+		foreach(n; 0 .. itemList.length)
+		{
+			boxes[n].fillColor = Color(0,0,0,0);
+			if(boxes[n].getGlobalBounds.contains(mousePos))
+			{
+				boxes[n].fillColor = Color(225, 188, 0, 80);
+				if(player.items[itemList[n]] > 0)
+				{
+					auto item = ConfigFiles.get("items")[itemList[n]].object;
+					texts[2].setString(item["name"].str);
+					texts[3].setString(item["description"].str);
+				}
+			}
+			auto itemcount = player.items[itemList[n]];
+			numbers[n].setString(itemcount > 0 ? itemcount.to!string : "");
+		}
 		texts.each!((t) => t.update);
+		numbers.each!((t) => t.update);
 	}
 
 	override void updateInactive(double dt)
 	{
 		texts[0].update;
 		texts[1].update;
-		texts[5].update;
+		texts[4].update;
 	}
 
 	override void draw()
@@ -166,6 +232,10 @@ class InventoryScreen: Screen
 		win.clear();
 		texts.each!((t) => win.draw(t));
 		boxes.each!((t) => win.draw(t));
+		foreach(n; 0 .. itemList.length)
+			if(player.items[itemList[n]] > 0)
+				win.draw(sprites[n]);
+		numbers.each!((t) => win.draw(t));
 	}
 
 	override void finish()

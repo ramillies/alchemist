@@ -60,7 +60,7 @@ class ReactiveText: Text
 			{
 				if(w + v > boxWidth)
 				{
-					broken ~= (w == 0 ? "" : "\n") ~ words[k] ~ (w == 0 ? "\n" : "");
+					broken ~= (w == 0 ? "" : "\n") ~ words[k] ~ (w == 0 ? "\n" : " ");
 					w = (w == 0) ? 0 : v;
 				}
 				else if(optimal <= (w+v))
