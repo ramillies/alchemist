@@ -1,3 +1,5 @@
+import std.conv;
+
 import resources;
 
 import boilerplate;
@@ -25,9 +27,12 @@ class CoolSprite: Sprite
 		tileSize = Images.tileSize(name);
 	}
 
-	@property void tilenumber(uint x)
+	@property void tilenumber(int x)
 	{
-		_tilenumber = x % Images.tileCount(_texturename);
+		auto tilecount = Images.tileCount(_texturename);
+		_tilenumber = to!uint((x % tilecount + tilecount) % tilecount); // we need this to work around the fact
+		// that modulus of a negative number is negative.
+
 		int tx = _tilenumber % (this.getTexture.getSize.x / tileSize.x);
 		int ty = _tilenumber / (this.getTexture.getSize.x / tileSize.x);
 
