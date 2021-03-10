@@ -54,7 +54,7 @@ class MessageBox: Screen
 			setCharacterSize(25);
 			setRelativeOrigin(Vector2f(.5f, 1f));
 			positionCallback = () => Vector2f(.5*win.size.x, .75*win.size.y - 5);
-			stringCallback = () => "(Press any key to get rid of this popup.)";
+			stringCallback = () => "(Press any key or mouse button to get rid of this popup.)";
 		}
 	}
 
@@ -62,7 +62,7 @@ class MessageBox: Screen
 
 	override void event(Event e)
 	{
-		if(e.type == Event.EventType.KeyPressed)
+		if(e.type == Event.EventType.KeyPressed || e.type == Event.EventType.MouseButtonPressed)
 			Mainloop.popScreen;
 	}
 
