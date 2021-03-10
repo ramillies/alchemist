@@ -8,5 +8,10 @@
 		"name": "Herb Meadow",
 		"description": "",
 		"script": "dofile('data/scripts/herb-meadow.lua')"
+	},
+	"city": {
+		"name": "",
+		"description": "",
+		"script": "dofile('data/scripts/city.lua')"
 	}
 }

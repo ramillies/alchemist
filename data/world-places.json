@@ -4,5 +4,17 @@
 		"places": [
 			{ "place": "herb meadow", "relativeChance": 1 }
 		]
-	}
+	},
+	"city": {
+		"placeChance": 1,
+		"places": [ { "place": "city", "relativeChance": 1 } ]
+	},
+	"village": {
+		"placeChance": 1,
+		"places": [ { "place": "city", "relativeChance": 1 } ]
+	},
+	"castle": {
+		"placeChance": 1,
+		"places": [ { "place": "city", "relativeChance": 1 } ]
+	},
 }
