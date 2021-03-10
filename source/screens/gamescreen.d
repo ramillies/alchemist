@@ -20,6 +20,7 @@ import reacttext;
 import gametime;
 import messagebox;
 import choicebox;
+import inventoryscreen;
 
 import dsfml.graphics;
 
@@ -138,6 +139,8 @@ class GameScreen: Screen
 				attemptMove(0, 1);
 			if(e.key.code == Keyboard.Key.D || e.key.code == Keyboard.Key.Right)
 				attemptMove(1, 0);
+			if(e.key.code == Keyboard.Key.I)
+				Mainloop.pushScreen(new InventoryScreen(player, time));
 			if(e.key.code == Keyboard.Key.Return)
 				world.enterPlace(player);
 			if(e.key.code == Keyboard.Key.R)

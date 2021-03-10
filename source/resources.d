@@ -26,7 +26,8 @@ class ConfigFiles
 			"movement" : "data/movement",
 			"places" : "data/places",
 			"world places" : "data/world-places",
-			"herbs" : "data/herbs"
+			"herbs" : "data/herbs",
+			"potions" : "data/potions"
 		])
 		{
 			File f;

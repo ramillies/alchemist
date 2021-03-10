@@ -1,0 +1,98 @@
+{
+	"fire spirit part": {
+		"name": "Shard of Living Flame",
+		"description": "Shard of Living Flame",
+		"tileset": "monsters",
+		"tilenumber": 328,
+		"goodPotion": "fire resistance potion",
+		"evilPotion": "lower fire resistance potion"
+	},
+	"water spirit part": {
+		"name": "Nevermelting Ice",
+		"description": "Nevermelting Ice",
+		"tileset": "monsters",
+		"tilenumber": 16,
+		"goodPotion": "water resistance potion",
+		"evilPotion": "lower water resistance potion"
+	},
+	"earth spirit part": {
+		"name": "Rock of Ages",
+		"description": "Rock of Ages",
+		"tileset": "monsters",
+		"tilenumber": 314,
+		"goodPotion": "earth resistance potion",
+		"evilPotion": "lower earth resistance potion"
+	},
+	"air spirit part": {
+		"name": "Gust in the Bottle",
+		"description": "Gust in the Bottle",
+		"tileset": "monsters",
+		"tilenumber": 93,
+		"goodPotion": "air resistance potion",
+		"evilPotion": "lower air resistance potion"
+	},
+	"lurking webtrapper part": {
+		"name": "Deadly Fangs",
+		"description": "Deadly Fangs",
+		"tileset": "monsters",
+		"tilenumber": 303,
+		"goodPotion": "heal potion",
+		"evilPotion": "poison potion"
+	},
+	"watcher of eons part": {
+		"name": "Ancient Retina",
+		"description": "Ancient Retina",
+		"tileset": "monsters",
+		"tilenumber": 95,
+		"goodPotion": "accuracy potion",
+		"evilPotion": "inaccuracy potion"
+	},
+	"screeching shellturtle part": {
+		"name": "Untouchable Carapace",
+		"description": "Untouchable Carapace",
+		"tileset": "monsters",
+		"tilenumber": 344,
+		"goodPotion": "defense potion",
+		"evilPotion": "vulnerability potion"
+	},
+	"horrid shadesplitter part": {
+		"name": "Condensed Fear",
+		"description": "Condensed Fear",
+		"tileset": "monsters",
+		"tilenumber": 117,
+		"goodPotion": "courage potion",
+		"evilPotion": "fear potion"
+	},
+	"spawn of raknas part": {
+		"name": "Chickenlike Meat",
+		"description": "Chickenlike Meat",
+		"tileset": "monsters",
+		"tilenumber": 11,
+		"goodPotion": "satiate potion",
+		"evilPotion": "hunger potion"
+	},
+	"rumbling rocksmasher part": {
+		"name": "Heaving Hand",
+		"description": "Heaving Hand",
+		"tileset": "monsters",
+		"tilenumber": 141,
+		"goodPotion": "strength potion",
+		"evilPotion": "weakness potion"
+	},
+	"nimble terrorfly part": {
+		"name": "Speeding Wings",
+		"description": "Speeding Wings",
+		"tileset": "monsters",
+		"tilenumber": 86,
+		"goodPotion": "speed potion",
+		"evilPotion": "slowness potion"
+	},
+	"amphibious leecher part": {
+		"name": "Filtering Lungs",
+		"description": "Filtering Lungs",
+		"tileset": "monsters",
+		"tilenumber": 378,
+		"goodPotion": "water breathing potion",
+		"evilPotion": "gas breathing potion"
+	}
+}
