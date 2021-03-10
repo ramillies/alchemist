@@ -21,8 +21,8 @@ end
 
 function place:enter(player)
 	choicebox("Herbs!", string.format("There are %d %s here. Grab them?", self.herbs, Herbs[self.herbKey].name), {
-		{ text = "Yes!", callback = function () self:grabHerbs(player) end },
-		{ text = "Nope...", callback = function () end },
+		{ text = "Yes!", tileset = "people", tilenumber = 5, callback = function () self:grabHerbs(player) end },
+		{ text = "Nope...", tileset = "people", tilenumber = 6, callback = function () end, disabled = true },
 	} )
 end
 
