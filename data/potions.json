@@ -1,0 +1,266 @@
+{
+	"fire resistance potion": {
+		"name": "fire resistance potion",
+		"description": "fire resistance potion"
+	},
+	"earth resistance potion": {
+		"name": "earth resistance potion",
+		"description": "earth resistance potion"
+	},
+	"water resistance potion": {
+		"name": "water resistance potion",
+		"description": "water resistance potion"
+	},
+	"air resistance potion": {
+		"name": "air resistance potion",
+		"description": "air resistance potion"
+	},
+	"satiate potion": {
+		"name": "satiate potion",
+		"description": "satiate potion"
+	},
+	"heal potion": {
+		"name": "heal potion",
+		"description": "heal potion"
+	},
+	"defense potion": {
+		"name": "defense potion",
+		"description": "defense potion"
+	},
+	"courage potion": {
+		"name": "courage potion",
+		"description": "courage potion"
+	},
+	"strength potion": {
+		"name": "strength potion",
+		"description": "strength potion"
+	},
+	"accuracy potion": {
+		"name": "accuracy potion",
+		"description": "accuracy potion"
+	},
+	"speed potion": {
+		"name": "speed potion",
+		"description": "speed potion"
+	},
+	"underwater breathing potion": {
+		"name": "underwater breathing potion",
+		"description": "underwater breathing potion"
+	},
+	"lower fire resistance potion": {
+		"name": "lower fire resistance potion",
+		"description": "lower fire resistance potion"
+	},
+	"lower earth resistance potion": {
+		"name": "lower earth resistance potion",
+		"description": "lower earth resistance potion"
+	},
+	"lower water resistance potion": {
+		"name": "lower water resistance potion",
+		"description": "lower water resistance potion"
+	},
+	"lower air resistance potion": {
+		"name": "lower air resistance potion",
+		"description": "lower air resistance potion"
+	},
+	"hunger potion": {
+		"name": "hunger potion",
+		"description": "hunger potion"
+	},
+	"poison potion": {
+		"name": "poison potion",
+		"description": "poison potion"
+	},
+	"vulnerability potion": {
+		"name": "vulnerability potion",
+		"description": "vulnerability potion"
+	},
+	"fear potion": {
+		"name": "fear potion",
+		"description": "fear potion"
+	},
+	"weakness potion": {
+		"name": "weakness potion",
+		"description": "weakness potion"
+	},
+	"inaccuracy potion": {
+		"name": "inaccuracy potion",
+		"description": "inaccuracy potion"
+	},
+	"slow potion": {
+		"name": "slow potion",
+		"description": "slow potion"
+	},
+	"gas breathing potion": {
+		"name": "gas breathing potion",
+		"description": "gas breathing potion"
+	},
+	"battle frenzy potion": {
+		"name": "battle frenzy potion",
+		"description": "battle frenzy potion"
+	},
+	"critical hit potion": {
+		"name": "critical hit potion",
+		"description": "critical hit potion"
+	},
+	"penetrating potion": {
+		"name": "penetrating potion",
+		"description": "penetrating potion"
+	},
+	"levitation potion": {
+		"name": "levitation potion",
+		"description": "levitation potion"
+	},
+	"water walk potion": {
+		"name": "water walk potion",
+		"description": "water walk potion"
+	},
+	"tentacles potion": {
+		"name": "tentacles potion",
+		"description": "tentacles potion"
+	},
+	"fire breath potion": {
+		"name": "fire breath potion",
+		"description": "fire breath potion"
+	},
+	"fire shield potion": {
+		"name": "fire shield potion",
+		"description": "fire shield potion"
+	},
+	"regeneration potion": {
+		"name": "regeneration potion",
+		"description": "regeneration potion"
+	},
+	"panacea potion": {
+		"name": "panacea potion",
+		"description": "panacea potion"
+	},
+	"fortitude potion": {
+		"name": "fortitude potion",
+		"description": "fortitude potion"
+	},
+	"mind resistance potion": {
+		"name": "mind resistance potion",
+		"description": "mind resistance potion"
+	},
+	"depression potion": {
+		"name": "depression potion",
+		"description": "depression potion"
+	},
+	"critical miss potion": {
+		"name": "critical miss potion",
+		"description": "critical miss potion"
+	},
+	"lower penetration potion": {
+		"name": "lower penetration potion",
+		"description": "lower penetration potion"
+	},
+	"hold on ground potion": {
+		"name": "hold on ground potion",
+		"description": "hold on ground potion"
+	},
+	"hold potion": {
+		"name": "hold potion",
+		"description": "hold potion"
+	},
+	"transform into frog potion": {
+		"name": "transform into frog potion",
+		"description": "transform into frog potion"
+	},
+	"fire swallow potion": {
+		"name": "fire swallow potion",
+		"description": "fire swallow potion"
+	},
+	"alchemist fire potion": {
+		"name": "alchemist fire potion",
+		"description": "alchemist fire potion"
+	},
+	"degeneration potion": {
+		"name": "degeneration potion",
+		"description": "degeneration potion"
+	},
+	"illness potion": {
+		"name": "illness potion",
+		"description": "illness potion"
+	},
+	"clumsy potion": {
+		"name": "clumsy potion",
+		"description": "clumsy potion"
+	},
+	"love potion": {
+		"name": "love potion",
+		"description": "love potion"
+	},
+	"dragon fury potion": {
+		"name": "dragon fury potion",
+		"description": "dragon fury potion"
+	},
+	"wings potion": {
+		"name": "wings potion",
+		"description": "wings potion"
+	},
+	"unleash kraken potion": {
+		"name": "unleash kraken potion",
+		"description": "unleash kraken potion"
+	},
+	"steal attack potion": {
+		"name": "steal attack potion",
+		"description": "steal attack potion"
+	},
+	"stasis potion": {
+		"name": "stasis potion",
+		"description": "stasis potion"
+	},
+	"vampiric potion": {
+		"name": "vampiric potion",
+		"description": "vampiric potion"
+	},
+	"sleep potion": {
+		"name": "sleep potion",
+		"description": "sleep potion"
+	},
+	"atrophy potion": {
+		"name": "atrophy potion",
+		"description": "atrophy potion"
+	},
+	"plague potion": {
+		"name": "plague potion",
+		"description": "plague potion"
+	},
+	"petrify potion": {
+		"name": "petrify potion",
+		"description": "petrify potion"
+	},
+	"smoke of hopelessness potion": {
+		"name": "smoke of hopelessness potion",
+		"description": "smoke of hopelessness potion"
+	},
+	"power drain potion": {
+		"name": "power drain potion",
+		"description": "power drain potion"
+	},
+	"doppelganger potion": {
+		"name": "doppelganger potion",
+		"description": "doppelganger potion"
+	},
+	"time loop potion": {
+		"name": "time loop potion",
+		"description": "time loop potion"
+	},
+	"angel of death potion": {
+		"name": "angel of death potion",
+		"description": "angel of death potion"
+	},
+	"paralysis potion": {
+		"name": "paralysis potion",
+		"description": "paralysis potion"
+	},
+	"mega curse potion": {
+		"name": "mega curse potion",
+		"description": "mega curse potion"
+	},
+	"death vortex potion": {
+		"name": "death vortex potion",
+		"description": "death vortex potion"
+	}
+}

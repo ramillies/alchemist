@@ -10,7 +10,7 @@ function place:init()
 	local feature = World:featureAt(self:getX(), self:getY())
 	self.settlementType = feature
 	table.insert(self.buildings, buildings.inn)
-	if feature == "city" then
+	if feature == "city" or feature == "village" then
 		local shipyard = false
 		for k = -1, 1 do
 			for l = -1, 1 do
@@ -48,7 +48,7 @@ function place:newDay()
 	for k, v in pairs(customerTable) do
 		if v.appear(self) then
 			local customer = table.deepcopy(v)
-			customer:init()
+			customer:init(self)
 			table.insert(self.customers, customer)
 			break
 		end
@@ -57,7 +57,6 @@ end
 
 function place:enter(player)
 	local choices = {
-		{ text = "Go away." },
 		{ text = "Try to sell your potions to the locals.", callback = function () self:sellStuff(player) end, popBox = false }
 	}
 	for k, v in pairs(self.buildings) do
@@ -68,6 +67,7 @@ function place:enter(player)
 			popBox = false
 		})
 	end
+	table.insert(choices, { text = "Go away." })
 	choicebox(self.name, string.format("You entered the %s of %s.\n\nWhat would you like to do here?", self.settlementType, self.name), choices)
 end
 
@@ -87,14 +87,15 @@ function place:sellStuff(player)
 	if #self.customers == 0 then
 		messagebox("Nobody here", "Nobody is currently interested in buying potions.")
 	else
-		choices = { { text = "Nobody — I changed my mind" } }
+		choices = { }
 		for k, v in pairs(self.customers) do
 			table.insert(choices, {
 				text = v.name,
-				callback = function () v:talk(player) end
+				callback = function () v:talk(self, player) end
 			})
 		end
-		choicebox("Customers", "There are some people that would be interested in buying potions... if they match their needs, of course. Who do you want to talk with?", choices)
+		table.insert(choices, { text = "Nobody — I changed my mind" })
+		choicebox("Customers", "There are some people that would be interested in buying potions... if they meet their needs, of course. Who do you want to talk with?", choices)
 	end
 end
 
@@ -106,4 +107,23 @@ function place:removeAwayCustomers()
 			break
 		end
 	end
+end
+
+function place:hasBuilding(name)
+	for k, v in pairs(self.buildings) do
+		if v.name == name then
+			return true
+		end
+	end
+	return false
+end
+
+function place:numberOfCustomers(name)
+	local count = 0
+	for k, v in pairs(self.customers) do
+		if v.name == "name" then
+			count = count + 1
+		end
+	end
+	return count
 end
