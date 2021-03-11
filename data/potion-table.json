@@ -1,0 +1,593 @@
+{
+	"potion table":
+		[
+			{
+				"output": "fire breath potion",
+				"inputs": [
+					"fire resistance potion",
+					"underwater breathing potion"
+				]
+			},
+			{
+				"inputs": [
+					"satiate potion",
+					"fire resistance potion"
+				],
+				"output": "fire shield potion"
+			},
+			{
+				"output": "regeneration potion",
+				"inputs": [
+					"heal potion",
+					"satiate potion"
+				]
+			},
+			{
+				"output": "panacea potion",
+				"inputs": [
+					"earth resistance potion",
+					"heal potion"
+				]
+			},
+			{
+				"output": "fortitude potion",
+				"inputs": [
+					"defense potion",
+					"earth resistance potion"
+				]
+			},
+			{
+				"inputs": [
+					"courage potion",
+					"defense potion"
+				],
+				"output": "mind resistance potion"
+			},
+			{
+				"output": "battle frenzy potion",
+				"inputs": [
+					"strength potion",
+					"courage potion"
+				]
+			},
+			{
+				"inputs": [
+					"accuracy potion",
+					"strength potion"
+				],
+				"output": "critical hit potion"
+			},
+			{
+				"output": "penetrating potion",
+				"inputs": [
+					"air resistance potion",
+					"accuracy potion"
+				]
+			},
+			{
+				"output": "levitation potion",
+				"inputs": [
+					"speed potion",
+					"air resistance potion"
+				]
+			},
+			{
+				"inputs": [
+					"water resistance potion",
+					"speed potion"
+				],
+				"output": "water walk potion"
+			},
+			{
+				"output": "tentacles potion",
+				"inputs": [
+					"underwater breathing potion",
+					"water resistance potion"
+				]
+			},
+			{
+				"inputs": [
+					"lower fire resistance potion",
+					"gas breathing potion"
+				],
+				"output": "fire breath potion"
+			},
+			{
+				"inputs": [
+					"hunger potion",
+					"lower fire resistance potion"
+				],
+				"output": "fire shield potion"
+			},
+			{
+				"inputs": [
+					"poison potion",
+					"hunger potion"
+				],
+				"output": "regeneration potion"
+			},
+			{
+				"output": "panacea potion",
+				"inputs": [
+					"lower earth resistance potion",
+					"poison potion"
+				]
+			},
+			{
+				"output": "fortitude potion",
+				"inputs": [
+					"vulnerability potion",
+					"lower earth resistance potion"
+				]
+			},
+			{
+				"output": "mind resistance potion",
+				"inputs": [
+					"fear potion",
+					"vulnerability potion"
+				]
+			},
+			{
+				"output": "battle frenzy potion",
+				"inputs": [
+					"weakness potion",
+					"fear potion"
+				]
+			},
+			{
+				"output": "critical hit potion",
+				"inputs": [
+					"inaccuracy potion",
+					"weakness potion"
+				]
+			},
+			{
+				"inputs": [
+					"lower air resistance potion",
+					"inaccuracy potion"
+				],
+				"output": "penetrating potion"
+			},
+			{
+				"output": "levitation potion",
+				"inputs": [
+					"slow potion",
+					"lower air resistance potion"
+				]
+			},
+			{
+				"inputs": [
+					"lower water resistance potion",
+					"slow potion"
+				],
+				"output": "water walk potion"
+			},
+			{
+				"output": "tentacles potion",
+				"inputs": [
+					"gas breathing potion",
+					"lower water resistance potion"
+				]
+			},
+			{
+				"inputs": [
+					"fire resistance potion",
+					"gas breathing potion"
+				],
+				"output": "alchemist fire potion"
+			},
+			{
+				"output": "fire swallow potion",
+				"inputs": [
+					"satiate potion",
+					"lower fire resistance potion"
+				]
+			},
+			{
+				"inputs": [
+					"heal potion",
+					"hunger potion"
+				],
+				"output": "degeneration potion"
+			},
+			{
+				"inputs": [
+					"earth resistance potion",
+					"poison potion"
+				],
+				"output": "illness potion"
+			},
+			{
+				"inputs": [
+					"defense potion",
+					"lower earth resistance potion"
+				],
+				"output": "clumsy potion"
+			},
+			{
+				"output": "love potion",
+				"inputs": [
+					"courage potion",
+					"vulnerability potion"
+				]
+			},
+			{
+				"inputs": [
+					"strength potion",
+					"fear potion"
+				],
+				"output": "depression potion"
+			},
+			{
+				"output": "critical miss potion",
+				"inputs": [
+					"accuracy potion",
+					"weakness potion"
+				]
+			},
+			{
+				"inputs": [
+					"air resistance potion",
+					"inaccuracy potion"
+				],
+				"output": "lower penetration potion"
+			},
+			{
+				"inputs": [
+					"speed potion",
+					"lower air resistance potion"
+				],
+				"output": "hold on ground potion"
+			},
+			{
+				"output": "hold potion",
+				"inputs": [
+					"water resistance potion",
+					"slow potion"
+				]
+			},
+			{
+				"inputs": [
+					"underwater breathing potion",
+					"lower water resistance potion"
+				],
+				"output": "transform into frog potion"
+			},
+			{
+				"inputs": [
+					"lower fire resistance potion",
+					"underwater breathing potion"
+				],
+				"output": "alchemist fire potion"
+			},
+			{
+				"inputs": [
+					"hunger potion",
+					"fire resistance potion"
+				],
+				"output": "fire swallow potion"
+			},
+			{
+				"output": "degeneration potion",
+				"inputs": [
+					"poison potion",
+					"satiate potion"
+				]
+			},
+			{
+				"inputs": [
+					"lower earth resistance potion",
+					"heal potion"
+				],
+				"output": "illness potion"
+			},
+			{
+				"inputs": [
+					"vulnerability potion",
+					"earth resistance potion"
+				],
+				"output": "clumsy potion"
+			},
+			{
+				"output": "love potion",
+				"inputs": [
+					"fear potion",
+					"defense potion"
+				]
+			},
+			{
+				"inputs": [
+					"weakness potion",
+					"courage potion"
+				],
+				"output": "depression potion"
+			},
+			{
+				"inputs": [
+					"inaccuracy potion",
+					"strength potion"
+				],
+				"output": "critical miss potion"
+			},
+			{
+				"output": "lower penetration potion",
+				"inputs": [
+					"lower air resistance potion",
+					"accuracy potion"
+				]
+			},
+			{
+				"output": "hold on ground potion",
+				"inputs": [
+					"slow potion",
+					"air resistance potion"
+				]
+			},
+			{
+				"inputs": [
+					"lower water resistance potion",
+					"speed potion"
+				],
+				"output": "hold potion"
+			},
+			{
+				"output": "transform into frog potion",
+				"inputs": [
+					"gas breathing potion",
+					"water resistance potion"
+				]
+			},
+			{
+				"inputs": [
+					"fire breath potion",
+					"battle frenzy potion"
+				],
+				"output": "dragon fury potion"
+			},
+			{
+				"inputs": [
+					"fire shield potion",
+					"critical hit potion"
+				],
+				"output": "steal attack potion"
+			},
+			{
+				"output": "vampiric potion",
+				"inputs": [
+					"regeneration potion",
+					"penetrating potion"
+				]
+			},
+			{
+				"inputs": [
+					"panacea potion",
+					"levitation potion"
+				],
+				"output": "wings potion"
+			},
+			{
+				"output": "stasis potion",
+				"inputs": [
+					"fortitude potion",
+					"water walk potion"
+				]
+			},
+			{
+				"inputs": [
+					"mind resistance potion",
+					"tentacles potion"
+				],
+				"output": "unleash kraken potion"
+			},
+			{
+				"inputs": [
+					"alchemist fire potion",
+					"depression potion"
+				],
+				"output": "dragon fury potion"
+			},
+			{
+				"output": "steal attack potion",
+				"inputs": [
+					"fire swallow potion",
+					"critical miss potion"
+				]
+			},
+			{
+				"inputs": [
+					"degeneration potion",
+					"lower penetration potion"
+				],
+				"output": "vampiric potion"
+			},
+			{
+				"output": "wings potion",
+				"inputs": [
+					"illness potion",
+					"hold on ground potion"
+				]
+			},
+			{
+				"output": "stasis potion",
+				"inputs": [
+					"clumsy potion",
+					"hold potion"
+				]
+			},
+			{
+				"inputs": [
+					"love potion",
+					"transform into frog potion"
+				],
+				"output": "unleash kraken potion"
+			},
+			{
+				"output": "smoke of hopelessness potion",
+				"inputs": [
+					"fire breath potion",
+					"depression potion"
+				]
+			},
+			{
+				"output": "power drain potion",
+				"inputs": [
+					"fire shield potion",
+					"critical miss potion"
+				]
+			},
+			{
+				"inputs": [
+					"regeneration potion",
+					"lower penetration potion"
+				],
+				"output": "atrophy potion"
+			},
+			{
+				"output": "plague potion",
+				"inputs": [
+					"panacea potion",
+					"hold on ground potion"
+				]
+			},
+			{
+				"output": "petrify potion",
+				"inputs": [
+					"fortitude potion",
+					"hold potion"
+				]
+			},
+			{
+				"output": "sleep potion",
+				"inputs": [
+					"mind resistance potion",
+					"transform into frog potion"
+				]
+			},
+			{
+				"inputs": [
+					"alchemist fire potion",
+					"battle frenzy potion"
+				],
+				"output": "smoke of hopelessness potion"
+			},
+			{
+				"inputs": [
+					"fire swallow potion",
+					"critical hit potion"
+				],
+				"output": "power drain potion"
+			},
+			{
+				"inputs": [
+					"degeneration potion",
+					"penetrating potion"
+				],
+				"output": "atrophy potion"
+			},
+			{
+				"output": "plague potion",
+				"inputs": [
+					"illness potion",
+					"levitation potion"
+				]
+			},
+			{
+				"output": "petrify potion",
+				"inputs": [
+					"clumsy potion",
+					"water walk potion"
+				]
+			},
+			{
+				"inputs": [
+					"love potion",
+					"tentacles potion"
+				],
+				"output": "sleep potion"
+			},
+			{
+				"inputs": [
+					"dragon fury potion",
+					"unleash kraken potion"
+				],
+				"output": "doppelganger potion"
+			},
+			{
+				"inputs": [
+					"steal attack potion",
+					"stasis potion"
+				],
+				"output": "time loop potion"
+			},
+			{
+				"output": "angel of death potion",
+				"inputs": [
+					"vampiric potion",
+					"wings potion"
+				]
+			},
+			{
+				"inputs": [
+					"smoke of hopelessness potion",
+					"plague potion"
+				],
+				"output": "doppelganger potion"
+			},
+			{
+				"inputs": [
+					"power drain potion",
+					"petrify potion"
+				],
+				"output": "time loop potion"
+			},
+			{
+				"inputs": [
+					"atrophy potion",
+					"sleep potion"
+				],
+				"output": "angel of death potion"
+			},
+			{
+				"inputs": [
+					"dragon fury potion",
+					"plague potion"
+				],
+				"output": "death vortex potion"
+			},
+			{
+				"inputs": [
+					"steal attack potion",
+					"petrify potion"
+				],
+				"output": "paralysis potion"
+			},
+			{
+				"inputs": [
+					"vampiric potion",
+					"sleep potion"
+				],
+				"output": "mega curse potion"
+			},
+			{
+				"inputs": [
+					"smoke of hopelessness potion",
+					"unleash kraken potion"
+				],
+				"output": "death vortex potion"
+			},
+			{
+				"inputs": [
+					"power drain potion",
+					"stasis potion"
+				],
+				"output": "paralysis potion"
+			},
+			{
+				"output": "mega curse potion",
+				"inputs": [
+					"atrophy potion",
+					"wings potion"
+				]
+			}
+		]
+}

@@ -526,5 +526,13 @@
 		"tilenumber": 66,
 		"level": 4,
 		"alignment": "evil"
+	},
+	"youth potion": {
+		"name": "Potion of Youth",
+		"description": "youth potion",
+		"tileset": "items",
+		"tilenumber": 66,
+		"level": 5,
+		"alignment": "evil"
 	}
 }

@@ -1,0 +1,137 @@
+import std.array;
+import std.algorithm;
+import std.json;
+import std.random;
+import std.typecons;
+import std.stdio;
+import std.format;
+
+import resources;
+
+struct SmallInfo
+{
+	Tuple!(string,string) inputs;
+	string output;
+	string description;
+	bool known = false;
+}
+
+struct MediumInfo
+{
+	Tuple!(string,string) inputs;
+	string description;
+	bool known = false;
+	bool obsolete = false;
+}
+
+struct LargeInfo
+{
+	string excluded;
+	string description;
+	bool known = false;
+}
+
+class PotionTable
+{
+	private string[Tuple!(string,string)] table;
+	
+	SmallInfo[] smallInfo;
+	MediumInfo[] medInfo;
+	LargeInfo[] largeInfo;
+
+	this() { }
+
+	void init()
+	{
+		foreach(entry; ConfigFiles.get("potion table")["potion table"].array)
+		{
+			string[] inputs;
+			string output;
+			try
+			{
+				inputs = entry["inputs"].array.map!((x) => x.str).array;
+				output = entry["output"].str;
+			}
+			catch(JSONException e) { writefln("WARNING! Bad JSON encountered in %s:%s: %s", e.file, e.line, e.msg); continue; }
+			if(inputs.length != 2) { writefln("A table entry must have exactly 2 entries, skipping."); continue; }
+			table[tuple(inputs[0], inputs[1])] = output;
+		}
+		foreach(key, val; ConfigFiles.get("ingredients"))
+		{
+			auto herbs = ConfigFiles.get("herbs").keys.randomCover.array;
+			foreach(n; 0 .. 2)
+			{
+				auto inputs = tuple(herbs[n], key);
+				auto output = val["goodPotion"].str;
+				table[inputs] = output;
+				writefln("small info %s -> %s", inputs, output);
+				smallInfo ~= SmallInfo(inputs, output, format("A %2$s together with a %1$s makes a %s.", ConfigFiles.get("herbs")[inputs[0]]["name"].str, ConfigFiles.get("ingredients")[inputs[1]]["name"].str, ConfigFiles.get("potions")[output]["name"].str));
+			}
+			foreach(n; 2 .. 4)
+			{
+				auto inputs = tuple(herbs[n], key);
+				auto output = val["evilPotion"].str;
+				table[inputs] = output;
+				writefln("small info %s -> %s", inputs, output);
+				smallInfo ~= SmallInfo(inputs, output, format("A %2$s together with a %1$s makes a %s.", ConfigFiles.get("herbs")[inputs[0]]["name"].str, ConfigFiles.get("ingredients")[inputs[1]]["name"].str, ConfigFiles.get("potions")[output]["name"].str));
+			}
+			foreach(n; 4 .. 6)
+			{
+				auto inputs = tuple(herbs[n], key);
+				smallInfo ~= SmallInfo(inputs, "", format("A %2$s together with a %1$s does not make anything useful.", ConfigFiles.get("herbs")[inputs[0]]["name"].str, ConfigFiles.get("ingredients")[inputs[1]]["name"].str));
+			}
+		}
+		auto greatPotions = ConfigFiles.get("potions").byPair.filter!((x) => x.value["level"].get!int == 4).array;
+		auto youthPotion = greatPotions.randomSample(2).array;
+		table[tuple(youthPotion[0].key, youthPotion[1].key)] = "youth potion";
+		foreach(k; 0 .. greatPotions.length-1)
+			foreach(l; k+1 .. greatPotions.length)
+				if(!((greatPotions[k].key == youthPotion[0].key && greatPotions[l].key == youthPotion[1].key) ||
+					(greatPotions[k].key == youthPotion[1].key && greatPotions[l].key == youthPotion[0].key)))
+					medInfo ~= MediumInfo(tuple(greatPotions[k].key, greatPotions[l].key), format("The %s is NOT made by mixing a %s with a %s.", ConfigFiles.get("potions")["youth potion"]["name"].str, greatPotions[k].value["name"].str, greatPotions[l].value["name"].str));
+		foreach(pot; greatPotions)
+			if(pot.key != youthPotion[0].key && pot.key != youthPotion[1].key)
+				largeInfo ~= LargeInfo(pot.key, format("The %s is not used in making of the %s.", pot.value["name"].str, ConfigFiles.get("potions")["youth potion"]["name"].str));
+
+	}
+
+	Tuple!(string, "result", string, "infoType", int, "infoIndex") mixResult(string a, string b)
+	{
+		if((tuple(a, b) in table) || (tuple(b, a) in table))
+		{
+			auto output = table.get(tuple(a,b), table.get(tuple(b,a), ""));
+			foreach(k, info; smallInfo)
+				if((tuple(a,b) == info.inputs || tuple(b,a) == info.inputs) && !info.known)
+				{
+					info.known = true;
+					chainDiscoveries();
+					return tuple!("result", "infoType", "infoIndex")(output, "small", cast(int) k);
+				}
+			return tuple!("result", "infoType", "infoIndex")(output, "none", cast(int) 0);
+		}
+		else
+		{
+			foreach(k, info; medInfo)
+				if((tuple(a,b) == info.inputs || tuple(b,a) == info.inputs) && !info.known)
+				{
+					info.known = true;
+					chainDiscoveries();
+					return tuple!("result", "infoType", "infoIndex")("", "medium", cast(int) k);
+				}
+			return tuple!("result", "infoType", "infoIndex")("", "none", cast(int) 0);
+		}
+	}
+
+	private void chainDiscoveries()
+	{
+		foreach(ref large; largeInfo)
+		{
+			auto f = medInfo.filter!((inf) => inf.inputs[0] == large.excluded || inf.inputs[1] == large.excluded);
+			if(!f.empty && f.all!`a.known`)
+				large.known = true;
+			if(large.known)
+				foreach(ref med; f)
+					med.obsolete = true;
+		}
+	}
+}

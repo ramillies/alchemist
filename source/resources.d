@@ -28,7 +28,8 @@ class ConfigFiles
 			"world places" : "data/world-places",
 			"herbs" : "data/herbs",
 			"potions" : "data/potions",
-			"ingredients": "data/ingredients"
+			"ingredients": "data/ingredients",
+			"potion table": "data/potion-table"
 		])
 		{
 			File f;

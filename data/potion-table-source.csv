@@ -1,0 +1,84 @@
+fire resistance potion	underwater breathing potion	fire breath potion
+satiate potion	fire resistance potion	fire shield potion
+heal potion	satiate potion	regeneration potion
+earth resistance potion	heal potion	panacea potion
+defense potion	earth resistance potion	fortitude potion
+courage potion	defense potion	mind resistance potion
+strength potion	courage potion	battle frenzy potion
+accuracy potion	strength potion	critical hit potion
+air resistance potion	accuracy potion	penetrating potion
+speed potion	air resistance potion	levitation potion
+water resistance potion	speed potion	water walk potion
+underwater breathing potion	water resistance potion	tentacles potion
+lower fire resistance potion	gas breathing potion	fire breath potion
+hunger potion	lower fire resistance potion	fire shield potion
+poison potion	hunger potion	regeneration potion
+lower earth resistance potion	poison potion	panacea potion
+vulnerability potion	lower earth resistance potion	fortitude potion
+fear potion	vulnerability potion	mind resistance potion
+weakness potion	fear potion	battle frenzy potion
+inaccuracy potion	weakness potion	critical hit potion
+lower air resistance potion	inaccuracy potion	penetrating potion
+slow potion	lower air resistance potion	levitation potion
+lower water resistance potion	slow potion	water walk potion
+gas breathing potion	lower water resistance potion	tentacles potion
+fire resistance potion	gas breathing potion	alchemist fire potion
+satiate potion	lower fire resistance potion	fire swallow potion
+heal potion	hunger potion	degeneration potion
+earth resistance potion	poison potion	illness potion
+defense potion	lower earth resistance potion	clumsy potion
+courage potion	vulnerability potion	love potion
+strength potion	fear potion	depression potion
+accuracy potion	weakness potion	critical miss potion
+air resistance potion	inaccuracy potion	lower penetration potion
+speed potion	lower air resistance potion	hold on ground potion
+water resistance potion	slow potion	hold potion
+underwater breathing potion	lower water resistance potion	transform into frog potion
+lower fire resistance potion	underwater breathing potion	alchemist fire potion
+hunger potion	fire resistance potion	fire swallow potion
+poison potion	satiate potion	degeneration potion
+lower earth resistance potion	heal potion	illness potion
+vulnerability potion	earth resistance potion	clumsy potion
+fear potion	defense potion	love potion
+weakness potion	courage potion	depression potion
+inaccuracy potion	strength potion	critical miss potion
+lower air resistance potion	accuracy potion	lower penetration potion
+slow potion	air resistance potion	hold on ground potion
+lower water resistance potion	speed potion	hold potion
+gas breathing potion	water resistance potion	transform into frog potion
+fire breath potion	battle frenzy potion	dragon fury potion
+fire shield potion	critical hit potion	steal attack potion
+regeneration potion	penetrating potion	vampiric potion
+panacea potion	levitation potion	wings potion
+fortitude potion	water walk potion	stasis potion
+mind resistance potion	tentacles potion	unleash kraken potion
+alchemist fire potion	depression potion	dragon fury potion
+fire swallow potion	critical miss potion	steal attack potion
+degeneration potion	lower penetration potion	vampiric potion
+illness potion	hold on ground potion	wings potion
+clumsy potion	hold potion	stasis potion
+love potion	transform into frog potion	unleash kraken potion
+fire breath potion	depression potion	smoke of hopelessness potion
+fire shield potion	critical miss potion	power drain potion
+regeneration potion	lower penetration potion	atrophy potion
+panacea potion	hold on ground potion	plague potion
+fortitude potion	hold potion	petrify potion
+mind resistance potion	transform into frog potion	sleep potion
+alchemist fire potion	battle frenzy potion	smoke of hopelessness potion
+fire swallow potion	critical hit potion	power drain potion
+degeneration potion	penetrating potion	atrophy potion
+illness potion	levitation potion	plague potion
+clumsy potion	water walk potion	petrify potion
+love potion	tentacles potion	sleep potion
+dragon fury potion	unleash kraken potion	doppelganger potion
+steal attack potion	stasis potion	time loop potion
+vampiric potion	wings potion	angel of death potion
+smoke of hopelessness potion	plague potion	doppelganger potion
+power drain potion	petrify potion	time loop potion
+atrophy potion	sleep potion	angel of death potion
+dragon fury potion	plague potion	death vortex potion
+steal attack potion	petrify potion	paralysis potion
+vampiric potion	sleep potion	mega curse potion
+smoke of hopelessness potion	unleash kraken potion	death vortex potion
+power drain potion	stasis potion	paralysis potion
+atrophy potion	wings potion	mega curse potion

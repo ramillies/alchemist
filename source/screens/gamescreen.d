@@ -22,6 +22,7 @@ import messagebox;
 import choicebox;
 import inventoryscreen;
 import teleportscreen;
+import potiontable;
 
 import dsfml.graphics;
 
@@ -36,6 +37,7 @@ class GameScreen: Screen
 	private RectangleShape cursor;
 	private GameTime time;
 	private size_t lastPlayerX, lastPlayerY;
+	private PotionTable table;
 
 	private RenderWindow win;
 
@@ -50,6 +52,8 @@ class GameScreen: Screen
 		auto startPos = cartesianProduct(world.width.iota, world.height.iota).filter!((x) => world.features[x[1]][x[0]] == "city").array.choice;
 		player = new Player(startPos[0], startPos[1]);
 		player.coins = 10000;
+
+		table = new PotionTable();
 	}
 
 	override void setWindow(RenderWindow w)
@@ -117,6 +121,8 @@ class GameScreen: Screen
 			positionCallback = () => Vector2f(.925*win.size.x, .05*win.size.y - 5);
 			stringCallback = () => format("%s", player.coins);
 		}
+
+		table.init;
 	}
 
 	override void event(Event e)

@@ -85,14 +85,14 @@
 		"tileset": "monsters",
 		"tilenumber": 86,
 		"goodPotion": "speed potion",
-		"evilPotion": "slowness potion"
+		"evilPotion": "slow potion"
 	},
 	"amphibious leecher part": {
 		"name": "Filtering Lungs",
 		"description": "Filtering Lungs",
 		"tileset": "monsters",
 		"tilenumber": 378,
-		"goodPotion": "water breathing potion",
+		"goodPotion": "underwater breathing potion",
 		"evilPotion": "gas breathing potion"
 	}
 }
