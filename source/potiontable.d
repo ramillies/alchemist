@@ -14,6 +14,8 @@ struct SmallInfo
 	string output;
 	string description;
 	bool known = false;
+
+	bool inputMatches(string a, string b) { return (a == inputs[0] && b == inputs[1] ) || (a == inputs[1] && b == inputs[0]); }
 }
 
 struct MediumInfo
@@ -22,6 +24,8 @@ struct MediumInfo
 	string description;
 	bool known = false;
 	bool obsolete = false;
+
+	bool inputMatches(string a, string b) { return (a == inputs[0] && b == inputs[1] ) || (a == inputs[1] && b == inputs[0]); }
 }
 
 struct LargeInfo
@@ -33,7 +37,7 @@ struct LargeInfo
 
 class PotionTable
 {
-	private string[Tuple!(string,string)] table;
+	string[Tuple!(string,string)] table;
 	
 	SmallInfo[] smallInfo;
 	MediumInfo[] medInfo;
@@ -64,21 +68,19 @@ class PotionTable
 				auto inputs = tuple(herbs[n], key);
 				auto output = val["goodPotion"].str;
 				table[inputs] = output;
-				writefln("small info %s -> %s", inputs, output);
-				smallInfo ~= SmallInfo(inputs, output, format("A %2$s together with a %1$s makes a %s.", ConfigFiles.get("herbs")[inputs[0]]["name"].str, ConfigFiles.get("ingredients")[inputs[1]]["name"].str, ConfigFiles.get("potions")[output]["name"].str));
+				smallInfo ~= SmallInfo(inputs, output, format("a %s together with a %s makes a %s", ConfigFiles.get("ingredients")[inputs[1]]["name"].str, ConfigFiles.get("herbs")[inputs[0]]["name"].str, ConfigFiles.get("potions")[output]["name"].str));
 			}
 			foreach(n; 2 .. 4)
 			{
 				auto inputs = tuple(herbs[n], key);
 				auto output = val["evilPotion"].str;
 				table[inputs] = output;
-				writefln("small info %s -> %s", inputs, output);
-				smallInfo ~= SmallInfo(inputs, output, format("A %2$s together with a %1$s makes a %s.", ConfigFiles.get("herbs")[inputs[0]]["name"].str, ConfigFiles.get("ingredients")[inputs[1]]["name"].str, ConfigFiles.get("potions")[output]["name"].str));
+				smallInfo ~= SmallInfo(inputs, output, format("a %s together with a %s makes a %s", ConfigFiles.get("ingredients")[inputs[1]]["name"].str, ConfigFiles.get("herbs")[inputs[0]]["name"].str, ConfigFiles.get("potions")[output]["name"].str));
 			}
 			foreach(n; 4 .. 6)
 			{
 				auto inputs = tuple(herbs[n], key);
-				smallInfo ~= SmallInfo(inputs, "", format("A %2$s together with a %1$s does not make anything useful.", ConfigFiles.get("herbs")[inputs[0]]["name"].str, ConfigFiles.get("ingredients")[inputs[1]]["name"].str));
+				smallInfo ~= SmallInfo(inputs, "", format("a %s together with a %s does not make anything useful", ConfigFiles.get("ingredients")[inputs[1]]["name"].str, ConfigFiles.get("herbs")[inputs[0]]["name"].str));
 			}
 		}
 		auto greatPotions = ConfigFiles.get("potions").byPair.filter!((x) => x.value["level"].get!int == 4).array;
@@ -88,11 +90,16 @@ class PotionTable
 			foreach(l; k+1 .. greatPotions.length)
 				if(!((greatPotions[k].key == youthPotion[0].key && greatPotions[l].key == youthPotion[1].key) ||
 					(greatPotions[k].key == youthPotion[1].key && greatPotions[l].key == youthPotion[0].key)))
-					medInfo ~= MediumInfo(tuple(greatPotions[k].key, greatPotions[l].key), format("The %s is NOT made by mixing a %s with a %s.", ConfigFiles.get("potions")["youth potion"]["name"].str, greatPotions[k].value["name"].str, greatPotions[l].value["name"].str));
+					medInfo ~= MediumInfo(tuple(greatPotions[k].key, greatPotions[l].key), format("by mixing a %s with a %s", greatPotions[k].value["name"].str, greatPotions[l].value["name"].str));
 		foreach(pot; greatPotions)
 			if(pot.key != youthPotion[0].key && pot.key != youthPotion[1].key)
-				largeInfo ~= LargeInfo(pot.key, format("The %s is not used in making of the %s.", pot.value["name"].str, ConfigFiles.get("potions")["youth potion"]["name"].str));
+				largeInfo ~= LargeInfo(pot.key, format("by mixing a %s with anything", pot.value["name"].str));
 
+	}
+
+	string tableLookup(string a, string b)
+	{
+		return table.get(tuple(a, b), table.get(tuple(b, a), ""));
 	}
 
 	Tuple!(string, "result", string, "infoType", int, "infoIndex") mixResult(string a, string b)
@@ -100,7 +107,7 @@ class PotionTable
 		if((tuple(a, b) in table) || (tuple(b, a) in table))
 		{
 			auto output = table.get(tuple(a,b), table.get(tuple(b,a), ""));
-			foreach(k, info; smallInfo)
+			foreach(k, ref info; smallInfo)
 				if((tuple(a,b) == info.inputs || tuple(b,a) == info.inputs) && !info.known)
 				{
 					info.known = true;
@@ -111,7 +118,14 @@ class PotionTable
 		}
 		else
 		{
-			foreach(k, info; medInfo)
+			foreach(k, ref info; smallInfo)
+				if((tuple(a,b) == info.inputs || tuple(b,a) == info.inputs) && !info.known)
+				{
+					info.known = true;
+					chainDiscoveries();
+					return tuple!("result", "infoType", "infoIndex")("", "small", cast(int) k);
+				}
+			foreach(k, ref info; medInfo)
 				if((tuple(a,b) == info.inputs || tuple(b,a) == info.inputs) && !info.known)
 				{
 					info.known = true;

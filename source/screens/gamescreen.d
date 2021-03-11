@@ -52,6 +52,8 @@ class GameScreen: Screen
 		auto startPos = cartesianProduct(world.width.iota, world.height.iota).filter!((x) => world.features[x[1]][x[0]] == "city").array.choice;
 		player = new Player(startPos[0], startPos[1]);
 		player.coins = 10000;
+		foreach(k, ref v; player.items)
+			v += 10;
 
 		table = new PotionTable();
 	}
@@ -149,7 +151,7 @@ class GameScreen: Screen
 			if(e.key.code == Keyboard.Key.D || e.key.code == Keyboard.Key.Right)
 				attemptMove(1, 0);
 			if(e.key.code == Keyboard.Key.I)
-				Mainloop.pushScreen(new InventoryScreen(player, time));
+				Mainloop.pushScreen(new InventoryScreen(player, time, table));
 			if(e.key.code == Keyboard.Key.Return)
 				world.enterPlace(player);
 			if(e.key.code == Keyboard.Key.R)
@@ -163,6 +165,19 @@ class GameScreen: Screen
 						Choice(null, "Wait one year", delegate void() { time.advance(336); }, new ReactiveText),
 					]
 				));
+			if(e.key.code == Keyboard.Key.N)
+			{
+				auto knowledge = chain(
+					table.largeInfo.filter!`a.known`.map!`a.description`,
+					table.medInfo.filter!`a.known && !a.obsolete`.map!`a.description`
+				);
+				Mainloop.pushScreen(new MessageBox(
+					"Your notes",
+					knowledge.empty ? "You haven't written down any notes yet." :
+					format("You know that a %s CANNOT be made:\n\n%-(%s;\n%).", ConfigFiles.get("potions")["youth potion"]["name"].str, knowledge),
+					.7, .7
+				));
+			}
 		}
 	}
 

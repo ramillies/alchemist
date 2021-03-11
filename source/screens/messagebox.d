@@ -15,11 +15,14 @@ class MessageBox: Screen
 	private ReactiveText[] texts;
 	private RenderWindow win;
 	private string heading, msg;
+	private double boxHeight, boxWidth;
 
-	this(string h, string m)
+	this(string h, string m, double bw = .5, double bh = .5)
 	{
 		heading = h;
 		msg = m;
+		boxHeight = bh;
+		boxWidth = bw;
 	}
 
 	override void init()
@@ -29,7 +32,7 @@ class MessageBox: Screen
 		{
 			txt.setFont(Fonts.text);
 			txt.setColor(Color.White);
-			txt.boxWidth = win.size.x/2 - 50;
+			txt.boxWidth = win.size.x*boxHeight - 50;
 		}
 		with(texts[0])
 		{
@@ -38,7 +41,7 @@ class MessageBox: Screen
 			setColor(Color.Red);
 			setStyle(Text.Style.Bold);
 			setRelativeOrigin(Vector2f(.5f, 0f));
-			positionCallback = () => Vector2f(.5*win.size.x, .25*win.size.y + 5);
+			positionCallback = () => Vector2f(.5*win.size.x, (.5-boxHeight/2)*win.size.y + 5);
 			stringCallback = () => heading;
 		}
 		with(texts[1])
@@ -53,7 +56,7 @@ class MessageBox: Screen
 			setFont(Fonts.italic);
 			setCharacterSize(25);
 			setRelativeOrigin(Vector2f(.5f, 1f));
-			positionCallback = () => Vector2f(.5*win.size.x, .75*win.size.y - 10);
+			positionCallback = () => Vector2f(.5*win.size.x, (.5+boxHeight/2)*win.size.y - 10);
 			stringCallback = () => "(Press any key or mouse button to get rid of this popup.)";
 		}
 	}
@@ -71,11 +74,11 @@ class MessageBox: Screen
 
 	override void draw()
 	{
-		RectangleShape r = new RectangleShape(Vector2f(.5 * win.size.x, .5*win.size.y));
+		RectangleShape r = new RectangleShape(Vector2f(boxWidth * win.size.x, boxHeight*win.size.y));
 		r.fillColor = Color.Black;
 		r.outlineThickness = win.size.x/100;
 		r.outlineColor = Color.Red;
-		r.position = Vector2f(.25*win.size.x, .25*win.size.y);
+		r.position = Vector2f((.5 - boxWidth/2)*win.size.x, (.5 - boxHeight/2)*win.size.y);
 
 		win.draw(r);
 		texts.each!((t) => win.draw(t));
