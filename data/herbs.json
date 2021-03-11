@@ -9,7 +9,7 @@
 	"grasp of winter": {
 		"name": "Grasp of Winter",
 		"placeCondition": "return World:terrainAt(place:getX(), place:getY()) == 'snow'",
-		"description": "Brave explorers that venture far north often bring back unique stories about ice giants, white bears, weird white-bearded men wearing red, and of course about Grasp of Winter, a fascinating flower that can survive without water and sun. If you listen closely, you can hear the clinging of ice emanating from it.",
+		"description": "Brave explorers that venture far north often bring back unique stories about ice giants, white bears, weird white-bearded men wearing red, and of course about Grasp of Winter, a fascinating flower that can survive without water and sun. If you listen closely, you will hear a faint chime of ice crystals emanating from it.",
 		"tileset": "items",
 		"tilenumber": 3
 	},

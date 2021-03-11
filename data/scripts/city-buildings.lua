@@ -79,8 +79,11 @@ buildings = {
 					end
 				end
 			end
-			choicebox("Adventurers' Guild", "This is one of the guilds that adventurers found to help them sell the more obscure pieces of their loot. Obviously it is often possible to get decent alchemical ingredients there... for a price.\nWhat would you like to buy?",
-			choices)
+			if #choices > 1 then
+				choicebox("Adventurers' Guild", "This is one of the guilds that adventurers found to help them sell the more obscure pieces of their loot. Obviously it is often possible to get decent alchemical ingredients there... for a price.\nWhat would you like to buy?", choices)
+			else
+				messagebox("Adventurers' Guild", "The merchantmen of the guild show you various pieces of loot, but nothing of it has any alchemical value. You will have to come later.")
+			end
 		end,
 		onNewDay = function (self)
 			if math.random() < 0.01 then
@@ -116,7 +119,53 @@ buildings = {
 		name = "Secluded Shack",
 		allowedIn = "village",
 		description = "Buy herbs",
-		onVisit = function () messagebox("Secluded Shack", "You enjoy a good chat with the local evil witch.") end,
+		onInit = function (self)
+			self.costPerPart = math.random(10, 20)
+			self.herbs = 0
+			self.maxHerbs = math.random(9, 13)
+			local keys = {}
+			for k, v in pairs(Herbs) do
+				if not loadstring(v.placeCondition)() then
+					table.insert(keys, k)
+				end
+			end
+			self.herbType = keys[math.random(1, #keys)]
+		end,
+		onVisit = function (self, player)
+			choices = { { text = "Nothing" } }
+			if self.herbs > 0 then
+				local n = self.herbs
+				while n >= 1 do
+					local cost = place:adjustedCost(n*self.costPerPart, -1)
+					local num = n
+					table.insert(choices, {
+						text = string.format("Buy %d× %s for %d gold", n, Herbs[self.herbType].name, cost),
+						disabled = player:getCoins() < cost,
+						tileset = Herbs[self.herbType].tileset,
+						tilenumber = Herbs[self.herbType].tilenumber,
+						callback = function ()
+							messagebox("Herbs Purchased",
+								string.format("You purchased %d %s for %d gold.", num, Herbs[self.herbType].name, cost))
+							player:giveItems{[self.herbType] = num}
+							player:giveCoins(-cost)
+							self.herbs = self.herbs - num
+						end
+					})
+					n = math.floor(n/2)
+				end
+			end
+			if #choices > 1 then
+				choicebox("Secluded Shack", string.format("An evil witch lives in this lonely shack, growing various fantastic herbs for her wicked experiments. Fortunately she is willing to part with some of her %s, of course for a price.\nWhat would you like to buy?", Herbs[self.herbType].name), choices)
+			else
+				messagebox("Secluded Shack", "The old witch sneers: \"Do you expect me to give everything I have to some upstart alchemist? Just go away! I'm not going to sell you anything!\".")
+			end
+		end,
+		onNewDay = function (self)
+			if math.random() < 0.1 then
+				self.herbs = self.herbs + math.random(1, 4)
+				if self.herbs > self.maxHerbs then self.herbs = self.maxHerbs end
+			end
+		end
 	},
 	["central tower"] = {
 		name = "Central Tower",

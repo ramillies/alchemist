@@ -157,6 +157,7 @@ function place:addReputation(x)
 	end
 end
 
-function place:adjustedCost(cost)
-	return cost * 3 ^ (-self.reputation/100)
+function place:adjustedCost(cost, modifier)
+	if modifier == nil then modifier = 1 end
+	return cost * 3 ^ (-self.reputation*modifier/100)
 end
