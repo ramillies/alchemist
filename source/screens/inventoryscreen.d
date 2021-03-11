@@ -135,9 +135,9 @@ class InventoryScreen: Screen
 		foreach(n; 11 .. 15)
 			texts[n].position = Vector2f(.425*win.size.x, (5.5 + [0, 2.1, 3.7, 4.8][n - 11])*cellsize);
 
+		int index = 0;
 		void makeCellAt(float x, float y)
 		{
-			static int n = 0;
 			auto r = new RectangleShape(Vector2f(cellsize, cellsize));
 			r.outlineThickness = -3;
 			r.outlineColor = Color.Red;
@@ -153,7 +153,7 @@ class InventoryScreen: Screen
 			t.setString("0");
 			numbers ~= t;
 			auto s = new CoolSprite;
-			JSONValue[string] record = ConfigFiles.get("items")[itemList[n]].object;
+			JSONValue[string] record = ConfigFiles.get("items")[itemList[index]].object;
 			string set = record["tileset"].str;
 			s.setTextureByName(set);
 			s.tilenumber = record["tilenumber"].get!int;
@@ -161,7 +161,7 @@ class InventoryScreen: Screen
 			Vector2u size = Images.tileSize(set);
 			s.scale = Vector2f(cellsize*.9/size.x, cellsize*.9/size.y);
 			sprites ~= s;
-			n++;
+			index++;
 		}
 		// Boxes for herbs
 		foreach(n; 0 .. 6)
@@ -190,7 +190,7 @@ class InventoryScreen: Screen
 			Mainloop.quit;
 		if(e.type == Event.EventType.KeyPressed)
 		{
-			if(e.key.code == Keyboard.Key.Escape)
+			if(e.key.code == Keyboard.Key.Escape || e.key.code == Keyboard.Key.I)
 				Mainloop.popScreen;
 		}
 	}
