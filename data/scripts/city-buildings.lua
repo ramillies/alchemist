@@ -57,6 +57,10 @@ buildings = {
 		name = "Guard House",
 		allowedIn = "city",
 	},
+	["thieves guild"] = {
+		name = "Thieves' Guild",
+		allowedIn = "city",
+	},
 	["cathedral"] = {
 		name = "Cathedral",
 		allowedIn = "city",

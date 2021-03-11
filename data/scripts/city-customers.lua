@@ -42,7 +42,7 @@ customerTable = {
 			if isInList(given, { "water resistance potion", "water walk potion", "levitation potion", "underwater breathing potion" }) then
 				local reward = math.random(75, 125)
 				player:giveCoins(reward)
-				player:giveItems({ [self.want] = -1 })
+				player:giveItems({ [given] = -1 })
 				messagebox("Great!", randomTalk {
 					"With help of this potion, I could catch even a Kraken, here is your payment.",
 					"This looks very useful, I could pay you three nets of fish, but you look like the kind that wants money more, so here it is.",
@@ -77,10 +77,10 @@ customerTable = {
 			choicebox("Pirate",
 				line,
 				{
-					{ text = "Yeah, I can give you some", callback = function ()
-						inventorybox(player, "Fisherman", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+					{ text = "Yar mate, try this", callback = function ()
+						inventorybox(player, "Pirate", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
 					end },
-					{ text = "No way." }
+					{ text = "Narr mate, I cannot help you." }
 				}
 			)
 		end,
@@ -89,7 +89,7 @@ customerTable = {
 			if isInList(given, { "water resistance potion", "water walk potion", "battle frenzy potion", "tentacles potion", "courage potion" }) then
 				local reward = math.random(125, 200)
 				player:giveCoins(reward)
-				player:giveItems({ [self.want] = -1 })
+				player:giveItems({ [given] = -1 })
 				messagebox("Great!", randomTalk {
 					"Prepare to walk the plank………….. back to the harbor, of course, this potion is great. Here is yer bounty.",
 					"Shiver me timbers, All hand hoy and take a look at this! ye earned yer pay, catch this.",
@@ -125,10 +125,10 @@ customerTable = {
 			choicebox("Guardsman",
 				line,
 				{
-					{ text = "Yeah, I can give you some", callback = function ()
+					{ text = "Yeah, I have some potions for lawman like you", callback = function ()
 						inventorybox(player, "Guardsman", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
 					end },
-					{ text = "No way." }
+					{ text = "I cannot help you, but Im sure you will be fine without my potions" }
 				}
 			)
 		end,
@@ -137,7 +137,7 @@ customerTable = {
 			if isInList(given, { "courage potion", "defense potion", "critical hit potion", "fire shield potion" }) then
 				local reward = math.random(100, 125)
 				player:giveCoins(reward)
-				player:giveItems({ [self.want] = -1 })
+				player:giveItems({ [given] = -1 })
 				messagebox("Great!", randomTalk {
 					"No evildoer can stop me now, here is your reward, you earned it.",
 					"Streets will be a safer place thanks to you, here is your coin."
@@ -183,7 +183,7 @@ customerTable = {
 			if isInList(given, { "dragon fury potion", "unleash kraken potion", "stasis potion", "steal attack potion", "petrify potion", "sleep potion" }) then
 				local reward = math.random(225, 350)
 				player:giveCoins(reward)
-				player:giveItems({ [self.want] = -1 })
+				player:giveItems({ [given] = -1 })
 				messagebox("Great!", randomTalk {
 					"Ah, yes, yes, this is a very potent mixture that can surely make me nearly invincible, here is your coin. ",
 					"Justice will surely celebrate another victory, now that i'm equipped with this potion, i consider it money well spent.",
@@ -227,7 +227,7 @@ customerTable = {
 			if isInList(given, { "alchemist fire potion", "strength potion", "fear potion", "transform into frog potion", "hold potion" }) then
 				local reward = math.random(200, 300)
 				player:giveCoins(reward)
-				player:giveItems({ [self.want] = -1 })
+				player:giveItems({ [given] = -1 })
 				messagebox("Great!", randomTalk {
 					"(as you give him the potion, he smiles and runs to the corner of his cell, a few minutes later you can hear a surprised scream from one of the guardsmen and then metal clinging of a short fight and a few minutes later, the prisoner walks through the jails main entrance and toses you a bag filled with money, before running away)",
 				})
@@ -269,7 +269,7 @@ customerTable = {
 			if isInList(given, { "heal potion", "satiate potion", "regeneration potion", "panacea potion", "fire resistance potion", "water resistance potion", "earth resistance potion",  "air resistance potion" }) then
 				local reward = math.random(100, 150)
 				player:giveCoins(reward)
-				player:giveItems({ [self.want] = -1 })
+				player:giveItems({ [given] = -1 })
 				messagebox("Great!", randomTalk {
 					"Blessed be the day of your arrival, this potion will help me spread the light even to the darkest corners.",
 				})
@@ -311,7 +311,7 @@ customerTable = {
 			if isInList(given, { "defense potion", "courage potion", "strength potion", "battle frenzy potion" }) then
 				local reward = math.random(100, 150)
 				player:giveCoins(reward)
-				player:giveItems({ [self.want] = -1 })
+				player:giveItems({ [given] = -1 })
 				messagebox("Great!", randomTalk {
 					"Dolorem Vult, now I’m ready to smite all heathens and purify their unholy abominations in righteous fire",
 				})
@@ -353,7 +353,7 @@ customerTable = {
 			if isInList(given, { "wings potion", "angel of death potion", "time loop potion", "stasis potion" }) then
 				local reward = math.random(225, 350)
 				player:giveCoins(reward)
-				player:giveItems({ [self.want] = -1 })
+				player:giveItems({ [given] = -1 })
 				messagebox("Great!", randomTalk {
 					"Dolorem chose well when he gifted you the gift of a potion-making, here is your coin."
 				})
@@ -395,7 +395,7 @@ customerTable = {
 			if isInList(given, { "poison potion", "earth resistance potion", "speed potion", "defense potion", "hold potion", "wings potion" }) then
 				local reward = math.random(150, 200)
 				player:giveCoins(reward)
-				player:giveItems({ [self.want] = -1 })
+				player:giveItems({ [given] = -1 })
 				messagebox("Great!", randomTalk {
 					"Impressing, this will surely come in handy one day, I just hope I won’t need to use it.",
 				})
@@ -437,7 +437,7 @@ customerTable = {
 			if isInList(given, { "love potion", }) then
 				local reward = math.random(125, 200)
 				player:giveCoins(reward)
-				player:giveItems({ [self.want] = -1 })
+				player:giveItems({ [given] = -1 })
 				messagebox("Great!", randomTalk {
 					"He will be mine in the blink of an eye. Thank you old man and enjoy your money.",
 				})
@@ -446,6 +446,429 @@ customerTable = {
 			else
 				messagebox("Uhmmm...", randomTalk {
 					"I knew the only useful thing alchemists can make are perfumes? ",
+				})
+			end
+		end
+	
+},
+{
+		name = "Guild Enforcer",
+		tileset = "people",
+		tilenumber = 213,
+		appear = function(city)
+			return city:numberOfCustomers("Guild Enforcer") < 2 and #city.customers < 10 and
+				city:hasBuilding("Thieves' Guild") and math.random() < 0.1
+		end,
+		init = function(self, city) end,
+		talk = function (self, city, player)
+			local line = randomTalk {
+				"One of the local shop owners refuses to pay us our protection fee, do you have something that could help me show him why should he pay us? ",
+			}
+			choicebox("Guild Enforcer",
+				line,
+				{
+					{ text = "Say hello to your new little friend in the bottle", callback = function ()
+						inventorybox(player, "Guild Enforcer", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+					end },
+					{ text = "I cannot help you, sorry" }
+				}
+			)
+		end,
+		check = function (self, city, player, given)
+			self.goAway = true
+			if isInList(given, { "strength potion", "weakness potion", "fear potion", "alchemist fire potion" }) then
+				local reward = math.random(200, 300)
+				player:giveCoins(reward)
+				player:giveItems({ [given] = -1 })
+				messagebox("Great!", randomTalk {
+					"Well, you made me offer so good, that I cannot refuse it",
+				})
+			elseif given == "" then
+				self.goAway = false
+			else
+				messagebox("Uhmmm...", randomTalk {
+					"Is this funny to you? If you will try to sell me something like this again, you will be sleeping with the fishes, capiche?",
+				})
+			end
+		end
+	
+},
+{
+		name = "Assassin",
+		tileset = "people",
+		tilenumber = 186,
+		appear = function(city)
+			return city:numberOfCustomers("Assassin") < 1 and #city.customers < 10 and
+				city:hasBuilding("Thieves' Guild") and math.random() < 0.1
+		end,
+		init = function(self, city) end,
+		talk = function (self, city, player)
+			local line = randomTalk {
+				"The unseen blade is the deadliest one, but a great potion can be an even greater asset. can you offer me some fit for men of my ehm.....expertise?",
+			}
+			choicebox("Assassin",
+				line,
+				{
+					{ text = "With this, no man can stop you", callback = function ()
+						inventorybox(player, "Assassin", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+					end },
+					{ text = "Not really" }
+				}
+			)
+		end,
+		check = function (self, city, player, given)
+			self.goAway = true
+			if isInList(given, { "poison potion", "speed potion", "levitation potion", "accuracy potion", "critical hit potion" }) then
+				local reward = math.random(200, 300)
+				player:giveCoins(reward)
+				player:giveItems({ [given] = -1 })
+				messagebox("Great!", randomTalk {
+					"This is a masterpiece fit for a master of his craft like me, thank you.",
+				})
+			elseif given == "" then
+				self.goAway = false
+			else
+				messagebox("Uhmmm...", randomTalk {
+					"I don’t need this, I will be better of with my sharp reflexes and uncanny agility",
+				})
+			end
+		end
+	
+},
+{
+		name = "Hunter",
+		tileset = "people",
+		tilenumber = 205,
+		appear = function(city)
+			return city:numberOfCustomers("Hunter") < 3 and #city.customers < 10 and
+				city:hasBuilding("Hunter's Lodge") and math.random() < 0.1
+		end,
+		init = function(self, city) end,
+		talk = function (self, city, player)
+			local line = randomTalk {
+				"I have the eyes of an eagle and the arms of a bear, but I want to bring more animal body parts home, so I can stuff them and display them like trophies, do you have something that could help me do that?",
+				}
+			choicebox("Hunter",
+				line,
+				{
+					{ text = "Sure, I can find something for guy like you", callback = function ()
+						inventorybox(player, "Hunter", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+					end },
+					{ text = "I dont think so" }
+				}
+			)
+		end,
+		check = function (self, city, player, given)
+			self.goAway = true
+			if isInList(given, { "speed potion", "slowness potion", "accuracy potion ", "hold potion", "clumsy potion" }) then
+				local reward = math.random(75, 125)
+				player:giveCoins(reward)
+				player:giveItems({ [given] = -1 })
+				messagebox("Great!", randomTalk {
+					"Great, no prey shall escape me now, here is your payment.",
+				})
+			elseif given == "" then
+				self.goAway = false
+			else
+				messagebox("Uhmmm...", randomTalk {
+					"I suppose you have no idea what you need to catch a deer, don’t you?",
+				})
+			end
+		end
+	
+},    
+{
+		name = "Miner",
+		tileset = "people",
+		tilenumber = 364,
+		appear = function(city)
+			return city:numberOfCustomers("Miner") < 3 and #city.customers < 10 and
+				city:hasBuilding("Mine") and math.random() < 0.1
+		end,
+		init = function(self, city) end,
+		talk = function (self, city, player)
+			local line = randomTalk {
+				"I spend my whole day underground smashing stones and pulling carts, suffice to say my life is in danger all the time, could some of your elixirs help me in the blackness of mine?",
+			}
+			choicebox("Miner",
+				line,
+				{
+					{ text = "Yeah, I can give you some", callback = function ()
+						inventorybox(player, "Miner", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+					end },
+					{ text = "No way." }
+				}
+			)
+		end,
+		check = function (self, city, player, given)
+			self.goAway = true
+			if isInList(given, { "strength potion", "earth resistance potion", "alchemist fire potion", "fortitude potion" }) then
+				local reward = math.random(75, 125)
+				player:giveCoins(reward)
+				player:giveItems({ [given] = -1 })
+				messagebox("Great!", randomTalk {
+					"Well, well, well, I found the mother lode, this will surely be useful in the mines, take these golden nuggets.",
+				})
+			elseif given == "" then
+				self.goAway = false
+			else
+				messagebox("Uhmmm...", randomTalk {
+					"This is useless like fools gold. I should get back to work.",
+				})
+			end
+		end
+	
+},
+{
+		name = "Blacksmith",
+		tileset = "people",
+		tilenumber = 370,
+		appear = function(city)
+			return city:numberOfCustomers("Blacksmith") < 1 and #city.customers < 10 and
+				city:hasBuilding("Smithy") and math.random() < 0.1
+		end,
+		init = function(self, city) end,
+		talk = function (self, city, player)
+			local line = randomTalk {
+				"You don’t look like someone that needs my services, but as an alchemist, I could use yours, if you have something useful to a blacksmith of course.",
+}
+			choicebox("Blacksmith",
+				line,
+				{
+					{ text = " I have something for tough guy like you", callback = function ()
+						inventorybox(player, "Blacksmith", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+					end },
+					{ text = "I dont have anything useful to you at this time." }
+				}
+			)
+		end,
+		check = function (self, city, player, given)
+			self.goAway = true
+			if isInList(given, { "fire resistance potion", "strength potion", "courage potion" }) then
+				local reward = math.random(100, 150)
+				player:giveCoins(reward)
+				player:giveItems({ [given] = -1 })
+				messagebox("Great!", randomTalk {
+					"This potion will help me craft the best armor in the land, thank you.",
+					"This potion will help me craft the best weapons in the land, thank you.",
+					"This potion will help me craft the best horseshoes in the land, thank you."
+				})
+			elseif given == "" then
+				self.goAway = false
+			else
+				messagebox("Uhmmm...", randomTalk {
+					"I cant see the usefulness of this potion in the heat of the forge ",
+				})
+			end
+		end
+	
+},
+{
+		name = "Priest",
+		tileset = "people",
+		tilenumber = 143,
+		appear = function(city)
+			return city:numberOfCustomers("Priest") < 1 and #city.customers < 10 and
+				city:hasBuilding("Church") and math.random() < 0.1
+		end,
+		init = function(self, city) end,
+		talk = function (self, city, player)
+			local line = randomTalk {
+				"Dolorem Ipsum son, welcome to my humble church, I don’t have a lot of money but if you could sell me some potion that could help me feed the poor and tend to wounded, I will be happy to pay you.",
+			}
+			choicebox("Priest",
+				line,
+				{
+					{ text = "Of course father, try this", callback = function ()
+						inventorybox(player, "Priest", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+					end },
+					{ text = "I cannot help you right now" }
+				}
+			)
+		end,
+		check = function (self, city, player, given)
+			self.goAway = true
+			if isInList(given, { "heal potion", "satiate potion", "regeneration potion", "panacea potion", "courage potion" }) then
+				local reward = math.random(100, 150)
+				player:giveCoins(reward)
+				player:giveItems({ [given] = -1 })
+				messagebox("Great!", randomTalk {
+					"Dolorem will surely remember your contribution to his great plan. Here is our money.",
+				})
+			elseif given == "" then
+				self.goAway = false
+			else
+				messagebox("Uhmmm...", randomTalk {
+					"I’m sorry my son, but I can’t spend money from the church on this potion, perhaps some other day ",
+				})
+			end
+		end
+	
+},
+{
+		name = "Old Hag",
+		tileset = "monsters",
+		tilenumber = 415,
+		appear = function(city)
+			return city:numberOfCustomers("Old Hag") < 1 and #city.customers < 10 and
+				city:hasBuilding("Secluded Shack") and math.random() < 0.1
+		end,
+		init = function(self, city) end,
+		talk = function (self, city, player)
+			local line = randomTalk {
+				"Ah, who do we have here? Potion maker heh? Then we have a lot to talk about. If you have any potions that I could use to torment these townsfolk, I would pay you good coin and even some herbs from my garden, what do you think?",
+			}
+			choicebox("Old Hag",
+				line,
+				{
+					{ text = "Would you be interested in this tool of harm and misfortune? ", callback = function ()
+						inventorybox(player, "Old Hag", "This is your inventory. What you will give her?", function (x) return self:check(city, player, x) end)
+					end },
+					{ text = "Ehhh, excuse me, I really need to go somewhere else" }
+				}
+			)
+		end,
+		check = function (self, city, player, given)
+			self.goAway = true
+			if isInList(given, { " lower water resistance potion", "lower earth resistance potion", "lower fire resistance potion", "lower air resistance potion", "hunger potion", "poison potion", "vulnerability potion", "fear potion", "weakness potion", "inaccuracy potion", "slow potion", "depression potion", "critical miss potion", "critical miss potion",
+            "lower penetration potion", "hold on ground potion", "hold potion", "transform into frog potion", "alchemist fire potion", "degeneration potion", "illness potion", "clumsy potion", "love potion", "sleep potion", "atrophy potion", "plague potion", "petrify potion", "smoke of hopelessness potion", "power drain potion", "paralysis potion", "mega curse potion", "death vortex potion" }) then
+				local reward = math.random(200, 300)
+				player:giveCoins(reward)
+				player:giveItems({ [given] = -1 })
+				messagebox("Great!", randomTalk {
+					"This is marvelous, I can do so many wicked thing things with this. Take this bag of gold and these herbs and come back, if you would like to sell me more",
+				})
+			elseif given == "" then
+				self.goAway = false
+			else
+				messagebox("Uhmmm...", randomTalk {
+					"What is this? I want to HARM people, not HELP them, get out of here before I turn you into a frog",
+				})
+			end
+		end
+	
+},
+{
+		name = "Witch Hunter",
+		tileset = "people",
+		tilenumber = 356,
+		appear = function(city)
+			return city:numberOfCustomers("Witch Hunter") < 1 and #city.customers < 10 and
+				city:hasBuilding("Secluded Shack") and math.random() < 0.05
+		end,
+		init = function(self, city) end,
+		talk = function (self, city, player)
+			local line = randomTalk {
+				"Greeting to you master of alchemy, I heard twisted woman stalks in this village and that she uses her eldritch magic to sow seeds of evil in the minds of townsfolk and animals alike. Could some of your potions help me fight that wretched thing?",
+			}
+			choicebox("Witch Hunter",
+				line,
+				{
+					{ text = "This will surely help you purge evil from this land", callback = function ()
+						inventorybox(player, "Witch Hunter", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+					end },
+					{ text = "I cant help you" }
+				}
+			)
+		end,
+		check = function (self, city, player, given)
+			self.goAway = true
+			if isInList(given, { "fire breath potion", "fire shield potion", "alchemist fire potion", "mind resistance potion", "regeneration potion", "strenght potion", "courage potion", "speed potion" }) then
+				local reward = math.random(150, 200)
+				player:giveCoins(reward)
+				player:giveItems({ [given] = -1 })
+				messagebox("Great!", randomTalk {
+					"Now I’m ready to condemn that fowl creature to its doom.",
+				})
+			elseif given == "" then
+				self.goAway = false
+			else
+				messagebox("Uhmmm...", randomTalk {
+					"Thanks for your offer but this is useless against evil the spells of that witch",
+				})
+			end
+		end
+	
+},
+{
+		name = "Footman",
+		tileset = "people",
+		tilenumber = 235,
+		appear = function(city)
+			return city:numberOfCustomers("Footman") < 2 and #city.customers < 10 and
+				city:hasBuilding("Barracks") and math.random() < 0.1
+		end,
+		init = function(self, city) end,
+		talk = function (self, city, player)
+			local line = randomTalk {
+				"As we soldiers often say, my favorite time of the year is March, but since we are stuck at this castle I could spend some of my money to prepare myself for the next one. Do you sell something interesting?",
+			}
+			choicebox("Footman",
+				line,
+				{
+					{ text = "Yeah, I can give you some", callback = function ()
+						inventorybox(player, "Footman", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+					end },
+					{ text = "No way." }
+				}
+			)
+		end,
+		check = function (self, city, player, given)
+			self.goAway = true
+			if isInList(given, { "strength potion", "critical hit potion", "battle frenzy potion", "courage potion", "defense potion" }) then
+				local reward = math.random(100, 150)
+				player:giveCoins(reward)
+				player:giveItems({ [given] = -1 })
+				messagebox("Great!", randomTalk {
+					"Holy moly, this will help me a great deal, here is your money, I will get more anyway because nobles will never stop fighting between themselves.",
+				})
+			elseif given == "" then
+				self.goAway = false
+			else
+				messagebox("Uhmmm...", randomTalk {
+					"Well, I don’t think this is useful in the middle of a battle, but thanks anyway.",
+				})
+			end
+		end
+	
+},
+{
+		name = "Crossbowman",
+		tileset = "people",
+		tilenumber = 11,
+		appear = function(city)
+			return city:numberOfCustomers("Crossbowman") < 2 and #city.customers < 10 and
+				city:hasBuilding("Barracks") and math.random() < 0.1
+		end,
+		init = function(self, city) end,
+		talk = function (self, city, player)
+			local line = randomTalk {
+				"My job is simple, shoot an enemy, reload, repeat, but that doesn’t mean it’s an easy one. Would some of your potions help me do it better?",
+	}
+            choicebox("Crossbowman",
+				line,
+				{
+					{ text = "Yeah, I can give you something", callback = function ()
+						inventorybox(player, "Crossbowman", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+					end },
+					{ text = "No way." }
+				}
+			)
+		end,
+		check = function (self, city, player, given)
+			self.goAway = true
+			if isInList(given, { "speed potion", "accuracy potion", "penetrating potion", "fire breath potion" }) then
+				local reward = math.random(100, 150)
+				player:giveCoins(reward)
+				player:giveItems({ [given] = -1 })
+				messagebox("Great!", randomTalk {
+					"This will very useful on the battlefield, I can’t wait for what crazy stunts will this allow me to do.",
+				})
+			elseif given == "" then
+				self.goAway = false
+			else
+				messagebox("Uhmmm...", randomTalk {
+					"This wouldn’t help me hit even the barns door, go away, please.",
 				})
 			end
 		end
