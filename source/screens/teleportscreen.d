@@ -14,63 +14,73 @@ import tilemap;
 import world;
 import water;
 import settings;
-import player;
 import place;
 import reacttext;
-import gametime;
 import messagebox;
 import choicebox;
-import inventoryscreen;
-import teleportscreen;
+import player;
 
+import luad.all;
 import dsfml.graphics;
 
-class GameScreen: Screen
+struct TeleportInfo
+{
+	bool ok;
+	string text;
+}
+
+class TeleportScreen: Screen
 {
 	private ReactiveText[] texts;
 	private World world;
 	private Water ocean;
 	private View camera, minimap;
 	private double zoom, maxZoom;
-	private Player player;
 	private RectangleShape cursor;
-	private GameTime time;
+	private string heading, msg;
+	private LuaTable delegate(size_t, size_t) infoCallback;
+	private void delegate(size_t, size_t, bool) resultCallback;
+	private Player player;
+	private Vertex[] colorcode;
+	private TeleportInfo[][] info;
 
 	private RenderWindow win;
 
-	this(World w, GameTime t)
+	this(World w, Player p, string heading, string msg, LuaTable delegate(size_t, size_t) infoCallback, void delegate(size_t, size_t, bool) resultCallback)
 	{
 		world = w;
-		time = t;
-
+		player = p;
 		ocean = new Water(to!int(ceil(world.width/2.)), to!int(world.height));
-		auto startPos = cartesianProduct(world.width.iota, world.height.iota).filter!((x) => world.features[x[1]][x[0]] == "city").array.choice;
-		player = new Player(startPos[0], startPos[1]);
-		player.coins = 10000;
+		this.heading = heading;
+		this.msg = msg;
+		this.infoCallback = infoCallback;
+		this.resultCallback = resultCallback;
+		writefln("done constructing");
 	}
 
-	override void setWindow(RenderWindow w)
-	{
-		win = w;
-	}
+	override void setWindow(RenderWindow w) { win = w; }
 
 	override void init()
 	{
+		writefln("begin init");
 		camera = win.getDefaultView.dup;
 		maxZoom = min(1.*world.pixelSize.x/camera.size.x, 1.*world.pixelSize.y/camera.size.y) - .01;
 		zoom = min(1, maxZoom);
 		camera.zoom(zoom);
 		world.updateTiles;
 
+		writefln("making cursor");
 		cursor = new RectangleShape(Vector2f(3*World.TILESIZE*1f, 3*World.TILESIZE*1f));
 		cursor.outlineThickness = 8*zoom;
 		cursor.fillColor = Color(225, 188, 0, 80);
 		cursor.outlineColor = Color(140, 117, 0);
 
+		writefln("making views");
 		minimap = new View(FloatRect(0, 0, world.pixelSize.x, world.pixelSize.y));
 		camera.center = Vector2f(3*World.TILESIZE*player.x + 3*World.TILESIZE/2, 3*World.TILESIZE*player.y + 3*World.TILESIZE/2);
 
-		texts = 6.iota.map!((x) => new ReactiveText).array;
+		writefln("making texts");
+		texts = 7.iota.map!((x) => new ReactiveText).array;
 		foreach(text; texts)
 		{
 			text.setFont(Fonts.text);
@@ -89,31 +99,70 @@ class GameScreen: Screen
 			return format("%02u:%02u", systime.hour, systime.minute);
 		};
 
-		texts[1].positionCallback = () => Vector2f(.925*win.size.x, .95*win.size.y);
-		texts[1].stringCallback = () => time.uiString;
+		texts[1].positionCallback = () => Vector2f(.925*win.size.x, .25*win.size.y);
+		texts[1].stringCallback = () => mouseOver() == MouseOver.Map ? world.terrainToString(mouseSquare()) : "";
 
-		texts[2].positionCallback = () => Vector2f(.925*win.size.x, .25*win.size.y);
-		texts[2].stringCallback = () => mouseOver() == MouseOver.Map ? world.terrainToString(mouseSquare()) : "";
+		texts[2].setFont(Fonts.heading);
+		texts[2].setCharacterSize(35);
+		texts[2].setRelativeOrigin(Vector2f(.5f, 1f));
+		texts[2].setStyle(Text.Style.Bold);
+		texts[2].positionCallback = () => Vector2f(.925*win.size.x, .35*win.size.y);
+		texts[2].stringCallback = () => mouseOver() == MouseOver.Map ? world.placeName(mouseSquare()) : "";
 
-		texts[3].setFont(Fonts.heading);
-		texts[3].setCharacterSize(35);
-		texts[3].setRelativeOrigin(Vector2f(.5f, 1f));
-		texts[3].setStyle(Text.Style.Bold);
-		texts[3].positionCallback = () => Vector2f(.925*win.size.x, .35*win.size.y);
-		texts[3].stringCallback = () => mouseOver() == MouseOver.Map ? world.placeName(mouseSquare()) : "";
+		texts[3].positionCallback = () => Vector2f(.925*win.size.x, .37*win.size.y);
+		texts[3].setRelativeOrigin(Vector2f(.5f, 0f));
+		texts[3].setCharacterSize(25);
+		texts[3].stringCallback = () => mouseOver() == MouseOver.Map ? world.placeDescription(mouseSquare()) : "";
 
-		texts[4].positionCallback = () => Vector2f(.925*win.size.x, .37*win.size.y);
-		texts[4].setRelativeOrigin(Vector2f(.5f, 0f));
-		texts[4].setCharacterSize(25);
-		texts[4].stringCallback = () => mouseOver() == MouseOver.Map ? world.placeDescription(mouseSquare()) : "";
-
-		with(texts[5])
+		with(texts[4])
 		{
 			setColor(Color(225, 188, 0));
 			setRelativeOrigin(Vector2f(.5f, 1f));
 			positionCallback = () => Vector2f(.925*win.size.x, .05*win.size.y - 5);
 			stringCallback = () => format("%s", player.coins);
 		}
+		with(texts[5])
+		{
+			setFont(Fonts.heading);
+			setCharacterSize(80);
+			setColor(Color.Red);
+			setRelativeOrigin(Vector2f(.5f, 0f));
+			boxWidth = 0;
+			positionCallback = () => Vector2f(.425*win.size.x, .75*win.size.y + 5);
+			setString(this.heading);
+		}
+		with(texts[6])
+		{
+			setCharacterSize(35);
+			setRelativeOrigin(Vector2f(.5f, 0f));
+			boxWidth = .85*win.size.x - 20;
+			positionCallback = () => Vector2f(.425*win.size.x, .83*win.size.y);
+			stringCallback = () => mouseOver() == MouseOver.Map ? info[mouseSquare().y][mouseSquare().x].text : "";
+		}
+
+		writefln("getting callback info");
+		info = world.height.iota.map!((y) => world.width.iota.map!((x) => TeleportInfo(false, "")).array).array;
+		foreach(y; 0 .. world.height)
+			foreach(x; 0 .. world.width)
+			{
+				info[y][x] = getInfo(x, y);
+				auto color = info[y][x].ok ? Color(0, 255, 0, 80) : Color(255, 0, 0, 80);
+				colorcode ~= Vertex(Vector2f(3*World.TILESIZE*x, 3*World.TILESIZE*y), color, Vector2f(0f, 0f));
+				colorcode ~= Vertex(Vector2f(3*World.TILESIZE*(x+1), 3*World.TILESIZE*y), color, Vector2f(0f, 0f));
+				colorcode ~= Vertex(Vector2f(3*World.TILESIZE*(x+1), 3*World.TILESIZE*(y+1)), color, Vector2f(0f, 0f));
+				colorcode ~= Vertex(Vector2f(3*World.TILESIZE*x, 3*World.TILESIZE*(y+1)), color, Vector2f(0f, 0f));
+			}
+
+	}
+
+	private TeleportInfo getInfo(size_t x, size_t y)
+	{
+		LuaTable t = infoCallback(x, y);
+		bool ok = false;
+		string text = "";
+		if(!t["allowed"].isNil) ok = t.get!bool("allowed");
+		if(!t["text"].isNil) text = t.get!string("text");
+		return TeleportInfo(ok, text);
 	}
 
 	override void event(Event e)
@@ -129,31 +178,25 @@ class GameScreen: Screen
 		{
 			if(e.key.code == Keyboard.Key.G)
 				Settings.drawGrid = !Settings.drawGrid;
-			if(e.key.code == Keyboard.Key.BackSpace)
-				Settings.gameLogShown = !Settings.gameLogShown;
-			if(e.key.code == Keyboard.Key.W || e.key.code == Keyboard.Key.Up)
-				attemptMove(0, -1);
-			if(e.key.code == Keyboard.Key.A || e.key.code == Keyboard.Key.Left)
-				attemptMove(-1, 0);
-			if(e.key.code == Keyboard.Key.S || e.key.code == Keyboard.Key.Down)
-				attemptMove(0, 1);
-			if(e.key.code == Keyboard.Key.D || e.key.code == Keyboard.Key.Right)
-				attemptMove(1, 0);
-			if(e.key.code == Keyboard.Key.I)
-				Mainloop.pushScreen(new InventoryScreen(player, time));
-			if(e.key.code == Keyboard.Key.Return)
-				world.enterPlace(player);
-			if(e.key.code == Keyboard.Key.R)
-				Mainloop.pushScreen(new ChoiceBox("Wait",
-					"You can let pass some time if you want — the world around you will still go on. There is no other advantage.",
-					[
-						Choice(null, "Do not wait", delegate void() { }, new ReactiveText),
-						Choice(null, "Wait one week", delegate void() { time.advance(7); }, new ReactiveText),
-						Choice(null, "Wait one month ", delegate void() { time.advance(28); }, new ReactiveText),
-						Choice(null, "Wait three months", delegate void() { time.advance(84); }, new ReactiveText),
-						Choice(null, "Wait one year", delegate void() { time.advance(336); }, new ReactiveText),
-					]
-				));
+			if(e.key.code == Keyboard.Key.Escape)
+			{
+				Mainloop.popScreen;
+				resultCallback(0, 0, false);
+			}
+		}
+		if(e.type == Event.EventType.MouseButtonPressed)
+		{
+			if(mouseOver() == MouseOver.Map)
+			{
+				auto pos = mouseSquare();
+				if(info[pos.y][pos.x].ok)
+				{
+
+					while(Mainloop.screens.length > 1)
+						Mainloop.popScreen;
+					resultCallback(pos.x, pos.y, true);
+				}
+			}
 		}
 	}
 
@@ -179,16 +222,13 @@ class GameScreen: Screen
 	{
 		ocean.update(dt);
 		texts[0].update;
-		texts[1].update;
-		texts[5].update;
+		texts[4].update;
 	}
 
 	override void draw()
 	{
-		if(Settings.gameLogShown)
-			camera.viewport = FloatRect(0f, 0f, .85f, .75f);
-		else
-			camera.viewport = FloatRect(0f, 0f, .85f, 1f);
+		win.clear();
+		camera.viewport = FloatRect(0f, 0f, .85f, .75f);
 		camera.size = Vector2f(win.size.x*camera.viewport.width/zoom, win.size.y*camera.viewport.height/zoom);
 		normalizeCamera();
 		win.view = camera;
@@ -198,6 +238,7 @@ class GameScreen: Screen
 		win.draw(player);
 		if(mouseOver == MouseOver.Map)
 			win.draw(cursor);
+		win.draw(colorcode, PrimitiveType.Quads);
 
 		win.view = minimap;
 		minimap.viewport = FloatRect(.875f, .05f, .10f, .10f*win.size.x/win.size.y);
@@ -221,17 +262,6 @@ class GameScreen: Screen
 
 	override void finish()
 	{
-	}
-
-	private void attemptMove(int dx, int dy)
-	{
-		if(world.passable(player.x + dx, player.y + dy))
-		{
-			player.x += dx;
-			player.y += dy;
-			world.passTimeForMove(player.x, player.y);
-		}
-		camera.center = Vector2f(3*World.TILESIZE*player.x + 3*World.TILESIZE/2, 3*World.TILESIZE*player.y + 3*World.TILESIZE/2);
 	}
 
 	private void normalizeCamera()

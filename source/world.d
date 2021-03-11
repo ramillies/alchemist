@@ -629,15 +629,15 @@ class World: Drawable
 			World me = string2ptr!World(t.get!string("ptr"));
 			return (x >=0 && x < me.width && y >=0 && y < me.height) ? me.decorations[y][x] : "";
 		};
-		obj["placeAt"] = delegate LuaTable (LuaTable t, size_t x, size_t y)
+		obj["placeAtString"] = delegate string (LuaTable t, size_t x, size_t y, string code)
 		{
 			World me = string2ptr!World(t.get!string("ptr"));
 			if(x < 0 && x >= me.width && y < 0 && y >= me.height)
-				return lua.loadString("return {}").call!LuaTable();
-			auto place = places.filter!((a) => a.x == x && a.y == y);
+				return "";
+			auto place = me.places.filter!((a) => a.x == x && a.y == y);
 			if(place.empty)
-				return lua.loadString("return {}").call!LuaTable();
-			return place.front.lua.get!LuaTable("place");
+				return "";
+			return place.front.lua.loadString(code).call!string();
 		};
 		obj["getWidth"] = delegate size_t (LuaTable t) { return string2ptr!World(t.get!string("ptr")).width; };
 		obj["getHeight"] = delegate size_t (LuaTable t) { return string2ptr!World(t.get!string("ptr")).height; };
@@ -669,12 +669,13 @@ class World: Drawable
 				}
 
 				auto chosenName = placeList[dice(chanceList)];
-				places ~= Place.byName(x, y, chosenName);				
-				this.luaPutInto(places[$-1].lua);
-				time.luaPutInto(places[$-1].lua);
-				places[$-1].init;
+				auto place = Place.byName(x, y, chosenName);
+				this.luaPutInto(place.lua);
+				time.luaPutInto(place.lua);
+				place.init;
 				if(time !is null)
-					time.onNewDay(&(places[$-1].newDay));
+					time.onNewDay(&(place.newDay));
+				places ~= place;
 			}
 	}
 	

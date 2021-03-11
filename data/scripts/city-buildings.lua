@@ -21,7 +21,37 @@ buildings = {
 	["shipyard"] = {
 		name = "Shipyard",
 		description = "Sail to another city with shipyard",
-		onVisit = function () messagebox("Shipyard", "You enjoy the nice sight of sea and ships.") end,
+		onInit = function (self)
+			self.costPerSquare = math.random(15, 25)
+		end,
+		onVisit = function (self, player)
+			teleportscreen(World, player, "Set Sail", "Bla bla", function (x, y)
+					local f = World:featureAt(x, y)
+					local dist = math.abs(x - place:getX()) + math.abs(y - place:getY());
+					if (f == "castle" or f == "city" or f == "village") then
+						local r = World:placeAtString(x, y, 'return tostring(place:hasBuilding("Shipyard"))')
+						if r == "true" then
+							return {
+								allowed = true,
+								text = string.format("Sail to %s for %d gold (%d days).", World:placeAtString(x, y, "return place:getName()"), dist*self.costPerSquare, dist/2)
+							}
+						else
+							return { allowed = false, text = "You cannot sail here." }
+						end
+					else
+						return { allowed = false, text = "You cannot sail here." }
+					end
+				end,
+				function (x, y, travel)
+					if travel then
+						local dist = math.abs(x - place:getX()) + math.abs(y - place:getY());
+						player:giveCoins(-dist*self.costPerSquare)
+						Time:advance(dist/2)
+						player:setPosition(x, y)
+					end
+				end
+			)
+		end
 	},
 	["guardhouse"] = {
 		name = "Guard House",
