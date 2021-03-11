@@ -35,6 +35,7 @@ class GameScreen: Screen
 	private Player player;
 	private RectangleShape cursor;
 	private GameTime time;
+	private size_t lastPlayerX, lastPlayerY;
 
 	private RenderWindow win;
 
@@ -43,6 +44,8 @@ class GameScreen: Screen
 		world = w;
 		time = t;
 
+		lastPlayerX = 0;
+		lastPlayerY = 0;
 		ocean = new Water(to!int(ceil(world.width/2.)), to!int(world.height));
 		auto startPos = cartesianProduct(world.width.iota, world.height.iota).filter!((x) => world.features[x[1]][x[0]] == "city").array.choice;
 		player = new Player(startPos[0], startPos[1]);
@@ -173,6 +176,13 @@ class GameScreen: Screen
 		texts.each!((t) => t.update);
 		cursor.outlineThickness = 8*zoom;
 		cursor.position = Vector2f(3*World.TILESIZE * mouseSquare().x, 3*World.TILESIZE * mouseSquare().y);
+
+		if(player.x != lastPlayerX || player.y != lastPlayerY)
+		{
+			lastPlayerX = player.x;
+			lastPlayerY = player.y;
+			camera.center = Vector2f(3*World.TILESIZE*player.x + 3*World.TILESIZE/2, 3*World.TILESIZE*player.y + 3*World.TILESIZE/2);
+		}
 	}
 
 	override void updateInactive(double dt)
