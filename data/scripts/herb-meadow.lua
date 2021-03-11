@@ -20,23 +20,8 @@ function place:newDay()
 end
 
 function place:enter(player)
-	choicebox("Herbs!", string.format("There are %d %s here. Grab them?", self.herbs, Herbs[self.herbKey].name), {
-		{ text = "Yes!", tileset = "people", tilenumber = 5, callback = function () self:grabHerbs(player) end },
-		{ text = "Nope...", tileset = "people", tilenumber = 6, callback = function () end, disabled = true },
-	} )
-end
-
-function place:grabHerbs(player)
 	player:giveItems({ [self.herbKey] = self.herbs })
-	local sep = ""
-	local herbList = ""
-	for k, v in pairs(player:getItems()) do
-		if v > 0 then
-			herbList = herbList .. sep .. string.format("%d × %s", v, Herbs[k].name)
-			sep = ", "
-		end
-	end
-	messagebox("New herbs!", string.format("You picked up %d %s here.\nNow you have %s.", self.herbs, Herbs[self.herbKey].name, herbList))
+	messagebox("New herbs!", string.format("You picked up %d %s.", self.herbs, Herbs[self.herbKey].name, herbList))
 	self.herbs = 0
 	self:updateDescription()
 end
