@@ -1,7 +1,6 @@
 dofile("data/scripts/city-buildings.lua")
 dofile("data/scripts/city-names.lua")
 dofile("data/scripts/city-customers.lua")
-dofile("data/scripts/inventorybox.lua")
 dofile("data/scripts/deepcopy.lua")
 
 function place:init()

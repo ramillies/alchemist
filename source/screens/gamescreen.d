@@ -125,6 +125,9 @@ class GameScreen: Screen
 		}
 
 		table.init;
+
+		foreach(place; world.places)
+			table.luaPutInto(place.lua);
 	}
 
 	override void event(Event e)

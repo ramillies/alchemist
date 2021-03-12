@@ -5,8 +5,12 @@ import std.random;
 import std.typecons;
 import std.stdio;
 import std.format;
+import std.range;
 
 import resources;
+import util;
+
+import luad.all;
 
 struct SmallInfo
 {
@@ -147,5 +151,35 @@ class PotionTable
 				foreach(ref med; f)
 					med.obsolete = true;
 		}
+	}
+
+	void luaPutInto(LuaState lua)
+	{
+		lua.doString(`PotionTable = {}`);
+		auto obj = lua.get!LuaTable("PotionTable");
+		obj["ptr"] = ptr2string(cast(void *) this);
+		obj["lookup"] = delegate string(LuaTable t, string a, string b)
+		{
+			return string2ptr!PotionTable(t.get!string("ptr")).tableLookup(a, b);
+		};
+		obj["giveRandomKnowledge"] = delegate void(LuaTable t, string type)
+		{
+			if(type == "medium")
+			{
+				auto index = medInfo.length.iota.filter!((n) => !medInfo[n].known && !medInfo[n].obsolete).array.choice;
+				medInfo[index].known = true;
+			}
+			else if(type == "large")
+			{
+				auto index = largeInfo.length.iota.filter!((n) => !largeInfo[n].known).array.choice;
+				largeInfo[index].known = true;
+			}
+			else
+			{
+				auto index = smallInfo.length.iota.filter!((n) => !smallInfo[n].known).array.choice;
+				smallInfo[index].known = true;
+			}
+			chainDiscoveries();
+		};
 	}
 }

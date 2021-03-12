@@ -31,7 +31,7 @@ customerTable = {
 				line,
 				{
 					{ text = "Yeah, I can give you some", callback = function ()
-						inventorybox(player, "Fisherman", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+						inventorybox(player, Time, PotionTable, function (x) return self:check(city, player, x) end)
 					end },
 					{ text = "No way." }
 				}
@@ -78,7 +78,7 @@ customerTable = {
 				line,
 				{
 					{ text = "Yar mate, try this", callback = function ()
-						inventorybox(player, "Pirate", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+						inventorybox(player, Time, PotionTable, function (x) return self:check(city, player, x) end)
 					end },
 					{ text = "Narr mate, I cannot help you." }
 				}
@@ -126,7 +126,7 @@ customerTable = {
 				line,
 				{
 					{ text = "Yeah, I have some potions for lawman like you", callback = function ()
-						inventorybox(player, "Guardsman", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+						inventorybox(player, Time, PotionTable, function (x) return self:check(city, player, x) end)
 					end },
 					{ text = "I cannot help you, but Im sure you will be fine without my potions" }
 				}
@@ -172,7 +172,7 @@ customerTable = {
 				line,
 				{
 					{ text = "I have something special for you, Capitan", callback = function ()
-						inventorybox(player, "Capitan Of The Guard", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+						inventorybox(player, Time, PotionTable, function (x) return self:check(city, player, x) end)
 					end },
 					{ text = "Sorry Capitan, I dont have anything that would satisfy you." }
 				}
@@ -216,7 +216,7 @@ customerTable = {
 				line,
 				{
 					{ text = "Im risking a lot by helping you, but take this", callback = function ()
-						inventorybox(player, "Prisoner", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+						inventorybox(player, Time, PotionTable, function (x) return self:check(city, player, x) end)
 					end },
 					{ text = "You should have followed the law" }
 				}
@@ -258,7 +258,7 @@ customerTable = {
 				line,
 				{
 					{ text = "Would this potion please Dolorem?", callback = function ()
-						inventorybox(player, "Bishop", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+						inventorybox(player, Time, PotionTable, function (x) return self:check(city, player, x) end)
 					end },
 					{ text = "Im afraid my potions cant help you" }
 				}
@@ -300,7 +300,7 @@ customerTable = {
 				line,
 				{
 					{ text = "I have always some potions for knights in shining armor", callback = function ()
-						inventorybox(player, "Crusader", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+						inventorybox(player, Time, PotionTable, function (x) return self:check(city, player, x) end)
 					end },
 					{ text = "None of my potions could enhance your holy talent" }
 				}
@@ -342,7 +342,7 @@ customerTable = {
 				line,
 				{
 					{ text = "Would this be holy enough for you Holy one?", callback = function ()
-						inventorybox(player, "Pope", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+						inventorybox(player, Time, PotionTable, function (x) return self:check(city, player, x) end)
 					end },
 					{ text = "Excuse my unpreparedness, I will return with some potion worhty of your time " }
 				}
@@ -384,7 +384,7 @@ customerTable = {
 				line,
 				{
 					{ text = "Drink this when assassins come knocking or use it when you need someone gone", callback = function ()
-						inventorybox(player, "Nobleman", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+						inventorybox(player, Time, PotionTable, function (x) return self:check(city, player, x) end)
 					end },
 					{ text = "Sorry, I cannot help you right now" }
 				}
@@ -426,7 +426,7 @@ customerTable = {
 				line,
 				{
 					{ text = "I have the cure for your hearths malady, my lady.", callback = function ()
-						inventorybox(player, "Lady In Waiting", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+						inventorybox(player, Time, PotionTable, function (x) return self:check(city, player, x) end)
 					end },
 					{ text = "Not even my potions can help you with face THAT ugly" }
 				}
@@ -468,7 +468,7 @@ customerTable = {
 				line,
 				{
 					{ text = "Say hello to your new little friend in the bottle", callback = function ()
-						inventorybox(player, "Guild Enforcer", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+						inventorybox(player, Time, PotionTable, function (x) return self:check(city, player, x) end)
 					end },
 					{ text = "I cannot help you, sorry" }
 				}
@@ -510,7 +510,7 @@ customerTable = {
 				line,
 				{
 					{ text = "With this, no man can stop you", callback = function ()
-						inventorybox(player, "Assassin", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+						inventorybox(player, Time, PotionTable, function (x) return self:check(city, player, x) end)
 					end },
 					{ text = "Not really" }
 				}
@@ -552,7 +552,7 @@ customerTable = {
 				line,
 				{
 					{ text = "Sure, I can find something for guy like you", callback = function ()
-						inventorybox(player, "Hunter", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+						inventorybox(player, Time, PotionTable, function (x) return self:check(city, player, x) end)
 					end },
 					{ text = "I dont think so" }
 				}
@@ -594,7 +594,7 @@ customerTable = {
 				line,
 				{
 					{ text = "Yeah, I can give you some", callback = function ()
-						inventorybox(player, "Miner", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+						inventorybox(player, Time, PotionTable, function (x) return self:check(city, player, x) end)
 					end },
 					{ text = "No way." }
 				}
@@ -636,7 +636,7 @@ customerTable = {
 				line,
 				{
 					{ text = " I have something for tough guy like you", callback = function ()
-						inventorybox(player, "Blacksmith", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+						inventorybox(player, Time, PotionTable, function (x) return self:check(city, player, x) end)
 					end },
 					{ text = "I dont have anything useful to you at this time." }
 				}
@@ -680,7 +680,7 @@ customerTable = {
 				line,
 				{
 					{ text = "Of course father, try this", callback = function ()
-						inventorybox(player, "Priest", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+						inventorybox(player, Time, PotionTable, function (x) return self:check(city, player, x) end)
 					end },
 					{ text = "I cannot help you right now" }
 				}
@@ -722,7 +722,7 @@ customerTable = {
 				line,
 				{
 					{ text = "Would you be interested in this tool of harm and misfortune? ", callback = function ()
-						inventorybox(player, "Old Hag", "This is your inventory. What you will give her?", function (x) return self:check(city, player, x) end)
+						inventorybox(player, Time, PotionTable, function (x) return self:check(city, player, x) end)
 					end },
 					{ text = "Ehhh, excuse me, I really need to go somewhere else" }
 				}
@@ -765,7 +765,7 @@ customerTable = {
 				line,
 				{
 					{ text = "This will surely help you purge evil from this land", callback = function ()
-						inventorybox(player, "Witch Hunter", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+						inventorybox(player, Time, PotionTable, function (x) return self:check(city, player, x) end)
 					end },
 					{ text = "I cant help you" }
 				}
@@ -807,7 +807,7 @@ customerTable = {
 				line,
 				{
 					{ text = "Yeah, I can give you some", callback = function ()
-						inventorybox(player, "Footman", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+						inventorybox(player, Time, PotionTable, function (x) return self:check(city, player, x) end)
 					end },
 					{ text = "No way." }
 				}
@@ -849,7 +849,7 @@ customerTable = {
 				line,
 				{
 					{ text = "Yeah, I can give you something", callback = function ()
-						inventorybox(player, "Crossbowman", "This is your inventory. What you will give him?", function (x) return self:check(city, player, x) end)
+						inventorybox(player, Time, PotionTable, function (x) return self:check(city, player, x) end)
 					end },
 					{ text = "No way." }
 				}

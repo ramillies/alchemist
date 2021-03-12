@@ -9,6 +9,9 @@ import util;
 import player;
 import world;
 import teleportscreen;
+import potiontable;
+import chooseitemscreen;
+import gametime;
 
 import luad.all;
 
@@ -23,11 +26,15 @@ void putPopupsIntoLua(LuaState lua)
 	};
 	lua["teleportscreen"] = delegate void (LuaTable world, LuaTable player, string heading, string msg, LuaTable delegate(size_t, size_t) infoCallback, void delegate(size_t, size_t, bool) resultCallback)
 	{
-		writefln("getting player ptr");
 		auto p = string2ptr!Player(player.get!string("ptr"));
-		writefln("getting world ptr");
 		auto w = string2ptr!World(world.get!string("ptr"));
-		writefln("pushing screen");
 		Mainloop.pushScreen(new TeleportScreen(w, p, heading, msg, infoCallback, resultCallback));
+	};
+	lua["inventorybox"] = delegate void (LuaTable player, LuaTable time, LuaTable potions, void delegate(string) callback)
+	{
+		auto p = string2ptr!Player(player.get!string("ptr"));
+		auto t = string2ptr!GameTime(time.get!string("ptr"));
+		auto pot = string2ptr!PotionTable(potions.get!string("ptr"));
+		Mainloop.pushScreen(new ChooseItemScreen(p, t, pot, callback));
 	};
 }

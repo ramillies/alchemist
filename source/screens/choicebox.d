@@ -52,7 +52,7 @@ class ChoiceBox: Screen
 	private RenderWindow win;
 	private string heading, msg;
 	private Choice[] choices;
-	const int ROWHEIGHT = 50;
+	const int ROWHEIGHT = 65;
 	private View camera;
 	private RectangleShape cursor;
 

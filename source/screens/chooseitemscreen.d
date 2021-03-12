@@ -25,7 +25,7 @@ import victoryscreen;
 
 import dsfml.graphics;
 
-class InventoryScreen: Screen
+class ChooseItemScreen: Screen
 {
 	private ReactiveText[] texts, numbers;
 	private CoolSprite[] sprites;
@@ -62,13 +62,15 @@ class InventoryScreen: Screen
 	private PotionTable potionTable;
 
 	private RenderWindow win;
+	private void delegate(string) callback;
 
-	this(Player p, GameTime t, PotionTable pot)
+	this(Player p, GameTime t, PotionTable pot, void delegate(string) c)
 	{
 		player = p;
 		time = t;
-		selected = [ -1, -1 ];
+		selected = [ -1 ];
 		potionTable = pot;
+		callback = c;
 	}
 
 	override void setWindow(RenderWindow w) { win = w; }
@@ -129,7 +131,7 @@ class InventoryScreen: Screen
 				setColor(Color.Red);
 				if(n < 11) setRelativeOrigin(Vector2f(.5f, 1f));
 				else setCharacterSize(6*cellsize/5);
-				setString(["Herbs", "Ingredients", "Potions", "Good", "Evil", "Combine", "I", "II", "III", "IV"][n-5]);
+				setString(["Herbs", "Ingredients", "Potions", "Good", "Evil", "Back", "I", "II", "III", "IV"][n-5]);
 			}
 		texts[5].positionCallback = () => Vector2f(.425*win.size.x, .7*cellsize);
 		texts[6].positionCallback = () => Vector2f(.425*win.size.x, 2.45*cellsize);
@@ -139,13 +141,14 @@ class InventoryScreen: Screen
 		texts[9].positionCallback = () => Vector2f(.75*.85*win.size.x, 4.4*cellsize);
 		texts[9].setCharacterSize(50*win.size.y/1080);
 		texts[10].position = Vector2f(.9*win.size.x, .90 * win.size.y);
+		texts[10].stringCallback = () => selected[0] == -1 ? "Back" : "Give";
 		foreach(n; 11 .. 15)
 			texts[n].position = Vector2f(.425*win.size.x, (5.5 + [0, 2.1, 3.7, 4.8][n - 11])*cellsize);
 
 		combineButton = new RectangleShape(Vector2f(texts[10].getLocalBounds.width + 20, texts[10].getLocalBounds.height + 20));
 		combineButton.fillColor = Color.Black;
 		combineButton.outlineThickness = 10;
-		combineButton.outlineColor = Color(120, 120, 120);
+		combineButton.outlineColor = Color.Red;
 
 		int index = 0;
 		void makeCellAt(float x, float y)
@@ -202,8 +205,11 @@ class InventoryScreen: Screen
 			Mainloop.quit;
 		if(e.type == Event.EventType.KeyPressed)
 		{
-			if(e.key.code == Keyboard.Key.Escape || e.key.code == Keyboard.Key.I)
+			if(e.key.code == Keyboard.Key.Escape)
+			{
 				Mainloop.popScreen;
+				callback("");
+			}
 			if(e.key.code == Keyboard.Key.N)
 			{
 				auto knowledge = chain(
@@ -226,38 +232,13 @@ class InventoryScreen: Screen
 					selectBox(k);
 					break;
 				}
-			if(selected.all!`a!=-1` && texts[10].getGlobalBounds().contains(Mouse.getPosition(win)))
+			if(texts[10].getGlobalBounds().contains(Mouse.getPosition(win)))
 			{
-				foreach(n; selected)
-					player.items[itemList[n]]--;
-				auto mixResult = potionTable.mixResult(itemList[selected[0]], itemList[selected[1]]);
-				if(mixResult.result == "")
-				{
-					Mainloop.pushScreen(new MessageBox("Poof!",
-						format("You tried to prepare a mixture of %s and %s, but you got only copious amounts of thick black stinking smoke. The ingredients are wasted.\n\n%s",
-							ConfigFiles.get("items")[itemList[selected[0]]]["name"].str,
-							ConfigFiles.get("items")[itemList[selected[1]]]["name"].str,
-							mixResult.infoType == "medium"
-								? format("You learnt that %s, and wrote that down into your notebook.", potionTable.medInfo[mixResult.infoIndex].description)
-								: mixResult.infoType == "small"
-									? format("You learnt that %s, and wrote that down into your notebook.", potionTable.smallInfo[mixResult.infoIndex].description)
-									: ""
-							)
-					));
-					unselectAll();
-				}
+				Mainloop.popScreen;
+				if(selected[0] == -1)
+					callback("");
 				else
-				{
-					player.items[mixResult.result]++;
-					if(mixResult.result == "youth potion")
-						Mainloop.pushScreen(new VictoryScreen(player, potionTable));
-					if(mixResult.infoType == "small")
-						Mainloop.pushScreen(new MessageBox("A new find!",
-							format("You now know that %s, and wrote that down into your notebook.", potionTable.smallInfo[mixResult.infoIndex].description)
-						));
-				}
-				if(selected.any!((n) => n == -1 || player.items[itemList[n]] < 1))
-					unselectAll();
+					callback(itemList[selected[0]]);
 			}
 		}
 	}
@@ -265,11 +246,8 @@ class InventoryScreen: Screen
 	override void update(double dt)
 	{
 		auto mousePos = Mouse.getPosition(win);
-		bool combineSelected = selected.all!`a!=-1` && texts[10].getGlobalBounds().contains(Mouse.getPosition(win));
-		texts[10].setColor(selected.all!`a!=-1` ? Color.Red : Color(120, 120, 120));
 		combineButton.position = Vector2f(texts[10].getGlobalBounds.left - 10, texts[10].getGlobalBounds.top - 10);
-		combineButton.fillColor = combineSelected ? Color(225, 188, 0, 80) : Color(0, 0, 0, 0);
-		combineButton.outlineColor = selected.all!`a!=-1` ? Color.Red : Color(120, 120, 120);
+		combineButton.fillColor = texts[10].getGlobalBounds().contains(Mouse.getPosition(win)) ? Color(225, 188, 0, 80) : Color(0, 0, 0, 0);
 		texts[2].setString("");
 		texts[3].setString("");
 		foreach(n; 0 .. itemList.length)
@@ -284,46 +262,6 @@ class InventoryScreen: Screen
 					auto item = ConfigFiles.get("items")[itemList[n]].object;
 					texts[2].setString(item["name"].str);
 					texts[3].setString(item["description"].str);
-				}
-			}
-			if(selected.count!`a != -1` == 1)
-			{
-				auto sel = selected[selected.countUntil!`a != -1`];
-				if(n < 18)
-				{
-					foreach(info; potionTable.smallInfo.filter!`a.known`)
-						if(info.inputMatches(itemList[sel], itemList[n]))
-							boxes[n].fillColor = info.output == "" ? Color(200, 0, 0, 80) : Color(0, 200, 0, 80);
-				}
-				else if(n < 48 || (n > 50 && n < 81))
-				{
-					if(potionTable.tableLookup(itemList[sel], itemList[n]) != "")
-						boxes[n].fillColor = Color(0, 200, 0, 80);
-					else
-						boxes[n].fillColor = Color(200, 0, 0, 80);
-				}
-				else
-				{
-					foreach(info; potionTable.medInfo.filter!`a.known`)
-						if(info.inputMatches(itemList[sel], itemList[n]))
-							boxes[n].fillColor = Color(200, 0, 0, 80);
-				}
-			}
-			if(selected.count!`a != -1` == 2)
-			{
-				if(selected[0] < 18)
-				{
-					foreach(info; potionTable.smallInfo.filter!`a.known`)
-						if(info.inputMatches(itemList[selected[0]], itemList[selected[1]]) && info.output == itemList[n])
-							boxes[n].outlineColor = Color(255, 255, 0);
-				}
-				else
-				{
-					foreach(key, val; potionTable.table)
-						if(((itemList[selected[0]] == key[0] && itemList[selected[1]] == key[1])
-						|| (itemList[selected[1]] == key[0] && itemList[selected[0]] == key[1]))
-						&& itemList[n] == val)
-							boxes[n].outlineColor = Color(255, 255, 0);
 				}
 			}
 			auto itemcount = player.items[itemList[n]];
