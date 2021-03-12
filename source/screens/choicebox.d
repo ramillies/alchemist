@@ -56,6 +56,8 @@ class ChoiceBox: Screen
 	private View camera;
 	private RectangleShape cursor;
 
+	private double choicesTop, choicesHeight;
+
 	this(string h, string m, Choice[] c)
 	{
 		heading = h;
@@ -80,14 +82,14 @@ class ChoiceBox: Screen
 			setStyle(Text.Style.Bold);
 			setRelativeOrigin(Vector2f(.5f, 0f));
 			positionCallback = () => Vector2f(.5*win.size.x, .05*win.size.y + 5);
-			stringCallback = () => heading;
+			setString(heading);
 		}
 		with(texts[1])
 		{
 			setCharacterSize(40);
 			setRelativeOrigin(Vector2f(.5f, 0f));
 			positionCallback = () => Vector2f(.5*win.size.x, .12*win.size.y);
-			stringCallback = () => msg;
+			setString(msg);
 		}
 		with(texts[2])
 		{
@@ -127,8 +129,13 @@ class ChoiceBox: Screen
 			}
 		}
 
-		camera = new View(FloatRect(0, 0, .45 * win.size.x, .66 * win.size.y));
-		camera.viewport = FloatRect(.275f, .32f, .45f, .60f);
+		texts[1].update;
+		auto bounds = texts[1].getGlobalBounds;
+		choicesTop = (bounds.top + bounds.height + 60)/win.size.y;
+		choicesHeight = .92 - choicesTop;
+
+		camera = new View(FloatRect(0, 0, .45 * win.size.x, choicesHeight * win.size.y));
+		camera.viewport = FloatRect(.275f, choicesTop, .45f, choicesHeight);
 
 		cursor = new RectangleShape(Vector2f(.45*win.size.x, ROWHEIGHT));
 		cursor.fillColor = Color(225, 188, 0, 80);
@@ -142,7 +149,7 @@ class ChoiceBox: Screen
 			camera.center = Vector2f(camera.center.x, clamp(camera.center.y - ROWHEIGHT*e.mouseWheel.delta, camera.size.y/2, max(choices.length*ROWHEIGHT - camera.size.y/2, camera.size.y/2)));
 		if(e.type == Event.EventType.MouseButtonPressed)
 		{
-			if(e.mouseButton.button == Mouse.Button.Left && mouseRow() != -1 && !choices[mouseRow()].disabled)
+			if(e.mouseButton.button == Mouse.Button.Left && mouseInBox() && !choices[mouseRow()].disabled)
 			{
 				if(choices[mouseRow()].popBox)
 					Mainloop.popScreen;
@@ -174,7 +181,7 @@ class ChoiceBox: Screen
 		{
 			RectangleShape bar = new RectangleShape(Vector2f(10f, camera.size.y ^^ 2 /ROWHEIGHT/choices.length));
 			bar.fillColor = Color.Red;
-			bar.position = Vector2f(.7375*win.size.x - 5, .26*win.size.y + camera.size.y * (camera.center.y - camera.size.y/2)/choices.length/ROWHEIGHT);
+			bar.position = Vector2f(.7375*win.size.x - 5, choicesTop*win.size.y + camera.size.y * (camera.center.y - camera.size.y/2)/choices.length/ROWHEIGHT);
 			win.draw(bar);
 		}
 
@@ -185,7 +192,7 @@ class ChoiceBox: Screen
 				win.draw(c.sprite);
 			win.draw(c.textRendering);
 		}
-		if(mouseRow() != -1 && !choices[mouseRow()].disabled)
+		if(mouseInBox() && !choices[mouseRow()].disabled)
 		{
 			cursor.position = Vector2f(0f, ROWHEIGHT*mouseRow());
 			win.draw(cursor);
@@ -194,16 +201,22 @@ class ChoiceBox: Screen
 		win.view = win.getDefaultView.dup;
 	}
 
+	private bool mouseInBox()
+	{
+		auto cw = camera.viewport;
+		return FloatRect(cw.left*win.size.x, cw.top*win.size.y, cw.width*win.size.x, cw.height*win.size.y).contains(Mouse.getPosition(win));
+	}
+
 	private int mouseRow()
 	{
 		auto cw = camera.viewport;
-		if(FloatRect(cw.left*win.size.x, cw.top*win.size.y, cw.width*win.size.x, cw.height*win.size.y).contains(Mouse.getPosition(win)))
+		if(mouseInBox())
 		{
 			auto pt = win.mapPixelToCoords(Mouse.getPosition(win), camera);
 			return clamp(to!int(pt.y/ROWHEIGHT), 0, choices.length-1);
 		}
 		else
-			return -1;
+			return 0;
 	}
 
 	override void finish()

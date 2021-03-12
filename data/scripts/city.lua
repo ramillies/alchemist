@@ -156,6 +156,7 @@ function place:addReputation(x)
 	elseif self.reputation < -100 then
 		self.reputation = -100
 	end
+	place:updateDescription()
 end
 
 function place:adjustedCost(cost, modifier)
