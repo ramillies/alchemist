@@ -162,24 +162,35 @@ class PotionTable
 		{
 			return string2ptr!PotionTable(t.get!string("ptr")).tableLookup(a, b);
 		};
-		obj["giveRandomKnowledge"] = delegate void(LuaTable t, string type)
+		obj["giveRandomKnowledge"] = delegate string(LuaTable t, string type)
 		{
+			string ret;
 			if(type == "medium")
 			{
-				auto index = medInfo.length.iota.filter!((n) => !medInfo[n].known && !medInfo[n].obsolete).array.choice;
+				auto usefulInfo = medInfo.length.iota.filter!((n) => !medInfo[n].known && !medInfo[n].obsolete).array;
+				if(usefulInfo.empty) return "";
+				auto index = usefulInfo.choice;
 				medInfo[index].known = true;
+				ret = medInfo[index].description;
 			}
 			else if(type == "large")
 			{
-				auto index = largeInfo.length.iota.filter!((n) => !largeInfo[n].known).array.choice;
+				auto usefulInfo = largeInfo.length.iota.filter!((n) => !largeInfo[n].known).array;
+				if(usefulInfo.empty) return "";
+				auto index = usefulInfo.choice;
 				largeInfo[index].known = true;
+				ret = largeInfo[index].description;
 			}
 			else
 			{
-				auto index = smallInfo.length.iota.filter!((n) => !smallInfo[n].known).array.choice;
+				auto usefulInfo = smallInfo.length.iota.filter!((n) => !smallInfo[n].known).array;
+				if(usefulInfo.empty) return "";
+				auto index = usefulInfo.choice;
 				smallInfo[index].known = true;
+				ret = smallInfo[index].description;
 			}
 			chainDiscoveries();
+			return ret;
 		};
 	}
 }
