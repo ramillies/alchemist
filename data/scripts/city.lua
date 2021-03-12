@@ -110,7 +110,9 @@ function place:sellStuff(player)
 		for k, v in pairs(self.customers) do
 			table.insert(choices, {
 				text = v.name,
-				callback = function () v:talk(self, player) end
+				callback = function () v:talk(self, player) end,
+				tileset = v.tileset,
+				tilenumber = v.tilenumber
 			})
 		end
 		table.insert(choices, { text = "Nobody — I changed my mind" })
