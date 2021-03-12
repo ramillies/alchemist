@@ -5,6 +5,7 @@ import reacttext;
 import coolsprite;
 import battletime;
 import unit;
+import player;
 
 import boilerplate;
 import luad.all;
@@ -15,7 +16,7 @@ class BattleScreen: Screen
 	private RenderWindow win;
 	private bool nonlethal;
 	private Player player;
-	private Unit[] monsters;
+	private Unit[] heroes, monsters;
 	private void delegate(LuaTable) endBattleCallback;
 	private BattleTime time;
 	bool inInputState;
@@ -23,7 +24,16 @@ class BattleScreen: Screen
 	this(Player p, Unit[] m, bool nl, void delegate(LuaTable) cb)
 	{
 		player = p;
-		monsters = m;
+		foreach(n; 0 .. 6)
+		{
+			auto index = m.countUntil!((x) => x.squadPosition == n);
+			monsters ~= index == -1 ? cast(Unit) null : m[index];
+		}
+		foreach(n; 0 .. 6)
+		{
+			auto index = p.units.countUntil!((x) => x.squadPosition == n);
+			heroes ~= index == -1 ? cast(Unit) null : p.units[index];
+		}
 		nonlethal = nl;
 		endBattleCallback = cb;
 		time = new BattleTime;
@@ -34,26 +44,30 @@ class BattleScreen: Screen
 
 	override void init()
 	{
-		const double margin = .1*win.size.x;
+		const double marginX = .1*win.size.x, marginY = .2 * win.size.y;
 		const double cellsize = .2*win.size.y;
-		foreach(unit; player.units)
+		foreach(pos, unit; heroes)
 		{
-			unit.saveCheckpoint;
+			if(unit is null) continue;
+			unit.startBattle(time, heroes, monsters);
 			unit.setRelativeOrigin(Vector2f(.5f, .5f));
 			time.register(unit);
 			unit.position = Vector2f(
-				margin + cellsize*(unit.squadPosition % 2 + .5),
-				cellsize*((unit.squadPosition/2) + 1.5)
+				marginX + cellsize*(pos % 2 + 1.5),
+				marginY + cellsize*((pos/2) + .5)
 			);
 
 		}
-		foreach(unit; monsters)
+		player.setBattlePosition(Vector2f(marginX + cellsize * .5, marginY + cellsize * 1.5));
+		foreach(pos, unit; monsters)
 		{
+			if(unit is null) continue;
+			unit.startBattle(time, monsters, heroes);
 			unit.setRelativeOrigin(Vector2f(.5f, .5f));
 			time.register(unit);
 			unit.position = Vector2f(
-				win.size.x - margin - cellsize*(unit.squadPosition % 2 + .5),
-				win.size.y - cellsize*((unit.squadPosition/2) + 1.5)
+				win.size.x - marginX - cellsize*(pos % 2 + .5),
+				win.size.y - marginY - cellsize*((pos/2) + 5)
 			);
 		}
 
@@ -93,19 +107,19 @@ class BattleScreen: Screen
 		];
 		win.draw(separators, PrimitiveType.Lines);
 
-		player.units.each!((x) => win.draw(x));
-		monsters.each!((x) => win.draw(x));
+		heroes.each!((x) => x !is null && win.draw(x));
+		monsters.each!((x) => x !is null && win.draw(x));
 	}
 
-	override bool checkBattleEnd()
+	bool checkBattleEnd()
 	{
 		LuaState lua = new LuaState;
 		lua.openLibs;
 		LuaTable result = lua.loadString("return {}").call!LuaTable();
-		if(monsters.all!`a.dead`)
+		if(monsters.filter!`a !is null`.all!`a.dead`)
 			result["result"] = "victory";
 		if(player.units.all!`a.dead || a.fled`)
-			result["result"] = playr.units.any!`a.fled` ? "flee" : "defeat";
+			result["result"] = player.units.any!`a.fled` ? "flight" : "defeat";
 		if(!result["result"].isNil)
 		{
 			player.endBattle(nonlethal);
@@ -114,7 +128,6 @@ class BattleScreen: Screen
 			return true;
 		}
 		return false;
-
 	}
 
 	override void finish() { }

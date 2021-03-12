@@ -1,24 +1,37 @@
-// import battletime;
+import std.algorithm, std.array, std.range;
+import std.typecons;
+
+import battletime;
 import stats;
 import unit;
 
 import luad.all;
 import boilerplate;
 
-class Effect
+class Effect: TimeRegistrable
 {
 	private
 	{
-	//	@Read void delegate(BattleTime) _recurring;
-		@Read Stats delegate(Stats) _changeStats;
-		@Read bool delegate(Unit) _changeTurn;
+		@Read string _name;
+		@Read AttackType _type;
+		@Read @Write void delegate() _recurring;
+		@Read @Write Stats delegate(Stats) _changeStats;
+		@Read @Write bool delegate(Unit) _changeTurn;
 		@Read LuaState _lua;
 	}
 
-	this(Stats delegate(Stats) c2, bool delegate(Unit) c3)
+	this(string n, AttackType t)
 	{
-		_changeStats = c2;
-		_changeTurn = c3;
+		_name = n;
+		_type = t;
 		_lua = new LuaState;
+	}
+
+	
+	mixin(GenerateAll);
+
+	override Tuple!(double, "cooldown", double, "speedFactor") takeTurn()
+	{
+		return tuple!("cooldown", "speedFactor")(1., 1.);
 	}
 }

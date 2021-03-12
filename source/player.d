@@ -3,6 +3,7 @@ import std.algorithm;
 import world;
 import resources;
 import util;
+import unit;
 
 import luad.all;
 import dsfml.graphics;
@@ -12,7 +13,9 @@ class Player: Drawable
 	size_t x, y;
 	int[string] items;
 	int coins;
+	Unit[] units;
 	private Sprite sprite;
+	private bool battle;
 
 	this(size_t x, size_t y)
 	{
@@ -30,6 +33,7 @@ class Player: Drawable
 			items[ingredient] = 0;
 		foreach(potion; ConfigFiles.get("potions").keys)
 			items[potion] = 0;
+		battle = false;
 	}
 
 	void luaPutInto(LuaTable obj)
@@ -61,9 +65,25 @@ class Player: Drawable
 		obj["giveCoins"] = delegate void(LuaTable t, int x) { auto me = string2ptr!Player(t.get!string("ptr")); me.coins = max(0, me.coins + x); };
 	}
 
+	void setBattlePosition(Vector2f pos)
+	{
+		battle = true;
+		sprite.position = pos;
+	}
+
+	void endBattle(bool nonlethal)
+	{
+		if(!nonlethal)
+			while(units.any!`a.dead`)
+				units = units.remove(units.countUntil!`a.dead`);
+		units.each!`a.endBattle`;
+		battle = false;
+	}
+
 	override void draw(RenderTarget target, RenderStates states)
 	{
-		sprite.position = Vector2f(3*World.TILESIZE*x + 3*World.TILESIZE/2, 3*y*World.TILESIZE + 3*World.TILESIZE/2);
+		if(!battle)
+			sprite.position = Vector2f(3*World.TILESIZE*x + 3*World.TILESIZE/2, 3*y*World.TILESIZE + 3*World.TILESIZE/2);
 		target.draw(sprite, states);
 	}
 }

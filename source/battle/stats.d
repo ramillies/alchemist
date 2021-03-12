@@ -42,7 +42,7 @@ struct Stats
 
 	@property void hp(int x) { _hp = min(_maxhp, x); }
 	@property void armor(int x) { _armor = min(x, 90); }
-	@property AttackResult tryHitWithType(AttackType type)
+	AttackResult tryHitWithType(AttackType type)
 	{
 		if(_immunities.canFind(type))
 			return AttackResult.Immunity;
@@ -51,7 +51,7 @@ struct Stats
 		return AttackResult.Hit;
 	}
 
-	@property AttackResult hitWithType(AttackType type)
+	AttackResult hitWithType(AttackType type)
 	{
 		auto res = tryHitWithType(type);
 		if(res == AttackResult.Ward)
