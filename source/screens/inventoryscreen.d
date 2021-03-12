@@ -21,7 +21,7 @@ import gametime;
 import messagebox;
 import choicebox;
 import potiontable;
-import victoryscreen;
+import endgamescreen;
 
 import dsfml.graphics;
 
@@ -250,7 +250,7 @@ class InventoryScreen: Screen
 				{
 					player.items[mixResult.result]++;
 					if(mixResult.result == "youth potion")
-						Mainloop.pushScreen(new VictoryScreen(player, potionTable));
+						Mainloop.pushScreen(new EndGameScreen(player, potionTable, "Victory!"));
 					if(mixResult.infoType == "small")
 						Mainloop.pushScreen(new MessageBox("A new find!",
 							format("You now know that %s, and wrote that down into your notebook.", potionTable.smallInfo[mixResult.infoIndex].description)

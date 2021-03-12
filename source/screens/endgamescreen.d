@@ -8,17 +8,20 @@ import resources;
 
 import dsfml.graphics;
 
-class VictoryScreen: Screen
+class EndGameScreen: Screen
 {
 	private ReactiveText[] texts;
 	private Player player;
 	private PotionTable table;
 	private RenderWindow win;
+	private string heading, text;
 
-	this(Player p, PotionTable t)
+	this(Player p, PotionTable t, string h, string txt)
 	{
 		player = p;
 		table = t;
+		heading = h;
+		text = txt;
 	}
 
 	override void setWindow(RenderWindow w) { win = w; }
@@ -28,7 +31,7 @@ class VictoryScreen: Screen
 		texts ~= new ReactiveText;
 		with(texts[$-1])
 		{
-			setString("Victory!");
+			setString(heading);
 			setColor(Color.Red);
 			position = Vector2f(win.size.x/2, win.size.y/2);
 			setRelativeOrigin(Vector2f(.5f, .5f));
