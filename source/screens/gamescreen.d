@@ -23,7 +23,10 @@ import choicebox;
 import inventoryscreen;
 import teleportscreen;
 import potiontable;
+import unit;
+import battlescreen;
 
+import luad.all;
 import dsfml.graphics;
 
 class GameScreen: Screen
@@ -128,6 +131,7 @@ class GameScreen: Screen
 
 		foreach(place; world.places)
 			table.luaPutInto(place.lua);
+
 	}
 
 	override void event(Event e)
@@ -194,6 +198,24 @@ class GameScreen: Screen
 
 	override void update(double dt)
 	{
+		player.units ~= Unit.byName("swordsman");
+		player.units[0].squadPosition = 0;
+		auto skel = Unit.byName("skeleton");
+		skel.squadPosition = 0;
+		Mainloop.pushScreen(new BattleScreen(
+			player,
+			[ skel ],
+			false,
+			delegate void(LuaTable t)
+			{
+				auto result = t.get!string("result");
+				if(result == "victory")
+					Mainloop.pushScreen(new MessageBox("Hooray!", "You won the battle!"));
+				if(result == "defeat")
+					Mainloop.pushScreen(new MessageBox("Boo!", "You lost the battle!"));
+			}
+		));
+
 		auto mouse = Mouse.getPosition(win);
 		if(mouse.x < win.size.x/20)
 			camera.move(Vector2f(-1024*dt, 0));

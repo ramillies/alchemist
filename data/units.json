@@ -1,0 +1,38 @@
+{
+	"skeleton": {
+		"name": "Skeleton",
+		"description": "Just an ordinary fantasy game skeleton.",
+		"tileset": "monsters",
+		"tilenumber": 251,
+		"hp": 150,
+		"armor": 10,
+		"speed": 40,
+		"wards": [],
+		"immunities": [],
+		"attack": {
+			"type": "weapon",
+			"strength": 30,
+			"chanceToHit": 80,
+			"usedOnEnemies": true,
+			"targets": "return {}"
+		}
+	},
+	"swordsman": {
+		"name": "Swordsman",
+		"description": "Just an ordinary swordsman.",
+		"tileset": "people",
+		"tilenumber": 280,
+		"hp": 200,
+		"armor": 0,
+		"speed": 30,
+		"wards": [],
+		"immunities": [],
+		"attack": {
+			"type": "weapon",
+			"strength": 25,
+			"chanceToHit": 90,
+			"usedOnEnemies": true,
+			"targets": "return {}"
+		}
+	}
+}

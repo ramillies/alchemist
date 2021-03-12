@@ -1,4 +1,5 @@
 import std.algorithm, std.range, std.array;
+import std.stdio;
 
 import mainloop;
 import reacttext;
@@ -34,6 +35,7 @@ class BattleScreen: Screen
 			auto index = p.units.countUntil!((x) => x.squadPosition == n);
 			heroes ~= index == -1 ? cast(Unit) null : p.units[index];
 		}
+
 		nonlethal = nl;
 		endBattleCallback = cb;
 		time = new BattleTime;
@@ -56,6 +58,7 @@ class BattleScreen: Screen
 				marginX + cellsize*(pos % 2 + 1.5),
 				marginY + cellsize*((pos/2) + .5)
 			);
+			writefln("Drawing unit %s to position %s.", unit.name, unit.position);
 
 		}
 		player.setBattlePosition(Vector2f(marginX + cellsize * .5, marginY + cellsize * 1.5));
@@ -67,16 +70,16 @@ class BattleScreen: Screen
 			time.register(unit);
 			unit.position = Vector2f(
 				win.size.x - marginX - cellsize*(pos % 2 + .5),
-				win.size.y - marginY - cellsize*((pos/2) + 5)
+				win.size.y - marginY - cellsize*((pos/2) + .5)
 			);
+			writefln("Drawing unit %s to position %s.", unit.name, unit.position);
 		}
-
-		time.initTimes;
-		time.nextTurn;
 	}
 
 	override void event(Event e)
 	{
+		if(e.type == Event.EventType.Closed)
+			Mainloop.quit;
 		if(!inInputState) return;
 	}
 
@@ -93,22 +96,30 @@ class BattleScreen: Screen
 					time.nextTurn;
 			}
 		}
+		else
+		{
+			time.cooldown = 0;
+			if(!checkBattleEnd())
+				time.nextTurn;
+		}
 	}
 
 	override void updateInactive(double dt) { }
 
 	override void draw()
 	{
+		win.clear();
 		Vertex[] separators = [
-			Vertex(Vector2f(0, .2*win.size.x), Color.Red, Vector2f(0f, 0f)),
-			Vertex(Vector2f(win.size.x, .2*win.size.x), Color.Red, Vector2f(0f, 0f)),
-			Vertex(Vector2f(0, .8*win.size.x), Color.Red, Vector2f(0f, 0f)),
-			Vertex(Vector2f(win.size.x, .8*win.size.x), Color.Red, Vector2f(0f, 0f))
+			Vertex(Vector2f(0, .2*win.size.y), Color.Red, Vector2f(0f, 0f)),
+			Vertex(Vector2f(win.size.x, .2*win.size.y), Color.Red, Vector2f(0f, 0f)),
+			Vertex(Vector2f(0, .8*win.size.y), Color.Red, Vector2f(0f, 0f)),
+			Vertex(Vector2f(win.size.x, .8*win.size.y), Color.Red, Vector2f(0f, 0f))
 		];
 		win.draw(separators, PrimitiveType.Lines);
 
 		heroes.each!((x) => x !is null && win.draw(x));
 		monsters.each!((x) => x !is null && win.draw(x));
+		win.draw(player);
 	}
 
 	bool checkBattleEnd()

@@ -2,11 +2,13 @@ import std.algorithm, std.range, std.array;
 import std.random;
 import std.typecons;
 import std.stdio;
+import std.format;
 
 class TimeRegistrable
 {
+	string name;
 	double[string] cooldowns;
-	double speed;
+	abstract @property double speed();
 
 	abstract Tuple!(double, "cooldown", double, "speedFactor") takeTurn();
 	final void advanceTime(double dt)
@@ -36,12 +38,14 @@ class BattleTime
 	private TimeRegistrable[] registered;
 	double cooldown;
 
-	this() { }
+	this() { cooldown = 0; }
 
 	void register(TimeRegistrable what)
 	{
+		what.cooldowns = [ "base":  what.speed * uniform(.85, 1.15) ];
 		registered ~= what;
 		registered.schwartzSort!`a.cooldowns.byValue.sum`;
+		writefln("%s was just registered", what);
 	}
 	void unregister(TimeRegistrable what)
 	{
@@ -51,16 +55,12 @@ class BattleTime
 		registered.schwartzSort!`a.cooldowns.byValue.sum`;
 	}
 
-	void initTimes()
-	{
-		foreach(reg; registered)
-			reg.cooldowns["base"] = reg.speed * uniform(.85, 1.15);
-		registered.schwartzSort!`a.cooldowns.byValue.sum`;
-	}
-
 	void nextTurn()
 	{
 		registered.schwartzSort!`a.cooldowns.byValue.sum`;
+		writefln("Registered:\n %(%s\n%)", registered.map!((x) =>
+			format("Name: %s, Cooldowns: %s (%s)", x.name, x.cooldowns.byValue.sum, x.cooldowns)
+					));
 
 		auto current = registered[0];
 		auto dt = current.cooldowns.byValue.sum;
