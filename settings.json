@@ -1,4 +1,5 @@
 {
 	"drawGrid": false,
-	"gameLogShown": false
+	"gameLogShown": false,
+	"realFullscreen": true
 }

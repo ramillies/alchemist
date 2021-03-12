@@ -157,6 +157,14 @@ class GameScreen: Screen
 				Mainloop.pushScreen(new InventoryScreen(player, time, table));
 			if(e.key.code == Keyboard.Key.Return)
 				world.enterPlace(player);
+			if(e.key.code == Keyboard.Key.Escape)
+				Mainloop.pushScreen(new ChoiceBox("Quit",
+					"Do you really want to quit and lose all your progress?",
+					[
+						Choice(null, "Yes, I'm done with this boring game", delegate void() { Mainloop.quit; }, new ReactiveText),
+						Choice(null, "No, please, I will play some more.", delegate void() { }, new ReactiveText)
+					]
+				));
 			if(e.key.code == Keyboard.Key.R)
 				Mainloop.pushScreen(new ChoiceBox("Wait",
 					"You can let pass some time if you want — the world around you will still go on. There is no other advantage.",

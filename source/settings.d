@@ -9,12 +9,14 @@ class Settings
 {
 	static bool drawGrid = true;
 	static bool gameLogShown = true;
+	static bool realFullscreen = false;
 
 	static void load()
 	{
 		auto list = ConfigFiles.get("settings");
 		drawGrid = list["drawGrid"].get!bool;
 		gameLogShown = list["gameLogShown"].get!bool;
+		realFullscreen = list["realFullscreen"].get!bool;
 	}
 
 	static void write()
