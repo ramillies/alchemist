@@ -49,7 +49,7 @@ class BattleScreen: Screen
 		foreach(pos, unit; heroes)
 		{
 			if(unit is null) continue;
-			unit.startBattle(time, heroes, monsters);
+			unit.startBattle(this, time, heroes, monsters);
 			unit.setRelativeOrigin(Vector2f(.5f, .5f));
 			time.register(unit);
 			unit.position = Vector2f(
@@ -62,7 +62,7 @@ class BattleScreen: Screen
 		foreach(pos, unit; monsters)
 		{
 			if(unit is null) continue;
-			unit.startBattle(time, monsters, heroes);
+			unit.startBattle(this, time, monsters, heroes);
 			unit.setRelativeOrigin(Vector2f(.5f, .5f));
 			time.register(unit);
 			unit.position = Vector2f(

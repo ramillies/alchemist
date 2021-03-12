@@ -29,7 +29,8 @@ class ConfigFiles
 			"herbs" : "data/herbs",
 			"potions" : "data/potions",
 			"ingredients": "data/ingredients",
-			"potion table": "data/potion-table"
+			"potion table": "data/potion-table",
+			"units": "data/units"
 		])
 		{
 			File f;

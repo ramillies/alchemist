@@ -1,6 +1,9 @@
 import std.algorithm;
 import std.range;
 import std.array;
+import std.random;
+import std.conv;
+import std.json;
 
 import attack;
 import effect;
@@ -59,7 +62,27 @@ struct Stats
 		return res;
 	}
 
-	@property bool addWard(AttackType type)
+	AttackResult takeHit(Attack attack)
+	{
+		AttackResult res = hitWithType(attack.type);
+		if(res != AttackResult.Hit)
+			return res;
+		if(uniform01() >= attack.hitChance)
+			return AttackResult.Miss;
+
+		hp = hp - min(to!int(attack.strength * (1 - armor/100.) * uniform(1, 1.1)), 300);
+		return AttackResult.Hit;
+	}
+
+	Stats applyEffects()
+	{
+		Stats result = this;
+		foreach(eff; _effects)
+			result = eff.applyStatsChange(result);
+		return result;
+	}
+
+	bool addWard(AttackType type)
 	{
 		if(_wards.canFind(type))
 			return false;
@@ -67,11 +90,22 @@ struct Stats
 		return true;
 	}
 
-	@property bool addImmunity(AttackType type)
+	bool addImmunity(AttackType type)
 	{
 		if(_immunities.canFind(type))
 			return false;
 		_immunities ~= type;
 		return true;
+	}
+
+	static Stats fromJSON(JSONValue x)
+	{
+		auto hp = x["hp"].get!int;
+		
+		return Stats(hp, hp, x["armor"].get!int, x["speed"].get!int,
+			x["wards"].array.map!((x) => cast(AttackType) x.str).array,
+			x["immunities"].array.map!((x) => cast(AttackType) x.str).array,
+			Attack.fromJSON(x["attack"])
+		);
 	}
 }

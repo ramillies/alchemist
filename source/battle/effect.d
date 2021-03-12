@@ -14,9 +14,9 @@ class Effect: TimeRegistrable
 	{
 		@Read string _name;
 		@Read AttackType _type;
-		@Read @Write void delegate() _recurring;
-		@Read @Write Stats delegate(Stats) _changeStats;
-		@Read @Write bool delegate(Unit) _changeTurn;
+		@Write void delegate() _recurring;
+		@Write Stats delegate(Stats) _changeStats;
+		@Write bool delegate(Unit) _changeTurn;
 		@Read LuaState _lua;
 	}
 
@@ -27,6 +27,7 @@ class Effect: TimeRegistrable
 		_lua = new LuaState;
 	}
 
+	Stats applyStatsChange(Stats x) { return (_changeStats is null) ? x : _changeStats(x); }
 	
 	mixin(GenerateAll);
 

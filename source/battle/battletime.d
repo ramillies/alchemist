@@ -38,30 +38,31 @@ class BattleTime
 
 	this() { }
 
-	void register(TimeRegistrable what) { registered ~= what; }
+	void register(TimeRegistrable what)
+	{
+		registered ~= what;
+		registered.schwartzSort!`a.cooldowns.byValue.sum`;
+	}
 	void unregister(TimeRegistrable what)
 	{
 		foreach(k, v; registered)
 			if(v is what)
 				registered = registered.remove(k);
+		registered.schwartzSort!`a.cooldowns.byValue.sum`;
 	}
 
 	void initTimes()
 	{
 		foreach(reg; registered)
 			reg.cooldowns["base"] = reg.speed * uniform(.85, 1.15);
+		registered.schwartzSort!`a.cooldowns.byValue.sum`;
 	}
 
 	void nextTurn()
 	{
-		auto index = registered.minIndex!((a, b) => a.cooldowns.byValue.sum < b.cooldowns.byValue.sum);
-		if(index < 0)
-		{
-			writefln("WARNING! Nobody is registered!");
-			cooldown = 1f;
-			return;
-		}
-		auto current = registered[index];
+		registered.schwartzSort!`a.cooldowns.byValue.sum`;
+
+		auto current = registered[0];
 		auto dt = current.cooldowns.byValue.sum;
 		foreach(reg; registered)
 			reg.advanceTime(dt);
