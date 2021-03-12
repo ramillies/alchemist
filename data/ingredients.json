@@ -1,7 +1,7 @@
 {
 	"fire spirit part": {
 		"name": "Shard of Living Flame",
-		"description": "Shard of Living Flame",
+		"description": "When adventurers manage to kill their first fire elemental, they are often surprised by the small gems that fire elementals leave behind when they die. These gems are called Shards of living fire because trapped inside is a small flame that will never extinguish and that’s why adventurers often have one with themselves when they explore dimly lit caverns.",
 		"tileset": "monsters",
 		"tilenumber": 328,
 		"goodPotion": "fire resistance potion",
@@ -9,7 +9,7 @@
 	},
 	"water spirit part": {
 		"name": "Nevermelting Ice",
-		"description": "Nevermelting Ice",
+		"description": "Nevermelting ice is a mystery to wizards and alchemists alike. this small chunk of ice resembles normal ice in all other qualities except that it cant be melted even by the strongest fire spells and even the dragon’s fire. The usefulness of it is not great except for its alchemical value, but rich mages often put small pieces of it inside their drinks to keep them cool in the summer",
 		"tileset": "monsters",
 		"tilenumber": 16,
 		"goodPotion": "water resistance potion",
@@ -17,7 +17,7 @@
 	},
 	"earth spirit part": {
 		"name": "Rock of Ages",
-		"description": "Rock of Ages",
+		"description": "When the stone becomes so old, that even the greatest dragons seem like toddlers in comparison, the earth itself starts to protect it by giving it little intelligence, so the stone can defend itself from greedy miners. That’s how the earth elementals are made.",
 		"tileset": "monsters",
 		"tilenumber": 314,
 		"goodPotion": "earth resistance potion",
@@ -25,7 +25,7 @@
 	},
 	"air spirit part": {
 		"name": "Gust in the Bottle",
-		"description": "Gust in the Bottle",
+		"description": "When sailors are caught in a typhoon or a windless calm, inexperienced ones often start to panic, but old captains and first mates know better than that. What lots of people do not know is that wind can be reasoned with, if you know the right words and have something to please it. That’s why captured essence of the air elementals is always restless and never tiring even after the death of the elemental itself. Legends say, that you could bargain with it for its freedom, but there is yet to be someone, who can understand their pleas.",
 		"tileset": "monsters",
 		"tilenumber": 93,
 		"goodPotion": "air resistance potion",
@@ -33,7 +33,7 @@
 	},
 	"lurking webtrapper part": {
 		"name": "Deadly Fangs",
-		"description": "Deadly Fangs",
+		"description": "When bitten by the Lurking Webstrapper, you won’t die, you will just wish you did. Its poison is not strong enough to paralyze you, but it will leave you defenseless while the Webspinner will capture you in his web and drag you to its lair, where you can survive even a few days before dying of thirst.",
 		"tileset": "monsters",
 		"tilenumber": 303,
 		"goodPotion": "heal potion",
@@ -41,7 +41,7 @@
 	},
 	"watcher of eons part": {
 		"name": "Ancient Retina",
-		"description": "Ancient Retina",
+		"description": "No one knows who Watchers of Eons are and what they want. The only certain thing about them is that they don’t age and that they are not from this plane of existence. Often they are seen stalking seemingly random individuals, but loremasters suggest that they have a pattern, we just don’t see. Maybe they are preparing to invade our world or they are just the result of some magical experiment. The only certain thing is that their retinas are great alchemical ingredients.",
 		"tileset": "monsters",
 		"tilenumber": 95,
 		"goodPotion": "accuracy potion",
@@ -49,7 +49,7 @@
 	},
 	"screeching shellturtle part": {
 		"name": "Untouchable Carapace",
-		"description": "Untouchable Carapace",
+		"description": "The existence of Screeching Shelltules is either a great evolutionary coincidence or the weirdest magical experiment ever. Shellturtles are slow and their jaws cant even penetrate most leather armors, but they still pose a significant threat even to the most skilled adventurers, because of their ability to make ear-rending screams, that will slowly shatter everything in their surrounding, and their nearly impenetrable shells. They cannot kill fast, but they can certainly do it before you get through their carapace.",
 		"tileset": "monsters",
 		"tilenumber": 344,
 		"goodPotion": "defense potion",
@@ -57,7 +57,7 @@
 	},
 	"horrid shadesplitter part": {
 		"name": "Condensed Fear",
-		"description": "Condensed Fear",
+		"description": "Legends say that there was once a wizard so evil and cruel, that even after his defeat, his shadow continued living just to spread fear and misery. According to old books, brave adventures slew that shadow and chopped it into million pieces, but the pieces themself have risen to torment the living. That’s how the Shadesplitters were born, but they have just a fraction of their former power, so they must feed on nightmares of sleeping humans to grow stronger. You should immediately  kill all Shadesplitters you come across because if you don’t, they could one day reunite into the great shadow, and who knows, how bad that could be",
 		"tileset": "monsters",
 		"tilenumber": 117,
 		"goodPotion": "courage potion",
@@ -65,7 +65,7 @@
 	},
 	"spawn of raknas part": {
 		"name": "Chickenlike Meat",
-		"description": "Chickenlike Meat",
+		"description": "There once was a man named Raknas and his magical power was far beyond what the normal mages could achieve, but he was as mad as he was powerful so in his twisted mind evil plan was born, a plan that included the destruction of humanity and the whole world. He used his magic to combine the most ferocious animals, bloodthirsty monsters, and even the dragons into eggs that he distributed all over the world and waited for them to hatch, but when that happened, he was disappointed by what he saw, his creations were bloodthirsty, but not even more dangerous than wolfs and to top it off. their meat was delicious so they were shortly reduced just to small monster type, hopelessly trying to survive in the world that loved their meat",
 		"tileset": "monsters",
 		"tilenumber": 11,
 		"goodPotion": "satiate potion",
@@ -73,7 +73,7 @@
 	},
 	"rumbling rocksmasher part": {
 		"name": "Heaving Hand",
-		"description": "Heaving Hand",
+		"description": "Not too much is known about Rumbling Rocksmashers, apart from what gave them their name, they hate rocks and they will do anything to destroy them. That’s why they often fight the Earth elementals and why they are not dangerous to anyone, who does not have any rocks in their possession, but unfortunately, gems are a type of rock for them, and that’s why they often attack miners and adventurers, who carry even a single gem.",
 		"tileset": "monsters",
 		"tilenumber": 141,
 		"goodPotion": "strength potion",
@@ -81,7 +81,7 @@
 	},
 	"nimble terrorfly part": {
 		"name": "Speeding Wings",
-		"description": "Speeding Wings",
+		"description": "between adventurers, often compare impossible tasks to caching Terrorfly by the tail, because its speed is unmatched even by that of the flying arrows. One ancient general once tried to train them as postal pigeons with a great deal of success, but he didn’t manage to control their hunger, so his training program was abandoned after some of them fled and killed a huge chunk of his army.",
 		"tileset": "monsters",
 		"tilenumber": 86,
 		"goodPotion": "speed potion",
@@ -89,7 +89,7 @@
 	},
 	"amphibious leecher part": {
 		"name": "Filtering Lungs",
-		"description": "Filtering Lungs",
+		"description": "Amphibious leeches are one of the most fascinating creatures in this world. They are mammals by nature, but they hatch from eggs and their lungs are functioning similar to the gills of the fish, except they can switch from water-breathing to air-breathing in a matter of seconds. This combined with both their fast swimming speed and ground speed makes them hard to fight effectively, because they often use hit and run tactics to exhaust their opponent.",
 		"tileset": "monsters",
 		"tilenumber": 378,
 		"goodPotion": "underwater breathing potion",
