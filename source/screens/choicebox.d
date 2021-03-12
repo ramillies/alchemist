@@ -134,6 +134,12 @@ class ChoiceBox: Screen
 		choicesTop = (bounds.top + bounds.height + 60)/win.size.y;
 		choicesHeight = .92 - choicesTop;
 
+		if(choicesHeight < 0.1)
+		{
+			choicesTop = .82;
+			choicesHeight = .10;
+		}
+
 		camera = new View(FloatRect(0, 0, .45 * win.size.x, choicesHeight * win.size.y));
 		camera.viewport = FloatRect(.275f, choicesTop, .45f, choicesHeight);
 
