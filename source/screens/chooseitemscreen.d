@@ -21,7 +21,6 @@ import gametime;
 import messagebox;
 import choicebox;
 import potiontable;
-import victoryscreen;
 
 import dsfml.graphics;
 
