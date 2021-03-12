@@ -10,6 +10,7 @@ class Settings
 	static bool drawGrid = true;
 	static bool gameLogShown = true;
 	static bool realFullscreen = false;
+	static string resolution = "desktop";
 
 	static void load()
 	{
@@ -17,6 +18,7 @@ class Settings
 		drawGrid = list["drawGrid"].get!bool;
 		gameLogShown = list["gameLogShown"].get!bool;
 		realFullscreen = list["realFullscreen"].get!bool;
+		resolution = list["resolution"].get!string;
 	}
 
 	static void write()

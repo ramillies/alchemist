@@ -1,5 +1,6 @@
 {
 	"drawGrid": false,
 	"gameLogShown": false,
-	"realFullscreen": false
+	"realFullscreen": false,
+	"resolution": "desktop"
 }
