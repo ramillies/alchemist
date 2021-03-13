@@ -102,11 +102,11 @@ class InventoryScreen: Screen
 		texts[2].setCharacterSize(35);
 		texts[2].setRelativeOrigin(Vector2f(.5f, 1f));
 		texts[2].setStyle(Text.Style.Bold);
-		texts[2].positionCallback = () => Vector2f(.865*win.size.x, .15*win.size.y);
+		texts[2].positionCallback = () => Vector2f(.865*win.size.x, .08*win.size.y);
 		texts[2].setString("");
 		texts[2].boxWidth = .27*win.size.x - 10;
 
-		texts[3].positionCallback = () => Vector2f(.865*win.size.x, .17*win.size.y);
+		texts[3].positionCallback = () => Vector2f(.865*win.size.x, .10*win.size.y);
 		texts[3].setRelativeOrigin(Vector2f(.5f, 0f));
 		texts[3].setCharacterSize(25);
 		texts[3].setString("");

@@ -65,7 +65,7 @@
 	},
 	"spawn of raknas part": {
 		"name": "Chickenlike Meat",
-		"description": "There once was a man named Raknas and his magical power was far beyond what the normal mages could achieve, but he was as mad as he was powerful so in his twisted mind evil plan was born, a plan that included the destruction of humanity and the whole world. He used his magic to combine the most ferocious animals, bloodthirsty monsters, and even the dragons into eggs that he distributed all over the world and waited for them to hatch, but when that happened, he was disappointed by what he saw, his creations were bloodthirsty, but not even more dangerous than wolfs and to top it off. their meat was delicious so they were shortly reduced just to small monster type, hopelessly trying to survive in the world that loved their meat",
+		"description": "There once was a man named Raknas and his magical power was far beyond what the normal mages could achieve, but he was as mad as he was powerful. In his twisted mind he conceived a plan that included the destruction of humanity and the whole world. He used his magic to combine the most ferocious animals, bloodthirsty monsters, and even the dragons into eggs that he distributed all over the world and waited for them to hatch. But when that happened, he saw that his creations weren't any more dangerous than a common wolf. Moreover their meat is so delicious that they were soon hunted to the brink of extinction.",
 		"tileset": "monsters",
 		"tilenumber": 11,
 		"goodPotion": "satiate potion",
@@ -81,7 +81,7 @@
 	},
 	"nimble terrorfly part": {
 		"name": "Speeding Wings",
-		"description": "between adventurers, often compare impossible tasks to caching Terrorfly by the tail, because its speed is unmatched even by that of the flying arrows. One ancient general once tried to train them as postal pigeons with a great deal of success, but he didn’t manage to control their hunger, so his training program was abandoned after some of them fled and killed a huge chunk of his army.",
+		"description": "One common saying between adventurers compares impossible tasks to caching Terrorfly by the tail, because its speed is unmatched even by that of the flying arrows. One ancient general once tried to train them as postal pigeons with a great deal of success, but he didn’t manage to control their hunger, so his training program was abandoned after some of them fled and killed a huge chunk of his army.",
 		"tileset": "monsters",
 		"tilenumber": 86,
 		"goodPotion": "speed potion",
