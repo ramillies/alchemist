@@ -23,6 +23,7 @@ class BattleScreen: Screen
 	private BattleTime time;
 	Animation[] animations;
 	bool inInputState;
+	private RectangleShape[] heroCells, monsterCells;
 
 	this(Player p, Unit[] m, bool nl, void delegate(LuaTable) cb)
 	{
@@ -56,9 +57,11 @@ class BattleScreen: Screen
 			unit.startBattle(this, time, heroes, monsters);
 			unit.setRelativeOrigin(Vector2f(.5f, .5f));
 			time.register(unit);
+			auto left = marginX + cellsize*(pos % 2 + 1);
+			auto top = marginY + cellsize*(pos/2);
 			unit.position = Vector2f(
-				marginX + cellsize*(pos % 2 + 1.5),
-				marginY + cellsize*((pos/2) + .5)
+				left + .5*cellsize,
+				top + .5*cellsize
 			);
 		}
 		player.setBattlePosition(Vector2f(marginX + cellsize * .5, marginY + cellsize * 1.5));
@@ -72,6 +75,17 @@ class BattleScreen: Screen
 				win.size.x - marginX - cellsize*(pos % 2 + .5),
 				win.size.y - marginY - cellsize*((pos/2) + .5)
 			);
+		}
+		foreach(n; 0 .. 6)
+		{
+			RectangleShape heroCell = new RectangleShape(Vector2f(cellsize, cellsize));
+			heroCell.fillColor = Color(0,0,0,0);
+			heroCell.position = Vector2f(marginX + cellsize*(n % 2 + 1), marginY + cellsize*(n/2));
+			heroCells ~= heroCell;
+			RectangleShape monsterCell = new RectangleShape(Vector2f(cellsize, cellsize));
+			monsterCell.fillColor = Color(0,0,0,0);
+			monsterCell.position = Vector2f(win.size.x - marginX - cellsize*(n % 2 + 1.), win.size.y - marginY - cellsize*((n/2) + 1.));
+			monsterCells ~= monsterCell;
 		}
 	}
 
@@ -94,6 +108,15 @@ class BattleScreen: Screen
 			a.updateAnimation(dt);
 		while(animations.any!`a.animationFinished`)
 			animations = animations.remove(animations.countUntil!`a.animationFinished`);
+		
+		if(!time.registered.empty)
+		{
+			foreach(n; 0..6)
+			{
+				heroCells[n].fillColor = (heroes[n] is time.registered[0]) ? Color(200, 0, 0, 80) : Color(0,0,0,0);
+				monsterCells[n].fillColor = (monsters[n] is time.registered[0]) ? Color(200, 0, 0, 80) : Color(0,0,0,0);
+			}
+		}
 
 		if(time.cooldown > 0)
 		{
@@ -127,6 +150,8 @@ class BattleScreen: Screen
 		];
 		win.draw(separators, PrimitiveType.Lines);
 
+		heroCells.each!((x) => win.draw(x));
+		monsterCells.each!((x) => win.draw(x));
 		heroes.each!((x) => x !is null && win.draw(x));
 		monsters.each!((x) => x !is null && win.draw(x));
 		win.draw(player);

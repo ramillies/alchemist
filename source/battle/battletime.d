@@ -35,7 +35,7 @@ class TimeRegistrable
 
 class BattleTime
 {
-	private TimeRegistrable[] registered;
+	TimeRegistrable[] registered;
 	double cooldown;
 
 	this() { cooldown = 0; }
