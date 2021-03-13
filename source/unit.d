@@ -14,6 +14,7 @@ import attack;
 import resources;
 import util;
 import settings;
+import flyingtext;
 
 import luad.all;
 import dsfml.graphics;
@@ -90,6 +91,32 @@ class Unit: TimeRegistrable, Transformable, Drawable
 			dead = true;
 			time.unregister(this);
 		}
+
+		auto msg = new FlyingText;
+		with(msg)
+		{
+			setColor(Color(255, 255, 0));
+			if(result == AttackResult.Hit)
+			{
+				setString(damageSuffered.to!string);
+				setColor(Color.Red);
+			}
+			else if(result == AttackResult.Miss)
+				setString("Dodged!");
+			else if(result == AttackResult.Ward)
+				setString("Ward!");
+			else if(result == AttackResult.Immunity)
+				setString("Immunity!");
+
+			setFont(Fonts.text);
+			setCharacterSize(40);
+			setStyle(Text.Style.Bold);
+			setRelativeOrigin(Vector2f(.5f, .5f));
+			auto bounds = sprite.getGlobalBounds;
+			position = Vector2f(bounds.left, bounds.top);
+			initAnimation(Vector2f(20f, -20f), 100.);
+		}
+		screen.animations ~= msg;
 	}
 
 	void update()
@@ -115,19 +142,13 @@ class Unit: TimeRegistrable, Transformable, Drawable
 		{
 			auto obj = lua.get!(LuaTable[])("friends")[n];
 			if(friends[n] !is null)
-			{
-				writefln("Putting %s into %s[%s]", friends[n], "friends", n);
 				friends[n].luaPutInto(obj);
-			}
 		}
 		foreach(n; 0 .. 6)
 		{
 			auto obj = lua.get!(LuaTable[])("enemies")[n];
 			if(enemies[n] !is null)
-			{
-				writefln("Putting %s into %s[%s]", enemies[n], "enemies", n);
 				enemies[n].luaPutInto(obj);
-			}
 		}
 		lua.doString(unitScript);
 		lua.doString(`unit:init()`);
@@ -164,6 +185,23 @@ class Unit: TimeRegistrable, Transformable, Drawable
 			cool = turn.get!double("cooldown");
 		if(!turn["speedFactor"].isNil)
 			factor = turn.get!double("speedFactor");
+		if(!turn["actionDescription"].isNil)
+		{
+			auto msg = new FlyingText;
+			with(msg)
+			{
+				setColor(Color.Blue);
+				setString(turn.get!string("actionDescription"));
+				setFont(Fonts.text);
+				setCharacterSize(40);
+				setStyle(Text.Style.Bold);
+				setRelativeOrigin(Vector2f(.5f, .5f));
+				auto bounds = sprite.getGlobalBounds;
+				position = Vector2f(bounds.left, bounds.top);
+				initAnimation(Vector2f(20f, -20f), 100.);
+			}
+			screen.animations ~= msg;
+		}
 		return tuple!("cooldown", "speedFactor")(cool * Settings.combatCooldown, factor);
 	}
 

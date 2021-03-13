@@ -7,6 +7,7 @@ import coolsprite;
 import battletime;
 import unit;
 import player;
+import animation;
 
 import boilerplate;
 import luad.all;
@@ -20,6 +21,7 @@ class BattleScreen: Screen
 	private Unit[] heroes, monsters;
 	private void delegate(LuaTable) endBattleCallback;
 	private BattleTime time;
+	Animation[] animations;
 	bool inInputState;
 
 	this(Player p, Unit[] m, bool nl, void delegate(LuaTable) cb)
@@ -88,6 +90,11 @@ class BattleScreen: Screen
 		foreach(unit; monsters)
 			if(unit !is null)
 				unit.update;
+		foreach(a; animations)
+			a.updateAnimation(dt);
+		while(animations.any!`a.animationFinished`)
+			animations = animations.remove(animations.countUntil!`a.animationFinished`);
+
 		if(time.cooldown > 0)
 		{
 			if(time.cooldown > dt)
@@ -123,6 +130,8 @@ class BattleScreen: Screen
 		heroes.each!((x) => x !is null && win.draw(x));
 		monsters.each!((x) => x !is null && win.draw(x));
 		win.draw(player);
+		foreach(a; animations)
+			win.draw(a);
 	}
 
 	bool checkBattleEnd()
