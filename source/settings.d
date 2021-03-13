@@ -11,6 +11,7 @@ class Settings
 	static bool gameLogShown = true;
 	static bool realFullscreen = false;
 	static string resolution = "desktop";
+	static double combatCooldown = 2.;
 
 	static void load()
 	{
@@ -19,6 +20,7 @@ class Settings
 		gameLogShown = list["gameLogShown"].get!bool;
 		realFullscreen = list["realFullscreen"].get!bool;
 		resolution = list["resolution"].get!string;
+		combatCooldown = list["combatCooldown"].get!double;
 	}
 
 	static void write()

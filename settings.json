@@ -2,5 +2,6 @@
 	"drawGrid": false,
 	"gameLogShown": false,
 	"realFullscreen": false,
-	"resolution": "desktop"
+	"resolution": "desktop",
+	"combatCooldown": 0.5
 }

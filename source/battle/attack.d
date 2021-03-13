@@ -3,6 +3,7 @@ import std.json;
 
 import stats;
 import effect;
+import util;
 
 import boilerplate;
 import luad.all;
@@ -22,6 +23,11 @@ class Attack
 
 	mixin(GenerateAll);
 
+	int[][] validTargets(int selfPos, bool[] friends, bool[] enemies)
+	{
+		return _targets(selfPos, friends, enemies);
+	}
+
 	static Attack fromJSON(JSONValue x)
 	{
 		auto ret = new Attack(
@@ -31,8 +37,22 @@ class Attack
 			x["usedOnEnemies"].boolean
 		);
 		auto targetCode = x["targets"].str;
-		ret.targets = (int x, bool[] a, bool[] b) => ret.lua.loadString(targetCode).call!(int[][])(x, a, b);
+		ret.lua.openLibs;
+		ret.targets = ret.lua.loadString(targetCode).call!(int[][] delegate(int, bool[], bool[]))();
 		return ret;
+	}
+	
+	void luaPutInto(LuaTable obj)
+	{
+		obj["ptr"] = ptr2string(cast(void *) this);
+		obj["getType"] = delegate string(LuaTable t) { return cast(string) string2ptr!Attack(t.get!string("ptr")).type; };
+		obj["getStrength"] = delegate int(LuaTable t) { return string2ptr!Attack(t.get!string("ptr")).strength; };
+		obj["getChanceToHit"] = delegate double(LuaTable t) { return string2ptr!Attack(t.get!string("ptr")).hitChance; };
+		obj["isUsedOnEnemies"] = delegate bool(LuaTable t) { return string2ptr!Attack(t.get!string("ptr")).useOnEnemies; };
+		obj["getTargets"] = delegate int[][](LuaTable t, int pos, bool[] friends, bool[] enemies)
+		{
+			return string2ptr!Attack(t.get!string("ptr")).validTargets(pos, friends, enemies);
+		};
 	}
 
 }

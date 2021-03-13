@@ -3,6 +3,7 @@ import std.typecons;
 import std.format;
 import std.json;
 import std.conv;
+import std.stdio;
 
 import coolsprite;
 import reacttext;
@@ -11,14 +12,17 @@ import battletime;
 import battlescreen;
 import attack;
 import resources;
+import util;
+import settings;
 
+import luad.all;
 import dsfml.graphics;
 import boilerplate;
 
 class Unit: TimeRegistrable, Transformable, Drawable
 {
 	string name, description;
-	@(ToString.Exclude) private Stats baseStats, checkpointStats;
+	private Stats baseStats, checkpointStats;
 	private Stats stats;
 	private CoolSprite sprite;
 	private bool battle;
@@ -28,16 +32,19 @@ class Unit: TimeRegistrable, Transformable, Drawable
 	private ReactiveText hpText, speedText;
 	bool dead, fled;
 	int squadPosition;
+	LuaState lua;
+	private string unitScript;
 
 	mixin(GenerateToString);
 
-	this(string n, string d, Stats s)
+	this(string n, string d, Stats s, string scr)
 	{
 		name = n;
 		description = d;
 		baseStats = s;
 		checkpointStats = s;
 		stats = s;
+		unitScript = scr;
 		sprite = new CoolSprite;
 		dead = false;
 		fled = false;
@@ -98,6 +105,32 @@ class Unit: TimeRegistrable, Transformable, Drawable
 		friends = f;
 		enemies = e;
 		saveCheckpoint;
+		lua = new LuaState;
+		lua.openLibs;
+		lua.doString(`unit = {}`);
+		luaPutInto(lua.get!LuaTable("unit"));
+		lua.doString(`friends = { {}, {}, {}, {}, {}, {} }`);
+		lua.doString(`enemies = { {}, {}, {}, {}, {}, {} }`);
+		foreach(n; 0 .. 6)
+		{
+			auto obj = lua.get!(LuaTable[])("friends")[n];
+			if(friends[n] !is null)
+			{
+				writefln("Putting %s into %s[%s]", friends[n], "friends", n);
+				friends[n].luaPutInto(obj);
+			}
+		}
+		foreach(n; 0 .. 6)
+		{
+			auto obj = lua.get!(LuaTable[])("enemies")[n];
+			if(enemies[n] !is null)
+			{
+				writefln("Putting %s into %s[%s]", enemies[n], "enemies", n);
+				enemies[n].luaPutInto(obj);
+			}
+		}
+		lua.doString(unitScript);
+		lua.doString(`unit:init()`);
 	}
 
 	void endBattle()
@@ -114,7 +147,7 @@ class Unit: TimeRegistrable, Transformable, Drawable
 	{
 		JSONValue x = ConfigFiles.get("units")[name].object;
 		auto ret = new Unit(x["name"].str, x["description"].str,
-			Stats.fromJSON(x));
+			Stats.fromJSON(x), x["script"].str);
 		if("tileset" in x)
 			ret.setTextureByName(x["tileset"].str);
 		if("tilenumber" in x)
@@ -125,13 +158,49 @@ class Unit: TimeRegistrable, Transformable, Drawable
 
 	override Tuple!(double, "cooldown", double, "speedFactor") takeTurn()
 	{
-		foreach(enemy; enemies)
-			if(enemy !is null)
-				enemy.applyAttack(this.stats.attack);
-		return tuple!("cooldown", "speedFactor")(2., 1.);
+		auto turn = lua.loadString(`return unit:takeTurn()`).call!LuaTable();
+		double cool = 1., factor = 1.;
+		if(!turn["cooldown"].isNil)
+			cool = turn.get!double("cooldown");
+		if(!turn["speedFactor"].isNil)
+			factor = turn.get!double("speedFactor");
+		return tuple!("cooldown", "speedFactor")(cool * Settings.combatCooldown, factor);
 	}
 
 	mixin NormalTransformable;
+
+	void luaPutInto(LuaTable obj)
+	{
+		obj["ptr"] = ptr2string(cast(void *) this);
+		obj["getHP"] = delegate int(LuaTable t) { return string2ptr!Unit(t.get!string("ptr")).stats.hp; };
+		obj["getArmor"] = delegate int(LuaTable t) { return string2ptr!Unit(t.get!string("ptr")).stats.armor; };
+		obj["isAlive"] = delegate bool(LuaTable t)
+		{
+			auto me = string2ptr!Unit(t.get!string("ptr"));
+			return !(me.dead || me.fled);
+		};
+		obj["attack"] = [ "blah": "blah" ];
+		stats.attack.luaPutInto(obj.get!LuaTable("attack"));
+		obj["attack", "blah"] = nil;
+		obj["tryAttack"] = delegate string(LuaTable t, string type)
+		{
+			auto me = string2ptr!Unit(t.get!string("ptr"));
+			return cast(string) me.stats.tryHitWithType(cast(AttackType) type);
+		};
+		obj["applyAttack"] = delegate void(LuaTable t, LuaTable attack)
+		{
+			string2ptr!Unit(t.get!string("ptr")).applyAttack(string2ptr!Attack(attack.get!string("ptr")));
+		};
+		obj["attackTargets"] = delegate int[][](LuaTable t)
+		{
+			auto me = string2ptr!Unit(t.get!string("ptr"));
+			auto ret = me.stats.attack.validTargets(me.squadPosition,
+				me.friends.map!((x) => x !is null && !x.dead && !x.fled).array,
+				me.enemies.map!((x) => x !is null && !x.dead && !x.fled).array
+			);
+			return ret;
+		};
+	}
 
 	override void draw(RenderTarget target, RenderStates states)
 	{

@@ -45,7 +45,6 @@ class BattleTime
 		what.cooldowns = [ "base":  what.speed * uniform(.85, 1.15) ];
 		registered ~= what;
 		registered.schwartzSort!`a.cooldowns.byValue.sum`;
-		writefln("%s was just registered", what);
 	}
 	void unregister(TimeRegistrable what)
 	{
@@ -58,10 +57,6 @@ class BattleTime
 	void nextTurn()
 	{
 		registered.schwartzSort!`a.cooldowns.byValue.sum`;
-		writefln("Registered:\n %(%s\n%)", registered.map!((x) =>
-			format("Name: %s, Cooldowns: %s (%s)", x.name, x.cooldowns.byValue.sum, x.cooldowns)
-					));
-
 		auto current = registered[0];
 		auto dt = current.cooldowns.byValue.sum;
 		foreach(reg; registered)

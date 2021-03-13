@@ -9,12 +9,13 @@
 		"speed": 40,
 		"wards": [],
 		"immunities": [],
+		"script": "dofile('data/scripts/simple-ai.lua')",
 		"attack": {
 			"type": "weapon",
 			"strength": 30,
 			"chanceToHit": 80,
 			"usedOnEnemies": true,
-			"targets": "return {}"
+			"targets": "dofile('data/scripts/attacks.lua'); return attackMelee"
 		}
 	},
 	"swordsman": {
@@ -27,12 +28,13 @@
 		"speed": 30,
 		"wards": [],
 		"immunities": [],
+		"script": "dofile('data/scripts/simple-ai.lua')",
 		"attack": {
 			"type": "weapon",
 			"strength": 25,
 			"chanceToHit": 90,
 			"usedOnEnemies": true,
-			"targets": "return {}"
+			"targets": "dofile('data/scripts/attacks.lua'); return attackMelee"
 		}
 	}
 }

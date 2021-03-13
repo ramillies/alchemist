@@ -58,8 +58,6 @@ class BattleScreen: Screen
 				marginX + cellsize*(pos % 2 + 1.5),
 				marginY + cellsize*((pos/2) + .5)
 			);
-			writefln("Drawing unit %s to position %s.", unit.name, unit.position);
-
 		}
 		player.setBattlePosition(Vector2f(marginX + cellsize * .5, marginY + cellsize * 1.5));
 		foreach(pos, unit; monsters)
@@ -72,7 +70,6 @@ class BattleScreen: Screen
 				win.size.x - marginX - cellsize*(pos % 2 + .5),
 				win.size.y - marginY - cellsize*((pos/2) + .5)
 			);
-			writefln("Drawing unit %s to position %s.", unit.name, unit.position);
 		}
 	}
 
@@ -85,6 +82,12 @@ class BattleScreen: Screen
 
 	override void update(double dt)
 	{
+		foreach(unit; heroes)
+			if(unit !is null)
+				unit.update;
+		foreach(unit; monsters)
+			if(unit !is null)
+				unit.update;
 		if(time.cooldown > 0)
 		{
 			if(time.cooldown > dt)
@@ -129,7 +132,7 @@ class BattleScreen: Screen
 		LuaTable result = lua.loadString("return {}").call!LuaTable();
 		if(monsters.filter!`a !is null`.all!`a.dead`)
 			result["result"] = "victory";
-		if(player.units.all!`a.dead || a.fled`)
+		if(heroes.filter!`a !is null`.all!`a.dead || a.fled`)
 			result["result"] = player.units.any!`a.fled` ? "flight" : "defeat";
 		if(!result["result"].isNil)
 		{

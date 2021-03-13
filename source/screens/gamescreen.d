@@ -198,13 +198,15 @@ class GameScreen: Screen
 
 	override void update(double dt)
 	{
-		player.units ~= Unit.byName("swordsman");
-		player.units[0].squadPosition = 0;
-		auto skel = Unit.byName("skeleton");
-		skel.squadPosition = 0;
+		player.units = 6.iota.map!((x) => Unit.byName("swordsman")).array;
+		foreach(n; 0 .. 6)
+			player.units[n].squadPosition = n;
+		auto skel = 6.iota.map!((x) => Unit.byName("skeleton")).array;
+		foreach(n; 0 .. 6)
+			skel[n].squadPosition = n;
 		Mainloop.pushScreen(new BattleScreen(
 			player,
-			[ skel ],
+			skel,
 			false,
 			delegate void(LuaTable t)
 			{
