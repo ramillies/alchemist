@@ -237,10 +237,13 @@ class Unit: TimeRegistrable, Transformable, Drawable
 		obj["attackTargets"] = delegate int[][](LuaTable t)
 		{
 			auto me = string2ptr!Unit(t.get!string("ptr"));
+			auto f = me.friends.map!((x) => x !is null && !x.dead && !x.fled).array;
+			auto g = me.enemies.map!((x) => x !is null && !x.dead && !x.fled).array;
 			auto ret = me.stats.attack.validTargets(me.squadPosition,
-				me.friends.map!((x) => x !is null && !x.dead && !x.fled).array,
-				me.enemies.map!((x) => x !is null && !x.dead && !x.fled).array
+				f,
+				g
 			);
+			writefln("Targets %s, %s, %s => %s", me.squadPosition, f, g, ret);
 			return ret;
 		};
 	}

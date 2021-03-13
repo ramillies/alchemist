@@ -58,6 +58,20 @@ class Player: Drawable
 
 			}
 		};
+		obj["addUnit"] = delegate bool(LuaTable t, string name)
+		{
+			auto me = string2ptr!Player(t.get!string("ptr"));
+			foreach(n; 0 .. 6)
+			{
+				if(!me.units.any!((x) => x.squadPosition == n))
+				{
+					me.units ~= Unit.byName(name);
+					me.units[$-1].squadPosition = n;
+					return true;
+				}
+			}
+			return false;
+		};
 		obj["getItems"] = delegate int[string](LuaTable t) { return string2ptr!Player(t.get!string("ptr")).items; };
 		obj["setItems"] = delegate void(LuaTable t, int[string] x) { string2ptr!Player(t.get!string("ptr")).items = x; };
 		obj["getCoins"] = delegate int(LuaTable t) { return string2ptr!Player(t.get!string("ptr")).coins; };

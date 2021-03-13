@@ -13,5 +13,10 @@
 		"name": "",
 		"description": "",
 		"script": "dofile('data/scripts/city.lua')"
+	},
+	"basic monster den": {
+		"name": "Monster Den",
+		"description": "",
+		"script": "dofile('data/scripts/basic-den.lua')"
 	}
 }

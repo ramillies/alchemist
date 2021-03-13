@@ -26,6 +26,7 @@ import potiontable;
 import unit;
 import battlescreen;
 import partyscreen;
+import endgamescreen;
 
 import luad.all;
 import dsfml.graphics;
@@ -55,9 +56,7 @@ class GameScreen: Screen
 		ocean = new Water(to!int(ceil(world.width/2.)), to!int(world.height));
 		auto startPos = cartesianProduct(world.width.iota, world.height.iota).filter!((x) => world.features[x[1]][x[0]] == "city").array.choice;
 		player = new Player(startPos[0], startPos[1]);
-		player.coins = 10000;
-		foreach(k, ref v; player.items)
-			v += 10;
+		player.coins = 1000;
 
 		table = new PotionTable();
 	}
@@ -133,8 +132,7 @@ class GameScreen: Screen
 		foreach(place; world.places)
 			table.luaPutInto(place.lua);
 
-		player.units ~= Unit.byName("swordsman");
-		player.units ~= Unit.byName("skeleton");
+		player.units = [ Unit.byName("knight"), Unit.byName("knight"), Unit.byName("ranger") ];
 		foreach(n; 0 .. player.units.length)
 			player.units[n].squadPosition = cast(int) n;
 	}
@@ -216,6 +214,9 @@ class GameScreen: Screen
 		if(mouse.y > win.size.y*19/20)
 			camera.move(Vector2f(0, 1024*dt));
 		ocean.update(dt);
+
+		if(time.days >= 3360)
+			Mainloop.pushScreen(new EndGameScreen(player, table, "Defeat", "You died"));
 
 		texts.each!((t) => t.update);
 		cursor.outlineThickness = 8*zoom;

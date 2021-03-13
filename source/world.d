@@ -41,6 +41,7 @@ class World: Drawable
 	string[][] decorations;
 	bool[][] roads;
 	size_t[][] islandDivisions;
+	string[] monsterTypes;
 
 	Place[] places;
 
@@ -162,11 +163,16 @@ class World: Drawable
 
 	void makeTerrain()
 	{
-		size_t numCells = to!size_t(18/landFraction) + 1;
+		auto basicMonsters = ConfigFiles.get("basic monsters");
+		size_t numCells = to!size_t(2*basicMonsters.keys.length/landFraction) + 1;
 		Pos[] kernels = cartesianProduct(_width.iota, _height.iota)
 				.map!((x) => Pos(x[0], x[1]))
-				.randomSample(numCells, width*height).array;
-		bool[] land = chain(true.repeat(18), false.repeat(numCells - 18)).array.randomCover.array;
+				.randomSample(numCells, width*height).array.randomCover.array;
+		bool[] land = chain(true.repeat(2*basicMonsters.keys.length), false.repeat(numCells - 2*basicMonsters.keys.length)).array;
+
+		// TODO: More logical monster placement
+		monsterTypes ~= basicMonsters.keys.randomCover.array;
+		monsterTypes ~= basicMonsters.keys.randomCover.array;
 
 		auto conf = ConfigFiles.get("world terrain");
 		int maxAttempts = conf["maxAttempts"].get!int;
@@ -628,6 +634,12 @@ class World: Drawable
 		{
 			World me = string2ptr!World(t.get!string("ptr"));
 			return (x >=0 && x < me.width && y >=0 && y < me.height) ? me.decorations[y][x] : "";
+		};
+		obj["monsterTypeAt"] = delegate string (LuaTable t, size_t x, size_t y)
+		{
+			World me = string2ptr!World(t.get!string("ptr"));
+			auto retval = (x >=0 && x < me.width && y >=0 && y < me.height && me.islandDivisions[y][x] < 2*ConfigFiles.get("basic monsters").keys.length) ? me.monsterTypes[me.islandDivisions[y][x]] : "";
+			return retval;
 		};
 		obj["placeAtString"] = delegate string (LuaTable t, size_t x, size_t y, string code)
 		{

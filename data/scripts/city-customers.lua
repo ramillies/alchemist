@@ -2137,7 +2137,7 @@ customerTable = {
 					{
 						text = "Offer to end the spell with one of your potions (and then just give him a vial of water)",
 						callback = function()
-							messagebox(
+							messagebox( "Mind-controlled",
 								"After drinking your potion, Foreman winks at you and says “See? I’m not mind-controlled and now you have proof from this alchemist. As you are leaving the village hunched old woman approaches you and gives you a bundle of hearbs while saying “thanks for not breaking my curse, here is your reward”"
 							)
 							player:giveItems(

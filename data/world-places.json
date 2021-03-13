@@ -2,7 +2,22 @@
 	"forest": {
 		"placeChance": 0.33,
 		"places": [
-			{ "place": "herb meadow", "relativeChance": 1 }
+			{ "place": "herb meadow", "relativeChance": 1 },
+			{ "place": "basic monster den", "relativeChance": 3 }
+		]
+	},
+	"plain": {
+		"placeChance": 0.16,
+		"places": [
+			{ "place": "herb meadow", "relativeChance": 2 },
+			{ "place": "basic monster den", "relativeChance": 1 }
+		]
+	},
+	"mountains": {
+		"placeChance": 0.33,
+		"places": [
+			{ "place": "herb meadow", "relativeChance": 1 },
+			{ "place": "basic monster den", "relativeChance": 5 }
 		]
 	},
 	"city": {
@@ -16,5 +31,5 @@
 	"castle": {
 		"placeChance": 1,
 		"places": [ { "place": "city", "relativeChance": 1 } ]
-	},
+	}
 }

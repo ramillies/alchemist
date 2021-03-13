@@ -16,7 +16,39 @@ buildings = {
 	["inn"] = {
 		name = "Inn",
 		description = "Recruit followers",
-		onVisit = function () messagebox("Inn", "You enjoy a good pint of ale in the local inn.") end,
+		onInit = function (self)
+			self.cooldown = math.random(1, 14)
+			self.forHire = ""
+		end,
+		onNewDay = function (self)
+			if self.cooldown > 1 then
+				self.cooldown = self.cooldown - 1
+			elseif self.cooldown == 1 then
+				self.cooldown = 0
+				local allowed = { "knight", "barbarian", "rogue", "ranger", "assassin", "fire wizard", "water wizard", "earth wizard", "air wizard" }
+				self.forHire = allowed[math.random(1, #allowed)]
+			end
+		end,
+		onVisit = function (self, player)
+			if self.forHire == "" then
+				messagebox("Inn", "You enjoy a good pint of ale in the local inn. However, there is nobody to be hired.")
+			else
+				choicebox("Hire", string.format("You find a %s who is offering his services for a pay. Would you like to recruit him for 200 gold?", Units[self.forHire].name),
+				{
+					{ text = "Hire him", disabled = player:getCoins() < 200, callback = function()
+						if player:addUnit(self.forHire) then
+							messagebox("Hire", "You hired him and he has entered your party immediately.")
+							player:giveCoins(-200)
+							self.forHire = ""
+							self.cooldown = math.random(28, 40)
+						else
+							messagebox("Hire", "Sadly, you don't have space for him in your party.")
+						end
+					end },
+					{ text = "Do not hire him" }
+				})
+			end
+		end
 	},
 	["shipyard"] = {
 		name = "Shipyard",

@@ -155,8 +155,13 @@ class PartyScreen: Screen
 							Choice(null, "Yes, dismiss him.", delegate void()
 								{
 									foreach(n, hero; player.units)
+									{
 										if(hero is h.front)
+										{
 											player.units = player.units.remove(n);
+											break;
+										}
+									}
 									selected = -1;
 								}, new ReactiveText),
 							Choice(null, "No.", delegate void() { }, new ReactiveText)

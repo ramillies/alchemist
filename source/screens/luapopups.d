@@ -12,6 +12,9 @@ import teleportscreen;
 import potiontable;
 import chooseitemscreen;
 import gametime;
+import unit;
+import battlescreen;
+import endgamescreen;
 
 import luad.all;
 
@@ -36,5 +39,23 @@ void putPopupsIntoLua(LuaState lua)
 		auto t = string2ptr!GameTime(time.get!string("ptr"));
 		auto pot = string2ptr!PotionTable(potions.get!string("ptr"));
 		Mainloop.pushScreen(new ChooseItemScreen(p, t, pot, callback));
+	};
+	lua["battlescreen"] = delegate void (LuaTable player, LuaTable[] monsters, void delegate(string) callback, bool nonlethal)
+	{
+		Unit[] list;
+		foreach(monster; monsters)
+		{
+			Unit m = Unit.byName(monster.get!string("monster"));
+			m.squadPosition = monster.get!int("position");
+			list ~= m;
+		}
+		auto p = string2ptr!Player(player.get!string("ptr"));
+		Mainloop.pushScreen(new BattleScreen(p, list, nonlethal, callback));
+	};
+	lua["endgamescreen"] = delegate void (LuaTable player, LuaTable potions, string heading, string msg)
+	{
+		auto p = string2ptr!Player(player.get!string("ptr"));
+		auto pot = string2ptr!PotionTable(potions.get!string("ptr"));
+		Mainloop.pushScreen(new EndGameScreen(p, pot, heading, msg));
 	};
 }

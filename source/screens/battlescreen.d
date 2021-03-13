@@ -19,13 +19,13 @@ class BattleScreen: Screen
 	private bool nonlethal;
 	private Player player;
 	private Unit[] heroes, monsters;
-	private void delegate(LuaTable) endBattleCallback;
+	private void delegate(string) endBattleCallback;
 	private BattleTime time;
 	Animation[] animations;
 	bool inInputState;
 	private RectangleShape[] heroCells, monsterCells;
 
-	this(Player p, Unit[] m, bool nl, void delegate(LuaTable) cb)
+	this(Player p, Unit[] m, bool nl, void delegate(string) cb)
 	{
 		player = p;
 		foreach(n; 0 .. 6)
@@ -161,14 +161,12 @@ class BattleScreen: Screen
 
 	bool checkBattleEnd()
 	{
-		LuaState lua = new LuaState;
-		lua.openLibs;
-		LuaTable result = lua.loadString("return {}").call!LuaTable();
+		string result = "";
 		if(monsters.filter!`a !is null`.all!`a.dead`)
-			result["result"] = "victory";
+			result = "victory";
 		if(heroes.filter!`a !is null`.all!`a.dead || a.fled`)
-			result["result"] = player.units.any!`a.fled` ? "flight" : "defeat";
-		if(!result["result"].isNil)
+			result = player.units.any!`a.fled` ? "flight" : "defeat";
+		if(result != "")
 		{
 			player.endBattle(nonlethal);
 			Mainloop.popScreen;

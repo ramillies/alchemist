@@ -1,0 +1,50 @@
+{
+	"fire spirit": {
+		"ingredient": "fire spirit part",
+		"monsters": [ "fire spirit" ]
+	},
+	"water spirit": {
+		"ingredient": "water spirit part",
+		"monsters": [ "water spirit" ]
+	},
+	"earth spirit": {
+		"ingredient": "earth spirit part",
+		"monsters": [ "earth spirit" ]
+	},
+	"air spirit": {
+		"ingredient": "air spirit part",
+		"monsters": [ "air spirit" ]
+	},
+	"lurking webtrapper": {
+		"ingredient": "lurking webtrapper part",
+		"monsters": [ "lurking webtrapper" ]
+	},
+	"watcher of eons": {
+		"ingredient": "watcher of eons part",
+		"monsters": [ "watcher of eons" ]
+	},
+	"screeching shellturtle": {
+		"ingredient": "screeching shellturtle part",
+		"monsters": [ "screeching shellturtle" ]
+	},
+	"horrid shadesplitter": {
+		"ingredient": "horrid shadesplitter part",
+		"monsters": [ "horrid shadesplitter" ]
+	},
+	"spawn of raknas": {
+		"ingredient": "spawn of raknas part",
+		"monsters": [ "spawn of raknas" ]
+	},
+	"rumbling rocksmasher": {
+		"ingredient": "rumbling rocksmasher part",
+		"monsters": [ "rumbling rocksmasher" ]
+	},
+	"nimble terrorfly": {
+		"ingredient": "nimble terrorfly part",
+		"monsters": [ "nimble terrorfly" ]
+	},
+	"amphibious leecher": {
+		"ingredient": "amphibious leecher part",
+		"monsters": [ "amphibious leecher" ]
+	}
+}

@@ -30,7 +30,8 @@ class ConfigFiles
 			"potions" : "data/potions",
 			"ingredients": "data/ingredients",
 			"potion table": "data/potion-table",
-			"units": "data/units"
+			"units": "data/units",
+			"basic monsters": "data/basic-monsters"
 		])
 		{
 			File f;
@@ -66,7 +67,7 @@ class ConfigFiles
 			lua.doString(format(`%s = %s`,
 				file.split.map!`a.capitalize`.join, // world terrain => WorldTerrain etc.
 				// rewrite the keys to agree with Lua table syntax
-				files[file].toString.replaceAll!((c) => format("[%s] = ", c.hit.strip(":")))(re)
+				files[file].toString.tr("[]", "{}").replaceAll!((c) => format("[%s] = ", c.hit.strip(":")))(re)
 			));
 		}
 	}

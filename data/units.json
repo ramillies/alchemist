@@ -1,9 +1,354 @@
 {
-	"skeleton": {
-		"name": "Skeleton",
-		"description": "Just an ordinary fantasy game skeleton.",
+	"fire spirit": {
+		"name": "Fire Spirit",
+		"description": "",
 		"tileset": "monsters",
-		"tilenumber": 251,
+		"tilenumber": 328,
+		"hp": 250,
+		"armor": 10,
+		"speed": 45,
+		"wards": [],
+		"immunities": [ "fire" ],
+		"script": "dofile('data/scripts/simple-ai.lua')",
+		"attack": {
+			"type": "fire",
+			"strength": 30,
+			"chanceToHit": 80,
+			"usedOnEnemies": true,
+			"targets": "dofile('data/scripts/attacks.lua'); return attackAll",
+			"description": {
+				"name": "Fire Wave",
+				"target": "All enemies"
+			}
+		}
+	},
+	"water spirit": {
+		"name": "Water Spirit",
+		"description": "",
+		"tileset": "monsters",
+		"tilenumber": 16,
+		"hp": 250,
+		"armor": 10,
+		"speed": 45,
+		"wards": [],
+		"immunities": [ "water" ],
+		"script": "dofile('data/scripts/simple-ai.lua')",
+		"attack": {
+			"type": "water",
+			"strength": 50,
+			"chanceToHit": 80,
+			"usedOnEnemies": true,
+			"targets": "dofile('data/scripts/attacks.lua'); return attackRanged",
+			"description": {
+				"name": "Forceful Wave",
+				"target": "Ranged"
+			}
+		}
+	},
+	"earth spirit": {
+		"name": "Earth Spirit",
+		"description": "",
+		"tileset": "monsters",
+		"tilenumber": 314,
+		"hp": 400,
+		"armor": 10,
+		"speed": 70,
+		"wards": [],
+		"immunities": [ "earth" ],
+		"script": "dofile('data/scripts/simple-ai.lua')",
+		"attack": {
+			"type": "earth",
+			"strength": 80,
+			"chanceToHit": 80,
+			"usedOnEnemies": true,
+			"targets": "dofile('data/scripts/attacks.lua'); return attackMelee",
+			"description": {
+				"name": "Stone Fists",
+				"target": "Melee"
+			}
+		}
+	},
+	"air spirit": {
+		"name": "Air Spirit",
+		"description": "",
+		"tileset": "monsters",
+		"tilenumber": 93,
+		"hp": 200,
+		"armor": 40,
+		"speed": 40,
+		"wards": [],
+		"immunities": [],
+		"script": "dofile('data/scripts/simple-ai.lua')",
+		"attack": {
+			"type": "air",
+			"strength": 30,
+			"chanceToHit": 80,
+			"usedOnEnemies": true,
+			"targets": "dofile('data/scripts/attacks.lua'); return attackRanged",
+			"description": {
+				"name": "Lightning Bolt",
+				"target": "Ranged"
+			}
+		}
+	},
+	"lurking webtrapper": {
+		"name": "Lurking Webtrapper",
+		"description": "",
+		"tileset": "monsters",
+		"tilenumber": 303,
+		"hp": 150,
+		"armor": 0,
+		"speed": 40,
+		"wards": [],
+		"immunities": [],
+		"script": "dofile('data/scripts/simple-ai.lua')",
+		"attack": {
+			"type": "weapon",
+			"strength": 80,
+			"chanceToHit": 80,
+			"usedOnEnemies": true,
+			"targets": "dofile('data/scripts/attacks.lua'); return attackMelee",
+			"description": {
+				"name": "Bite",
+				"target": "Melee"
+			}
+		}
+	},
+	"watcher of eons": {
+		"name": "Watcher of Eons",
+		"description": "",
+		"tileset": "monsters",
+		"tilenumber": 95,
+		"hp": 250,
+		"armor": 0,
+		"speed": 30,
+		"wards": [],
+		"immunities": [],
+		"script": "dofile('data/scripts/simple-ai.lua')",
+		"attack": {
+			"type": "fire",
+			"strength": 50,
+			"chanceToHit": 80,
+			"usedOnEnemies": true,
+			"targets": "dofile('data/scripts/attacks.lua'); return attackRanged",
+			"description": {
+				"name": "Scorching Ray",
+				"target": "Ranged"
+			}
+		}
+	},
+	"screeching shellturtle": {
+		"name": "Screeching Shellturtle",
+		"description": "",
+		"tileset": "monsters",
+		"tilenumber": 344,
+		"hp": 400,
+		"armor": 70,
+		"speed": 50,
+		"wards": [],
+		"immunities": [],
+		"script": "dofile('data/scripts/simple-ai.lua')",
+		"attack": {
+			"type": "death",
+			"strength": 10,
+			"chanceToHit": 80,
+			"usedOnEnemies": true,
+			"targets": "dofile('data/scripts/attacks.lua'); return attackAll",
+			"description": {
+				"name": "Horrible Scream",
+				"target": "All enemies"
+			}
+		}
+	},
+	"horrid shadesplitter": {
+		"name": "Horrid Shadesplitter",
+		"description": "",
+		"tileset": "monsters",
+		"tilenumber": 117,
+		"hp": 60,
+		"armor": 10,
+		"speed": 50,
+		"wards": [],
+		"immunities": [],
+		"script": "dofile('data/scripts/simple-ai.lua')",
+		"attack": {
+			"type": "death",
+			"strength": 80,
+			"chanceToHit": 80,
+			"usedOnEnemies": true,
+			"targets": "dofile('data/scripts/attacks.lua'); return attackAll",
+			"description": {
+				"name": "Consuming Shadows",
+				"target": "All enemies"
+			}
+		}
+	},
+	"spawn of raknas": {
+		"name": "Spawn of Raknas",
+		"description": "",
+		"tileset": "monsters",
+		"tilenumber": 11,
+		"hp": 250,
+		"armor": 15,
+		"speed": 40,
+		"wards": [],
+		"immunities": [],
+		"script": "dofile('data/scripts/simple-ai.lua')",
+		"attack": {
+			"type": "earth",
+			"strength": 50,
+			"chanceToHit": 80,
+			"usedOnEnemies": true,
+			"targets": "dofile('data/scripts/attacks.lua'); return attackMelee",
+			"description": {
+				"name": "Bite",
+				"target": "Melee"
+			}
+		}
+	},
+	"rumbling rocksmasher": {
+		"name": "Rumbling Rocksmasher",
+		"description": "",
+		"tileset": "monsters",
+		"tilenumber": 141,
+		"hp": 400,
+		"armor": 30,
+		"speed": 120,
+		"wards": [],
+		"immunities": [],
+		"script": "dofile('data/scripts/simple-ai.lua')",
+		"attack": {
+			"type": "weapon",
+			"strength": 200,
+			"chanceToHit": 80,
+			"usedOnEnemies": true,
+			"targets": "dofile('data/scripts/attacks.lua'); return attackMelee",
+			"description": {
+				"name": "Huge Club",
+				"target": "Melee"
+			}
+		}
+	},
+	"nimble terrorfly": {
+		"name": "Nimble Terrorfly",
+		"description": "",
+		"tileset": "monsters",
+		"tilenumber": 86,
+		"hp": 200,
+		"armor": 0,
+		"speed": 10,
+		"wards": [],
+		"immunities": [],
+		"script": "dofile('data/scripts/simple-ai.lua')",
+		"attack": {
+			"type": "air",
+			"strength": 15,
+			"chanceToHit": 80,
+			"usedOnEnemies": true,
+			"targets": "dofile('data/scripts/attacks.lua'); return attackMelee",
+			"description": {
+				"name": "Bite",
+				"target": "Melee"
+			}
+		}
+	},
+	"amphibious leecher": {
+		"name": "Amphibious Leecher",
+		"description": "",
+		"tileset": "monsters",
+		"tilenumber": 378,
+		"hp": 200,
+		"armor": 10,
+		"speed": 40,
+		"wards": [],
+		"immunities": [],
+		"script": "dofile('data/scripts/simple-ai.lua')",
+		"attack": {
+			"type": "water",
+			"strength": 60,
+			"chanceToHit": 80,
+			"usedOnEnemies": true,
+			"targets": "dofile('data/scripts/attacks.lua'); return attackRanged",
+			"description": {
+				"name": "Acid Spit",
+				"target": "Ranged"
+			}
+		}
+	},
+	"knight": {
+		"name": "Knight",
+		"description": "",
+		"tileset": "people",
+		"tilenumber": 322,
+		"hp": 300,
+		"armor": 30,
+		"speed": 70,
+		"wards": [],
+		"immunities": [],
+		"script": "dofile('data/scripts/simple-ai.lua')",
+		"attack": {
+			"type": "weapon",
+			"strength": 45,
+			"chanceToHit": 80,
+			"usedOnEnemies": true,
+			"targets": "dofile('data/scripts/attacks.lua'); return attackMelee",
+			"description": {
+				"name": "Sword",
+				"target": "Melee"
+			}
+		}
+	},
+	"barbarian": {
+		"name": "Barbarian",
+		"description": "",
+		"tileset": "people",
+		"tilenumber": 286,
+		"hp": 250,
+		"armor": 0,
+		"speed": 100,
+		"wards": [],
+		"immunities": [],
+		"script": "dofile('data/scripts/simple-ai.lua')",
+		"attack": {
+			"type": "weapon",
+			"strength": 100,
+			"chanceToHit": 80,
+			"usedOnEnemies": true,
+			"targets": "dofile('data/scripts/attacks.lua'); return attackMelee",
+			"description": {
+				"name": "Huge Sword",
+				"target": "Melee"
+			}
+		}
+	},
+	"rogue": {
+		"name": "Rogue",
+		"description": "",
+		"tileset": "people",
+		"tilenumber": 212,
+		"hp": 200,
+		"armor": 0,
+		"speed": 30,
+		"wards": [],
+		"immunities": [],
+		"script": "dofile('data/scripts/simple-ai.lua')",
+		"attack": {
+			"type": "weapon",
+			"strength": 25,
+			"chanceToHit": 80,
+			"usedOnEnemies": true,
+			"targets": "dofile('data/scripts/attacks.lua'); return attackMelee",
+			"description": {
+				"name": "Daggers",
+				"target": "Melee"
+			}
+		}
+	},
+	"ranger": {
+		"name": "Ranger",
+		"description": "",
+		"tileset": "people",
+		"tilenumber": 194,
 		"hp": 150,
 		"armor": 10,
 		"speed": 40,
@@ -15,33 +360,125 @@
 			"strength": 30,
 			"chanceToHit": 80,
 			"usedOnEnemies": true,
-			"targets": "dofile('data/scripts/attacks.lua'); return attackMelee",
+			"targets": "dofile('data/scripts/attacks.lua'); return attackRanged",
 			"description": {
-				"name": "Morning Star",
-				"target": "Melee"
+				"name": "Bow Shot",
+				"target": "Ranged"
 			}
 		}
 	},
-	"swordsman": {
-		"name": "Swordsman",
-		"description": "Just an ordinary swordsman.",
+	"assassin": {
+		"name": "Assassin",
+		"description": "",
 		"tileset": "people",
-		"tilenumber": 280,
-		"hp": 200,
+		"tilenumber": 222,
+		"hp": 150,
 		"armor": 0,
-		"speed": 30,
+		"speed": 80,
 		"wards": [],
 		"immunities": [],
 		"script": "dofile('data/scripts/simple-ai.lua')",
 		"attack": {
-			"type": "weapon",
-			"strength": 25,
-			"chanceToHit": 90,
+			"type": "death",
+			"strength": 80,
+			"chanceToHit": 80,
 			"usedOnEnemies": true,
-			"targets": "dofile('data/scripts/attacks.lua'); return attackMelee",
+			"targets": "dofile('data/scripts/attacks.lua'); return attackRanged",
 			"description": {
-				"name": "Swords",
-				"target": "Melee"
+				"name": "Murderous Shot",
+				"target": "Ranged"
+			}
+		}
+	},
+	"fire wizard": {
+		"name": "Fire Wizard",
+		"description": "",
+		"tileset": "people",
+		"tilenumber": 57,
+		"hp": 150,
+		"armor": 0,
+		"speed": 70,
+		"wards": [ "fire" ],
+		"immunities": [],
+		"script": "dofile('data/scripts/simple-ai.lua')",
+		"attack": {
+			"type": "fire",
+			"strength": 30,
+			"chanceToHit": 80,
+			"usedOnEnemies": true,
+			"targets": "dofile('data/scripts/attacks.lua'); return attackAll",
+			"description": {
+				"name": "Fire Ball",
+				"target": "All enemies"
+			}
+		}
+	},
+	"water wizard": {
+		"name": "Water Wizard",
+		"description": "",
+		"tileset": "people",
+		"tilenumber": 70,
+		"hp": 150,
+		"armor": 0,
+		"speed": 70,
+		"wards": [ "water" ],
+		"immunities": [],
+		"script": "dofile('data/scripts/simple-ai.lua')",
+		"attack": {
+			"type": "water",
+			"strength": 30,
+			"chanceToHit": 80,
+			"usedOnEnemies": true,
+			"targets": "dofile('data/scripts/attacks.lua'); return attackAll",
+			"description": {
+				"name": "Flash FLood",
+				"target": "All enemies"
+			}
+		}
+	},
+	"earth wizard": {
+		"name": "Earth Wizard",
+		"description": "",
+		"tileset": "people",
+		"tilenumber": 56,
+		"hp": 150,
+		"armor": 0,
+		"speed": 70,
+		"wards": [ "earth" ],
+		"immunities": [],
+		"script": "dofile('data/scripts/simple-ai.lua')",
+		"attack": {
+			"type": "earth",
+			"strength": 30,
+			"chanceToHit": 80,
+			"usedOnEnemies": true,
+			"targets": "dofile('data/scripts/attacks.lua'); return attackAll",
+			"description": {
+				"name": "Rocks Fall",
+				"target": "All enemies"
+			}
+		}
+	},
+	"air wizard": {
+		"name": "Air Wizard",
+		"description": "",
+		"tileset": "people",
+		"tilenumber": 57,
+		"hp": 150,
+		"armor": 0,
+		"speed": 70,
+		"wards": [ "air" ],
+		"immunities": [],
+		"script": "dofile('data/scripts/simple-ai.lua')",
+		"attack": {
+			"type": "air",
+			"strength": 30,
+			"chanceToHit": 80,
+			"usedOnEnemies": true,
+			"targets": "dofile('data/scripts/attacks.lua'); return attackAll",
+			"description": {
+				"name": "Lightning Storm",
+				"target": "All enemies"
 			}
 		}
 	}

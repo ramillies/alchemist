@@ -3,7 +3,7 @@ function attackAll(position, friends, enemies)
 	for k, v in pairs(enemies) do
 		if v then table.insert(result, k-1) end
 	end
-	return result
+	return { result }
 end
 
 function attackRanged(position, friends, enemies)
