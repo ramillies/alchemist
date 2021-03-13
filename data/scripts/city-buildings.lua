@@ -73,7 +73,33 @@ buildings = {
 		name = "Library",
 		allowedIn = "city",
 		description = "Find potion-making lore",
-		onVisit = function () messagebox("Library", "You enjoy a good read at the local library.") end,
+		onInit = function (self)
+			self.entryFee = 100
+			self.hasInfo = math.random(1, 3)
+			self.days = 10
+		end,
+		onVisit = function (self, player)
+			if self.hasInfo < 1 then
+				messagebox("Library", "There are some nice books in this library, but nothing that would tell you anything interesting about alchemy.")
+			else
+				choicebox("Library",
+				string.format("Many obscure books are kept within the walls of this library, and some of them perhaps talk about alchemical secrets. Do you want to search the books?\nYou will need to pay a fee of %d coins and the search will take %d days.", self.entryFee, self.days),
+				{
+					{ text = "Search the books", disabled = player:getCoins() < self.entryFee, callback = function()
+						local knowledge = PotionTable:giveRandomKnowledge("medium")
+						Time:advance(self.days)
+						self.days = self.days * 2
+						self.hasInfo = self.hasInfo - 1
+						if knowledge == "" then
+							messagebox("Bad Luck", "Your knowledge is already so vast that you couldn't find anything new in this library.")
+						else
+							messagebox("Great!", string.format("You found an old book about alchemy, and there were some stories about people who tried to make a Potion of Youth. Sadly, they were all unsuccessful, but at least you manage to deduce that the potion is NOT made %s, and you put that down into your notebook.", knowledge))
+						end
+				end },
+					{ text = "Go away" }
+				})
+			end
+		end,
 	},
 	["adventurers guild"] = {
 		name = "Adventurers' Guild",

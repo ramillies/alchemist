@@ -140,7 +140,7 @@ class PotionTable
 		}
 	}
 
-	private void chainDiscoveries()
+	void chainDiscoveries()
 	{
 		foreach(ref large; largeInfo)
 		{
@@ -164,32 +164,33 @@ class PotionTable
 		};
 		obj["giveRandomKnowledge"] = delegate string(LuaTable t, string type)
 		{
+			auto me = string2ptr!PotionTable(t.get!string("ptr"));
 			string ret;
 			if(type == "medium")
 			{
-				auto usefulInfo = medInfo.length.iota.filter!((n) => !medInfo[n].known && !medInfo[n].obsolete).array;
+				auto usefulInfo = me.medInfo.length.iota.filter!((n) => !me.medInfo[n].known && !me.medInfo[n].obsolete).array;
 				if(usefulInfo.empty) return "";
 				auto index = usefulInfo.choice;
-				medInfo[index].known = true;
-				ret = medInfo[index].description;
+				me.medInfo[index].known = true;
+				ret = me.medInfo[index].description;
 			}
 			else if(type == "large")
 			{
-				auto usefulInfo = largeInfo.length.iota.filter!((n) => !largeInfo[n].known).array;
+				auto usefulInfo = me.largeInfo.length.iota.filter!((n) => !me.largeInfo[n].known).array;
 				if(usefulInfo.empty) return "";
 				auto index = usefulInfo.choice;
-				largeInfo[index].known = true;
-				ret = largeInfo[index].description;
+				me.largeInfo[index].known = true;
+				ret = me.largeInfo[index].description;
 			}
 			else
 			{
-				auto usefulInfo = smallInfo.length.iota.filter!((n) => !smallInfo[n].known).array;
+				auto usefulInfo = me.smallInfo.length.iota.filter!((n) => !me.smallInfo[n].known).array;
 				if(usefulInfo.empty) return "";
 				auto index = usefulInfo.choice;
-				smallInfo[index].known = true;
-				ret = smallInfo[index].description;
+				me.smallInfo[index].known = true;
+				ret = me.smallInfo[index].description;
 			}
-			chainDiscoveries();
+			me.chainDiscoveries();
 			return ret;
 		};
 	}
