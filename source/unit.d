@@ -4,6 +4,7 @@ import std.format;
 import std.json;
 import std.conv;
 import std.stdio;
+import std.string;
 
 import coolsprite;
 import reacttext;
@@ -35,6 +36,7 @@ class Unit: TimeRegistrable, Transformable, Drawable
 	int squadPosition;
 	LuaState lua;
 	private string unitScript;
+	int monthlyPay;
 
 	mixin(GenerateToString);
 
@@ -50,6 +52,7 @@ class Unit: TimeRegistrable, Transformable, Drawable
 		dead = false;
 		fled = false;
 		squadPosition = -1;
+		monthlyPay = 0;
 
 		hpText = new ReactiveText;
 		with(hpText)
@@ -240,6 +243,13 @@ class Unit: TimeRegistrable, Transformable, Drawable
 			);
 			return ret;
 		};
+	}
+
+	string completeDescription()
+	{
+		return format("%s\n\nMonthly Pay: %s\nLife: %s\nArmor: %s\nWards: %(%s, %)\nImmunities: %(%s, %)\nSpeed: %s\n\n%s",
+			description, monthlyPay, stats.hp, stats.armor, stats.wards.map!((x) => (cast(string) x).capitalize).array,
+			stats.immunities.map!((x) => (cast(string) x).capitalize).array, stats.speed, stats.attack.description);
 	}
 
 	override void draw(RenderTarget target, RenderStates states)

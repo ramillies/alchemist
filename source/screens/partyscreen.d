@@ -11,6 +11,7 @@ import unit;
 import player;
 import animation;
 import resources;
+import choicebox;
 
 import boilerplate;
 import luad.all;
@@ -24,9 +25,9 @@ class PartyScreen: Screen
 	private GameTime time;
 	private RectangleShape[] heroCells;
 	private double marginX, marginY, cellsize;
-	private int selected;
+	private int selected, cursorOn;
 
-	this(Player p, GameTime t) { player = p; time = t; selected = -1; }
+	this(Player p, GameTime t) { player = p; time = t; selected = -1; cursorOn = -1; }
 
 	Vector2f posToCoords(int pos)
 	{
@@ -60,7 +61,7 @@ class PartyScreen: Screen
 			heroCells ~= heroCell;
 		}
 
-		texts = 3.iota.map!((x) => new ReactiveText).array;
+		texts = 8.iota.map!((x) => new ReactiveText).array;
 		foreach(text; texts)
 		{
 			text.setFont(Fonts.text);
@@ -89,6 +90,50 @@ class PartyScreen: Screen
 			positionCallback = () => Vector2f(.925*win.size.x, .05*win.size.y - 5);
 			stringCallback = () => format("%s", player.coins);
 		}
+
+		with(texts[3])
+		{
+			setCharacterSize(50);
+			setFont(Fonts.heading);
+			setRelativeOrigin(Vector2f(.5, 0f));
+			position = Vector2f(.7*win.size.x, .2*win.size.y);
+			stringCallback = delegate string()
+			{
+				auto h = player.units.find!((x) => x.squadPosition == cursorOn);
+				return h.empty ? "" : h.front.name;
+			};
+			boxWidth = .4 * win.size.x;
+		}
+		with(texts[4])
+		{
+			setRelativeOrigin(Vector2f(.5, 0f));
+			position = Vector2f(.7*win.size.x, .2*win.size.y + 60);
+			stringCallback = delegate string()
+			{
+				auto h = player.units.find!((x) => x.squadPosition == cursorOn);
+				return h.empty ? "" : h.front.completeDescription();
+			};
+			boxWidth = .4 * win.size.x;
+		}
+		with(texts[5])
+		{
+			setRelativeOrigin(Vector2f(.5, 1f));
+			setCharacterSize(90);
+			setFont(Fonts.heading);
+			setString("Your Party");
+			setColor(Color.Red);
+			position = Vector2f(.45 * win.size.x, .2 * win.size.y - 20);
+			boxWidth = .4 * win.size.x;
+		}
+		with(texts[6])
+		{
+			setRelativeOrigin(Vector2f(.5, 1f));
+			setCharacterSize(30);
+			setFont(Fonts.italic);
+			setString("(Click the boxes to select units, then click again to move them. You can also hit D to dismiss the selected unit.)");
+			position = Vector2f(.42 * win.size.x, win.size.y - 40);
+			boxWidth = .85 * win.size.x;
+		}
 	}
 
 	override void event(Event e)
@@ -99,13 +144,29 @@ class PartyScreen: Screen
 		{
 			if(e.key.code == Keyboard.Key.Escape || e.key.code == Keyboard.Key.P)
 				Mainloop.popScreen;
+			if(e.key.code == Keyboard.Key.D)
+			{
+				auto h = player.units.find!((x) => x.squadPosition == selected);
+				if(!h.empty)
+					Mainloop.pushScreen(new ChoiceBox("Dismiss",
+						format("Do you really want to permanently dismiss %s? This cannot be undone!",
+							h.front.name),
+						[
+							Choice(null, "Yes, dismiss him.", delegate void()
+								{
+									foreach(n, hero; player.units)
+										if(hero is h.front)
+											player.units = player.units.remove(n);
+									selected = -1;
+								}, new ReactiveText),
+							Choice(null, "No.", delegate void() { }, new ReactiveText)
+						]
+					));
+			}
 		}
 		if(e.type == Event.EventType.MouseButtonPressed)
 		{
-			int clicked = -1;
-			foreach(n, rect; heroCells)
-				if(rect.getGlobalBounds.contains(Mouse.getPosition(win)))
-					clicked = cast(int) n;
+			int clicked = cursorOn;
 			if(clicked != -1)
 			{
 				if(selected == -1)
@@ -139,6 +200,11 @@ class PartyScreen: Screen
 
 	override void update(double dt)
 	{
+		cursorOn = -1;
+		foreach(n, rect; heroCells)
+			if(rect.getGlobalBounds.contains(Mouse.getPosition(win)))
+				cursorOn = cast(int) n;
+		texts.each!`a.update`;
 		foreach(hero; player.units)
 			putAtPos(hero, hero.squadPosition);
 		foreach(n, cell; heroCells)
@@ -153,17 +219,17 @@ class PartyScreen: Screen
 	override void draw()
 	{
 		win.clear();
+		/*
 		Vertex[] separators = [
 			Vertex(Vector2f(0, .2*win.size.y), Color.Red, Vector2f(0f, 0f)),
 			Vertex(Vector2f(win.size.x, .2*win.size.y), Color.Red, Vector2f(0f, 0f)),
-			Vertex(Vector2f(0, .8*win.size.y), Color.Red, Vector2f(0f, 0f)),
-			Vertex(Vector2f(win.size.x, .8*win.size.y), Color.Red, Vector2f(0f, 0f))
 		];
 		win.draw(separators, PrimitiveType.Lines);
+		*/
 
 		heroCells.each!((x) => win.draw(x));
 		player.units.each!((x) => win.draw(x));
-		win.draw(player);
+		texts.each!((x) => win.draw(x));
 	}
 
 	override void finish() { }

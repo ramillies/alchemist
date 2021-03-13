@@ -15,7 +15,11 @@
 			"strength": 30,
 			"chanceToHit": 80,
 			"usedOnEnemies": true,
-			"targets": "dofile('data/scripts/attacks.lua'); return attackMelee"
+			"targets": "dofile('data/scripts/attacks.lua'); return attackMelee",
+			"description": {
+				"name": "Morning Star",
+				"target": "Melee"
+			}
 		}
 	},
 	"swordsman": {
@@ -34,7 +38,11 @@
 			"strength": 25,
 			"chanceToHit": 90,
 			"usedOnEnemies": true,
-			"targets": "dofile('data/scripts/attacks.lua'); return attackMelee"
+			"targets": "dofile('data/scripts/attacks.lua'); return attackMelee",
+			"description": {
+				"name": "Swords",
+				"target": "Melee"
+			}
 		}
 	}
 }
