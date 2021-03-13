@@ -16,6 +16,7 @@ import place;
 import util;
 import gametime;
 import player;
+import coolsprite;
 
 import boilerplate;
 import dsfml.graphics;
@@ -32,6 +33,7 @@ class World: Drawable
 		Tilemap tiles, featureTiles, roadTiles, decorationTiles;
 		Sprite[] mountains;
 		GameTime time;
+		CoolSprite[] placeSprites;
 	}
 
 	static const TILESIZE = 48;
@@ -135,6 +137,8 @@ class World: Drawable
 		target.draw(roadTiles, states);
 		target.draw(featureTiles, states);
 		target.draw(decorationTiles, states);
+		foreach(spr; placeSprites)
+			target.draw(spr, states);
 		if(Settings.drawGrid)
 		{
 			Vertex[] lines;
@@ -651,6 +655,41 @@ class World: Drawable
 				return "";
 			return place.front.lua.loadString(code).call!string();
 		};
+		obj["addPlaceSprite"] = delegate string(LuaTable t, LuaTable spec)
+		{
+			if(spec["position"].isNil || spec["tileset"].isNil || spec["tilenumber"].isNil)
+				return "";
+			auto position = spec.get!(int[])("position");
+			int[] subposition;
+			if(t["subposition"].isNil)
+				subposition = [ 1, 1 ];
+			else
+				subposition = spec.get!(int[])("subposition");
+			auto tileset = spec.get!string("tileset");
+			auto tilenumber = spec.get!int("tilenumber");
+			auto self = string2ptr!World(t.get!string("ptr"));
+			CoolSprite s = new CoolSprite;
+			s.position = Vector2f((3*position[0] + subposition[0] + .5)*TILESIZE, (3*position[1] + subposition[1] + .5)*TILESIZE);
+			s.setTextureByName(tileset);
+			s.tilenumber = tilenumber;
+			s.setRelativeOrigin(Vector2f(.5f, .5f));
+			auto bounds = s.getGlobalBounds;
+			s.scale = Vector2f(TILESIZE/bounds.width, TILESIZE/bounds.height);
+			self.placeSprites ~= s;
+			return ptr2string(cast(void *) s);
+		};
+		obj["removePlaceSprite"] = delegate void(LuaTable t, string ptr)
+		{
+			auto s = string2ptr!CoolSprite(ptr);
+			auto self = string2ptr!World(t.get!string("ptr"));
+			foreach(n, sprite; self.placeSprites)
+				if(sprite is s)
+				{
+					self.placeSprites = self.placeSprites.remove(n);
+					break;
+				}
+
+		};
 		obj["getWidth"] = delegate size_t (LuaTable t) { return string2ptr!World(t.get!string("ptr")).width; };
 		obj["getHeight"] = delegate size_t (LuaTable t) { return string2ptr!World(t.get!string("ptr")).height; };
 	}
@@ -661,12 +700,13 @@ class World: Drawable
 		foreach(y; 0 .. height)
 			foreach(x; 0 .. width)
 			{
-				if(!(features[y][x] in table))
+				auto ft = roads[y][x] ? "road" : features[y][x];
+				if(!(ft in table))
 				{
 					places ~= Place.byName(x, y, "nothing");
 					continue;
 				}
-				auto subtab = table[features[y][x]].object;
+				auto subtab = table[ft].object;
 				if(uniform01() > subtab["placeChance"].get!double)
 				{
 					places ~= Place.byName(x, y, "nothing");

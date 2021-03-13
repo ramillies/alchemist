@@ -3,5 +3,5 @@
 	"gameLogShown": false,
 	"realFullscreen": false,
 	"resolution": "desktop",
-	"combatCooldown": 1
+	"combatCooldown": 0.6
 }
