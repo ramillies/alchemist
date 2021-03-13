@@ -67,9 +67,11 @@ class Unit: TimeRegistrable, Transformable, Drawable
 			setFont(Fonts.text);
 			setColor(Color.White);
 			setRelativeOrigin(Vector2f(.5f, 1f));
-			stringCallback = () => (cooldowns.keys.length > 1)
-				? format("%s = %(%s+%)", cooldowns.values.sum.to!int, cooldowns.values.map!`a.to!int`.array)
-				: format("%s", cooldowns.values.sum.to!int);
+			stringCallback = () => battle
+				? ((cooldowns.keys.length > 1)
+					? format("%s = %(%s+%)", cooldowns.values.sum.to!int, cooldowns.values.map!`a.to!int`.array)
+					: format("%s", cooldowns.values.sum.to!int))
+				: "";
 		}		
 	}
 

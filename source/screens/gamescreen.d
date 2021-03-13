@@ -25,6 +25,7 @@ import teleportscreen;
 import potiontable;
 import unit;
 import battlescreen;
+import partyscreen;
 
 import luad.all;
 import dsfml.graphics;
@@ -132,6 +133,10 @@ class GameScreen: Screen
 		foreach(place; world.places)
 			table.luaPutInto(place.lua);
 
+		player.units ~= Unit.byName("swordsman");
+		player.units ~= Unit.byName("skeleton");
+		foreach(n; 0 .. player.units.length)
+			player.units[n].squadPosition = cast(int) n;
 	}
 
 	override void event(Event e)
@@ -159,6 +164,8 @@ class GameScreen: Screen
 				attemptMove(1, 0);
 			if(e.key.code == Keyboard.Key.I)
 				Mainloop.pushScreen(new InventoryScreen(player, time, table));
+			if(e.key.code == Keyboard.Key.P)
+				Mainloop.pushScreen(new PartyScreen(player, time));
 			if(e.key.code == Keyboard.Key.Return)
 				world.enterPlace(player);
 			if(e.key.code == Keyboard.Key.Escape)
@@ -198,25 +205,6 @@ class GameScreen: Screen
 
 	override void update(double dt)
 	{
-		player.units = 6.iota.map!((x) => Unit.byName("swordsman")).array;
-		foreach(n; 0 .. 6)
-			player.units[n].squadPosition = n;
-		auto skel = 6.iota.map!((x) => Unit.byName("skeleton")).array;
-		foreach(n; 0 .. 6)
-			skel[n].squadPosition = n;
-		Mainloop.pushScreen(new BattleScreen(
-			player,
-			skel,
-			false,
-			delegate void(LuaTable t)
-			{
-				auto result = t.get!string("result");
-				if(result == "victory")
-					Mainloop.pushScreen(new MessageBox("Hooray!", "You won the battle!"));
-				if(result == "defeat")
-					Mainloop.pushScreen(new MessageBox("Boo!", "You lost the battle!"));
-			}
-		));
 
 		auto mouse = Mouse.getPosition(win);
 		if(mouse.x < win.size.x/20)
