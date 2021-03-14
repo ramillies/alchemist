@@ -6,17 +6,30 @@ function place:init()
 	self.ingredient = BasicMonsters[monsterType].ingredient
 	self.monsters = { { monster = self.allowedMonsters[math.random(1, #self.allowedMonsters)], position = 1 } }
 	self.lootedCountdown = 0
+
+	local terrain = World:terrainAt(self:getX(), self:getY())
+	if terrain == "water" then terrain = "grass" end -- cannot happen, but if it happens anyhow, let's not crash
+	self.holeSprite = World:addPlaceSprite {
+		position = { self:getX(), self:getY() },
+		tileset = "world tileset",
+		tilenumber = OverworldTiles[terrain .. " hole"]
+	}
+
+	self:initSprites()
+	self:addSprite()
+
 	self:updateDescription()
 end
 
 function place:newDay()
-	if self.lootedCountdown == 0 and #self.monsters < 3 and math.random() < 0.05 then
+	if self.lootedCountdown == 0 and #self.monsters < 3 and math.random() < 0.03 then
 		table.insert(self.monsters,
 			{
 				monster = self.allowedMonsters[math.random(1, #self.allowedMonsters)],
 				position = 1 + 2*#self.monsters
 			}
 		)
+		self:addSprite()
 	end
 	if self.lootedCountdown > 0 then
 		self.lootedCountdown = self.lootedCountdown - 1
@@ -34,6 +47,7 @@ function place:enter(player)
 							local give = 3*#self.monsters + math.random(1, 5)
 							player:giveItems({ [self.ingredient] = give })
 							self.lootedCountdown = math.random(336, 672)
+							self:wipeSprites()
 							self.monsters = { }
 							self:updateDescription()
 							messagebox("Victory!", string.format("You defeated the vile monsters and searched the whole lair. After the looting is done and the place is ruined, you found that %d × %s will be useful to you.", give, Items[self.ingredient].name))
@@ -46,6 +60,41 @@ function place:enter(player)
 			}
 		)
 	end
+end
+
+function place:initSprites()
+	self.availableSubPos = { }
+	self.usedSprites = { }
+	for k = 0, 2 do
+		for l = 0, 2 do
+			if k^2+l^2 ~= 2 then
+				table.insert(self.availableSubPos, { k, l })
+			end
+		end
+	end
+end
+
+function place:addSprite()
+	if #self.availableSubPos > 0 then
+		local index = math.random(1, #self.availableSubPos)
+		local spr = World:addPlaceSprite {
+			position = { self:getX(), self:getY() },
+			subposition = self.availableSubPos[index],
+			tileset = "monsters",
+			tilenumber = Units[self.allowedMonsters[math.random(1, #self.allowedMonsters)]].tilenumber
+		}
+		if spr ~= "" then
+			table.insert(self.usedSprites, spr)
+			table.remove(self.availableSubPos, index)
+		end
+	end
+end
+
+function place:wipeSprites()
+	for k, v in pairs(self.usedSprites) do
+		World:removePlaceSprite(v)
+	end
+	place:initSprites()
 end
 
 function place:updateDescription()

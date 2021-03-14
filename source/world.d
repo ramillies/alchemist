@@ -661,7 +661,7 @@ class World: Drawable
 				return "";
 			auto position = spec.get!(int[])("position");
 			int[] subposition;
-			if(t["subposition"].isNil)
+			if(spec["subposition"].isNil)
 				subposition = [ 1, 1 ];
 			else
 				subposition = spec.get!(int[])("subposition");
@@ -701,6 +701,8 @@ class World: Drawable
 			foreach(x; 0 .. width)
 			{
 				auto ft = roads[y][x] ? "road" : features[y][x];
+				if(["city", "village", "castle"].canFind(features[y][x]))
+					ft = features[y][x];
 				if(!(ft in table))
 				{
 					places ~= Place.byName(x, y, "nothing");
