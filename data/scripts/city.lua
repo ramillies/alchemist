@@ -9,6 +9,14 @@ function place:init()
 	local feature = World:featureAt(self:getX(), self:getY())
 	self.settlementType = feature
 	table.insert(self.buildings, buildings.inn)
+	if feature == "city" then
+		table.insert(self.buildings, buildings["city hall"])
+	elseif feature == "village" then
+		table.insert(self.buildings, buildings["foremans house"])
+	elseif feature == "castle" then
+		table.insert(self.buildings, buildings["central tower"])
+	end
+
 	if feature == "city" or feature == "village" then
 		local shipyard = false
 		for k = -1, 1 do

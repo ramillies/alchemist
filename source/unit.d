@@ -91,6 +91,7 @@ class Unit: TimeRegistrable, Transformable, Drawable
 		auto damageSuffered = hp - stats.hp;
 		baseStats.hp = baseStats.hp - damageSuffered;
 		baseStats.effects = stats.effects;
+		baseStats.wards = stats.wards.dup;
 		if(stats.hp <= 0)
 		{
 			dead = true;

@@ -261,7 +261,7 @@ customerTable = {
 							)
 						end
 					},
-					{text = "Sorry Capitan, I dont have anything that would satisfy you."}
+					{text = "Sorry Capitan, I don't have anything that would satisfy you."}
 				}
 			)
 		end,
@@ -408,7 +408,7 @@ customerTable = {
 							)
 						end
 					},
-					{text = "Im afraid my potions cant help you"}
+					{text = "I'm afraid my potions can't help you"}
 				}
 			)
 		end,
@@ -851,14 +851,14 @@ customerTable = {
 		talk = function(self, city, player)
 			local line =
 				randomTalk {
-				"They sure could call me Alibaba, because I have here more than forty thieves, but not a single one of them can brew potions like you do. what is the deadliest think you can offer me?"
+				"They sure could call me Alibaba, because I have here more than forty thieves, but not a single one of them can brew potions like you do. What is the deadliest thing you can offer me?"
 			}
 			choicebox(
 				"Guildmaster",
 				line,
 				{
 					{
-						text = "Here is my wilest brew",
+						text = "Here is my vilest brew",
 						callback = function()
 							inventorybox(
 								player,
@@ -889,7 +889,7 @@ customerTable = {
 				messagebox(
 					"Great!",
 					randomTalk {
-						"Very deadly, very useful, i like it"
+						"Very deadly, very useful, I like it!"
 					}
 				)
 			elseif given == "" then
@@ -936,13 +936,13 @@ customerTable = {
 							)
 						end
 					},
-					{text = "I dont think so"}
+					{text = "I don't think so"}
 				}
 			)
 		end,
 		check = function(self, city, player, given)
 			self.goAway = true
-			if isInList(given, {"speed potion", "slowness potion", "accuracy potion ", "hold potion", "clumsy potion"}) then
+			if isInList(given, {"speed potion", "slow potion", "accuracy potion ", "hold potion", "clumsy potion"}) then
 				local reward = math.random(75, 125)
 				player:giveCoins(reward)
 				place:addReputation(2)
@@ -1063,7 +1063,7 @@ customerTable = {
 							)
 						end
 					},
-					{text = "I dont have anything useful to you at this time."}
+					{text = "I don't have anything useful to you at this time."}
 				}
 			)
 		end,
@@ -1088,7 +1088,7 @@ customerTable = {
 				messagebox(
 					"Uhmmm...",
 					randomTalk {
-						"I cant see the usefulness of this potion in the heat of the forge "
+						"I can't see the usefulness of this potion in the heat of the forge "
 					}
 				)
 			end
@@ -1202,7 +1202,7 @@ customerTable = {
 				isInList(
 					given,
 					{
-						" lower water resistance potion",
+						"lower water resistance potion",
 						"lower earth resistance potion",
 						"lower fire resistance potion",
 						"lower air resistance potion",
@@ -1242,12 +1242,12 @@ customerTable = {
 				place:addReputation(-20)
 				player:giveItems(
 					{
-						["grasp of winter"] = math.random(0, 2),
-						["desert rose"] = math.random(0, 2),
-						["deadly nightshade"] = math.random(0, 2),
-						["piece of heaven"] = math.random(0, 2),
-						["black lotus"] = math.random(0, 2),
-						["snowbelle"] = math.random(0, 2)
+						["grasp of winter"] = math.random(3, 5),
+						["desert rose"] = math.random(3, 5),
+						["deadly nightshade"] = math.random(3, 5),
+						["piece of heaven"] = math.random(3, 5),
+						["black lotus"] = math.random(3, 5),
+						["snowbelle"] = math.random(3, 5)
 					}
 				)
 				player:giveItems({[given] = -1})
@@ -1302,7 +1302,7 @@ customerTable = {
 							)
 						end
 					},
-					{text = "I cant help you"}
+					{text = "I can't help you"}
 				}
 			)
 		end,
@@ -1317,7 +1317,7 @@ customerTable = {
 						"alchemist fire potion",
 						"mind resistance potion",
 						"regeneration potion",
-						"strenght potion",
+						"strength potion",
 						"courage potion",
 						"speed potion"
 					}
@@ -1330,7 +1330,7 @@ customerTable = {
 				messagebox(
 					"Great!",
 					randomTalk {
-						"Now I’m ready to condemn that fowl creature to its doom."
+						"Now I’m ready to condemn that foul creature to its doom!"
 					}
 				)
 			elseif given == "" then
@@ -1339,7 +1339,7 @@ customerTable = {
 				messagebox(
 					"Uhmmm...",
 					randomTalk {
-						"Thanks for your offer but this is useless against evil the spells of that witch"
+						"Thanks for your offer but this is useless against evil the spells of that witch."
 					}
 				)
 			end
@@ -1557,9 +1557,9 @@ customerTable = {
 							player:giveCoins(-50)
 							self.goAway = true
 							if math.random() < 0.5 then
-								PotionTable:giveRandomKnowledge(medium)
-								PotionTable:giveRandomKnowledge(medium)
-								PotionTable:giveRandomKnowledge(medium)
+								PotionTable:giveRandomKnowledge("medium")
+								PotionTable:giveRandomKnowledge("medium")
+								PotionTable:giveRandomKnowledge("medium")
 								messagebox(
 									"Great!",
 									randomTalk {
@@ -1657,7 +1657,7 @@ customerTable = {
 				messagebox(
 					"Great!",
 					randomTalk {
-						"Crowd bolstered by your concoction charged at the bandits and one by one threw them down from their horses and clobbered them to death with their improvised equipment. As the battle ended, villagers cheered and gave you a sack of money for your help. You can be certain they won’t forget what you did for them"
+						"The crowd, bolstered by your concoction, charged at the bandits and one by one threw them down from their horses and clobbered them to death with their improvised equipment. As the battle ended, villagers cheered and gave you a sack of money for your help. You can be certain they won’t forget what you did for them."
 					}
 				)
 			elseif
@@ -1701,7 +1701,7 @@ customerTable = {
 				messagebox(
 					"Uhmmm...",
 					randomTalk {
-						"Your potion only confused the villagers and bandits alike, so you didn’t help either side. You decided that that’s all you can do for now, so you jumped the nearest fence and hid until the end of the skirmish"
+						"Your potion only confused the villagers and bandits alike, so you didn’t help either side. You decided that that’s all you can do for now, so you jumped the nearest fence and hid until the end of the skirmish."
 					}
 				)
 			end
@@ -1742,7 +1742,7 @@ customerTable = {
 							)
 						end
 					},
-					{text = "Im not an healer, im sorry"}
+					{text = "I'm not an healer, I'm sorry"}
 				}
 			)
 		end,
@@ -1756,7 +1756,7 @@ customerTable = {
 				messagebox(
 					"Partial success",
 					randomTalk {
-						"your potion is not strong enough to heal the foreman completely, but at least it will ease the pain and help his body to heal itself. Foreman helps you and hands you your reward."
+						"Your potion is not strong enough to heal the foreman completely, but at least it will ease the pain and help his body to heal itself. He thanks you and hands you your reward."
 					}
 				)
 			elseif isInList(given, {"panacea potion"}) then
@@ -1767,7 +1767,7 @@ customerTable = {
 				messagebox(
 					"Complete success!",
 					randomTalk {
-						"After drinking the whole vial, the foreman immediately jumps to his feet and starts to praise your name. “Hey everyone, I’m alive and healthy, this alchemist can sure do miracles”, you almost can’t leave his house through the people that are trying to thank you for saving their leader."
+						"After drinking the whole vial, the foreman immediately jumps to his feet and starts to praise your name. “Hey everyone, I’m alive and healthy, this alchemist can sure do miracles!” You almost can’t leave his house because of all the people that are trying to thank you for saving their leader."
 					}
 				)
 			elseif isInList(given, {"poison potion", "plague potion", "illness potion"}) then
@@ -1778,7 +1778,7 @@ customerTable = {
 				messagebox(
 					"Foreman is Dead",
 					randomTalk {
-						"After drinking the whole vial, the foreman topples over dead, you search the body but you manage to find just a few coins. With no time to spare, you vanish from the village before anyone notices you leaving"
+						"After drinking the whole vial, the foreman topples over dead, you search the body but you manage to find just a few coins. With no time to spare, you vanish from the village before anyone notices you leaving."
 					}
 				)
 			elseif given == "" then
@@ -1788,7 +1788,7 @@ customerTable = {
 				messagebox(
 					"Uhmmm...",
 					randomTalk {
-						"effect of your poison doesn’t noticeably affect foreman, so after few minutes of waiting you leave."
+						"Your potion had no real effect on his illness, so after a couple of minutes of waiting, you leave."
 					}
 				)
 			end
@@ -1808,7 +1808,7 @@ customerTable = {
 		talk = function(self, city, player)
 			local line =
 				randomTalk {
-				"As you are talking to the foreman you see a group of villagers dragging the resisting woman to the village square. When they drag her close to you, the woman calls out to you “Mater alchemist, you are the only one that will listen to me here, they are going to kill me, because they think I’m a witch, but I’m just ordinary herbalist. Please, let me choose between burning at stake or drowning to death, either of which I cant survive without your help, if you help me, I can give you my whole stock of herbs."
+				"As you are talking to the foreman you see a group of villagers dragging a struggling woman to the village square. When they drag her close to you, the woman calls out to you “Mater alchemist, you are the only one that will listen to me here, they are going to kill me, because they think I’m a witch, but I’m just ordinary herbalist. They want to let me choose between burning at stake or drowning to death, either of which I can't survive without your help, if you help me, I can give you my whole stock of herbs."
 			}
 			choicebox(
 				"Kill the Witch",
@@ -1926,9 +1926,9 @@ customerTable = {
 							player:giveCoins(-1000)
 							self.goAway = true
 							if math.random() < 0.5 then
-								PotionTable:giveRandomKnowledge(small)
-								PotionTable:giveRandomKnowledge(small)
-								PotionTable:giveRandomKnowledge(small)
+								PotionTable:giveRandomKnowledge("small")
+								PotionTable:giveRandomKnowledge("small")
+								PotionTable:giveRandomKnowledge("small")
 								messagebox(
 									"Great!",
 									randomTalk {
@@ -1947,7 +1947,7 @@ customerTable = {
 						disabled = player:getCoins() < 1000
 					},
 					{
-						text = "Dont buy it",
+						text = "Don't buy it",
 						callback = function()
 							self.goAway = true
 						end
@@ -2025,12 +2025,12 @@ customerTable = {
 		talk = function(self, city, player)
 			local line =
 				randomTalk {
-					"After few drinks with the foreman, he invites you to the friendly game of cards, but after few hours he proposes that to make bets larger to make the game more exciting, he knows how to play well, so it will be hard to beat him, but with the little bit of luck it is not impossible."
+					"After few drinks with the foreman, he invites you to the friendly game of cards, but after few hours he proposes that to make bets larger to make the game more exciting. He plays well, so it will be hard to beat him, but with a little bit of luck it is not impossible."
 				} "High stakes",
 				line,
 				{
 					{
-						text = "Cheat by using one of your potions)",
+						text = "Cheat by using one of your potions",
 						callback = function()
 							inventorybox(
 								player,
@@ -2067,7 +2067,7 @@ customerTable = {
 						disabled = player:getCoins() < 500
 					},
 					{
-						text = "Dont take the chance",
+						text = "Don't take the chance",
 						callback = function()
 							self.goAway = true
 						end
@@ -2096,7 +2096,7 @@ customerTable = {
 				messagebox(
 					"Uhmmm...",
 					randomTalk {
-						"You dont see how any of your potions could help you here, so you decide not to play instead"
+						"You don't see how any of your potions could help you here, so you decide not to play instead"
 					}
 				)
 			end
@@ -2118,7 +2118,7 @@ customerTable = {
 				"As you are talking to the foreman you spot the crowd of angry villagers heading towards you two. When they get closer man leading the mob yells “This madness must stop, we told you about the evil deeds of the witch from that secluded cottage and you did nothing to end them which is strange because you always hated magic. The only reason we can think of is that she is mind-controlling you with one of her spells” "
 			}
 			choicebox(
-				"Mind-controled",
+				"Mind-controlled",
 				line,
 				{
 					{

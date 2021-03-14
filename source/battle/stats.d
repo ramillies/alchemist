@@ -35,7 +35,7 @@ struct Stats
 		@Read int _hp, _maxhp;
 		@Read int _armor;
 		@Read int _speed;
-		@Read AttackType[] _wards, _immunities;
+		@Read @Write AttackType[] _wards, _immunities;
 		@Read @Write Attack _attack;
 		@Read @Write Effect[] _effects;
 	}

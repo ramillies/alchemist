@@ -17,8 +17,10 @@ function unit:takeTurn()
 				if hpLeft <= 0 then
 					value.killed = value.killed + 1
 				else
-					value.minHealth = hpLeft
+					value.minHealth = math.min(value.minHealth, hpLeft)
 				end
+			elseif try == "ward" then
+				value.minHealth = math.min(value.minHealth, enemies[v+1]:getHP())
 			end
 		end
 		if value.killed > bestValue.killed
