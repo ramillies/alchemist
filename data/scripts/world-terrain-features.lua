@@ -66,7 +66,7 @@ makeMask(function (x, y)
 	for k, v in pairs(adjacentTerrain(x,y)) do
 		if v == "water" then sum = sum + 1 end
 	end
-	return settlementAllowed(x,y) and (water or math.random() < 0.33)
+	return settlementAllowed(x,y) and (sum > 0 or math.random() < 0.33)
 end, true)
 distribute{ feature = "city", number = math.ceil(land/150), exclusionRadius = 8 }
 makeMask(settlementAllowed, true)

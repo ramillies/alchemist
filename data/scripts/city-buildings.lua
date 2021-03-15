@@ -40,7 +40,7 @@ buildings = {
 							messagebox("Hire", "You hired him and he has entered your party immediately.")
 							player:giveCoins(-200)
 							self.forHire = ""
-							self.cooldown = math.random(28, 40)
+							self.cooldown = math.random(24, 34)
 						else
 							messagebox("Hire", "Sadly, you don't have space for him in your party.")
 						end
@@ -60,13 +60,21 @@ buildings = {
 			teleportscreen(World, player, "Set Sail", "Bla bla", function (x, y)
 					local f = World:featureAt(x, y)
 					local dist = math.abs(x - place:getX()) + math.abs(y - place:getY());
+					local cost = self:adjustedCost(dist*self.costPerSquare)
 					if (f == "castle" or f == "city" or f == "village") then
 						local r = World:placeAtString(x, y, 'return tostring(place:hasBuilding("Shipyard"))')
 						if r == "true" then
-							return {
-								allowed = true,
-								text = string.format("Sail to %s for %d gold (%d days).", World:placeAtString(x, y, "return place:getName()"), dist*self.costPerSquare, dist/2)
-							}
+							if player:getCoins() < cost then
+								return {
+									allowed = false,
+									text = string.format("It is possible to sail to %s for %d gold (%d days), but you don't have enough gold.", World:placeAtString(x, y, "return place:getName()"), dist*self.costPerSquare, dist/2)
+								}
+							else
+								return {
+									allowed = true,
+									text = string.format("Sail to %s for %d gold (%d days).", World:placeAtString(x, y, "return place:getName()"), dist*self.costPerSquare, dist/2)
+								}
+							end
 						else
 							return { allowed = false, text = "You cannot sail here." }
 						end
@@ -77,7 +85,7 @@ buildings = {
 				function (x, y, travel)
 					if travel then
 						local dist = math.abs(x - place:getX()) + math.abs(y - place:getY());
-						player:giveCoins(-dist*self.costPerSquare)
+						player:giveCoins(-self:adjustedCost(dist*self.costPerSquare))
 						Time:advance(dist/2)
 						player:setPosition(x, y)
 					end
@@ -178,7 +186,7 @@ buildings = {
 			end
 		end,
 		onNewDay = function (self)
-			if math.random() < 0.01 then
+			if math.random() < 0.04 then
 				local loot = self.keys[math.random(1, #self.keys)]
 				self.parts[loot] = self.parts[loot] + math.random(2, 5)
 			end

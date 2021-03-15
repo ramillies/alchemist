@@ -271,6 +271,19 @@ class Unit: TimeRegistrable, Transformable, Drawable
 		target.draw(sprite, states);
 		if(!dead)
 		{
+			auto barColor = Color(to!ubyte(150*clamp(1. - 1.*stats.hp/stats.maxhp, 0, 1)), to!ubyte(150*clamp(stats.hp*1./stats.maxhp, 0, 1)), 0);
+			RectangleShape back = new RectangleShape(Vector2f(bounds.width, hpText.getGlobalBounds.height + 6));
+			back.fillColor = Color(0, 0, 0, 0);
+			back.outlineColor = barColor;
+			back.outlineThickness = 3;
+			back.position = Vector2f(bounds.left, bounds.top + bounds.height);
+			RectangleShape front = new RectangleShape(Vector2f(bounds.width * clamp(1.*stats.hp/stats.maxhp, 0, 1), hpText.getGlobalBounds.height + 6));
+			front.fillColor = barColor;
+			front.outlineColor = Color(0, 0, 0, 0);
+			front.outlineThickness = 3;
+			front.position = Vector2f(bounds.left, bounds.top + bounds.height);
+			target.draw(back, states);
+			target.draw(front, states);
 			target.draw(hpText, states);
 			target.draw(speedText, states);
 		}

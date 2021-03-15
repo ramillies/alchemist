@@ -135,6 +135,7 @@ class GameScreen: Screen
 		player.units = [ Unit.byName("knight"), Unit.byName("knight"), Unit.byName("ranger") ];
 		foreach(n; 0 .. player.units.length)
 			player.units[n].squadPosition = cast(int) n;
+		player.units[0].squadPosition = 3;
 	}
 
 	override void event(Event e)
