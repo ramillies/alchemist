@@ -1,5 +1,6 @@
 import std.algorithm, std.range, std.array;
 import std.stdio;
+import std.format;
 
 import mainloop;
 import reacttext;
@@ -24,8 +25,9 @@ class BattleScreen: Screen
 	Animation[] animations;
 	bool inInputState;
 	private RectangleShape[] heroCells, monsterCells;
+	private CoolSprite[] backgrounds; // Array of two sprites; the first is the actual background, the second is also a part of the battle background but it goes in front of the other things.
 
-	this(Player p, Unit[] m, bool nl, void delegate(string) cb)
+	this(Player p, Unit[] m, string bg, bool nl, void delegate(string) cb)
 	{
 		player = p;
 		foreach(n; 0 .. 6)
@@ -43,6 +45,14 @@ class BattleScreen: Screen
 		endBattleCallback = cb;
 		time = new BattleTime;
 		inInputState = false;
+		foreach(n; 0 .. 2)
+		{
+			auto s = new CoolSprite;
+			s.setRelativeOrigin(Vector2f(.5f, .5f));
+			backgrounds ~= s;
+		}
+		backgrounds[0].setTextureByName(format("battle background %s back", bg));
+		backgrounds[1].setTextureByName(format("battle background %s front", bg));
 	}
 
 	override void setWindow(RenderWindow w) { win = w; }
@@ -86,6 +96,12 @@ class BattleScreen: Screen
 			monsterCell.fillColor = Color(0,0,0,0);
 			monsterCell.position = Vector2f(win.size.x - marginX - cellsize*(n % 2 + 1.), win.size.y - marginY - cellsize*((n/2) + 1.));
 			monsterCells ~= monsterCell;
+		}
+
+		foreach(back; backgrounds)
+		{
+			back.position = Vector2f(win.size.x/2, win.size.y/2);
+			back.scale = Vector2f(win.size.y/back.getGlobalBounds.height, win.size.y/back.getGlobalBounds.height);
 		}
 	}
 
@@ -142,13 +158,8 @@ class BattleScreen: Screen
 	override void draw()
 	{
 		win.clear();
-		Vertex[] separators = [
-			Vertex(Vector2f(0, .2*win.size.y), Color.Red, Vector2f(0f, 0f)),
-			Vertex(Vector2f(win.size.x, .2*win.size.y), Color.Red, Vector2f(0f, 0f)),
-			Vertex(Vector2f(0, .8*win.size.y), Color.Red, Vector2f(0f, 0f)),
-			Vertex(Vector2f(win.size.x, .8*win.size.y), Color.Red, Vector2f(0f, 0f))
-		];
-		win.draw(separators, PrimitiveType.Lines);
+
+		win.draw(backgrounds[0]);
 
 		heroCells.each!((x) => win.draw(x));
 		monsterCells.each!((x) => win.draw(x));
@@ -157,6 +168,8 @@ class BattleScreen: Screen
 		win.draw(player);
 		foreach(a; animations)
 			win.draw(a);
+
+		win.draw(backgrounds[1]);
 	}
 
 	bool checkBattleEnd()

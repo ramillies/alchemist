@@ -28,5 +28,85 @@
 		"path": "images/items.png",
 		"tilesize": [ 96, 96 ],
 		"tilecount": 68
+	},
+	"battle background forest 1 front": {
+		"path": "images/battle-backgrounds/battleback1-1.png",
+		"tilesize": [ 1104, 621 ],
+		"tilecount": 1
+	},
+	"battle background forest 1 back": {
+		"path": "images/battle-backgrounds/battleback1-2.png",
+		"tilesize": [ 1104, 621 ],
+		"tilecount": 1
+	},
+	"battle background snow front": {
+		"path": "images/battle-backgrounds/battleback2-1.png",
+		"tilesize": [ 1104, 621 ],
+		"tilecount": 1
+	},
+	"battle background snow back": {
+		"path": "images/battle-backgrounds/battleback2-2.png",
+		"tilesize": [ 1104, 621 ],
+		"tilecount": 1
+	},
+	"battle background sand front": {
+		"path": "images/battle-backgrounds/battleback3-1.png",
+		"tilesize": [ 1104, 621 ],
+		"tilecount": 1
+	},
+	"battle background sand back": {
+		"path": "images/battle-backgrounds/battleback3-2.png",
+		"tilesize": [ 1104, 621 ],
+		"tilecount": 1
+	},
+	"battle background mountains front": {
+		"path": "images/battle-backgrounds/battleback5-1.png",
+		"tilesize": [ 1104, 621 ],
+		"tilecount": 1
+	},
+	"battle background mountains back": {
+		"path": "images/battle-backgrounds/battleback5-2.png",
+		"tilesize": [ 1104, 621 ],
+		"tilecount": 1
+	},
+	"battle background forest 2 front": {
+		"path": "images/battle-backgrounds/battleback6-1.png",
+		"tilesize": [ 1104, 621 ],
+		"tilecount": 1
+	},
+	"battle background forest 2 back": {
+		"path": "images/battle-backgrounds/battleback6-2.png",
+		"tilesize": [ 1104, 621 ],
+		"tilecount": 1
+	},
+	"battle background forest 3 front": {
+		"path": "images/battle-backgrounds/battleback7-1.png",
+		"tilesize": [ 1104, 621 ],
+		"tilecount": 1
+	},
+	"battle background forest 3 back": {
+		"path": "images/battle-backgrounds/battleback7-2.png",
+		"tilesize": [ 1104, 621 ],
+		"tilecount": 1
+	},
+	"battle background dungeon front": {
+		"path": "images/battle-backgrounds/battleback8-1.png",
+		"tilesize": [ 1104, 621 ],
+		"tilecount": 1
+	},
+	"battle background dungeon back": {
+		"path": "images/battle-backgrounds/battleback8-2.png",
+		"tilesize": [ 1104, 621 ],
+		"tilecount": 1
+	},
+	"battle background grass front": {
+		"path": "images/battle-backgrounds/battleback10-1.png",
+		"tilesize": [ 1104, 621 ],
+		"tilecount": 1
+	},
+	"battle background grass back": {
+		"path": "images/battle-backgrounds/battleback10-2.png",
+		"tilesize": [ 1104, 621 ],
+		"tilecount": 1
 	}
 }

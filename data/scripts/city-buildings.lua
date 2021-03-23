@@ -60,7 +60,7 @@ buildings = {
 			teleportscreen(World, player, "Set Sail", "Bla bla", function (x, y)
 					local f = World:featureAt(x, y)
 					local dist = math.abs(x - place:getX()) + math.abs(y - place:getY());
-					local cost = self:adjustedCost(dist*self.costPerSquare)
+					local cost = place:adjustedCost(dist*self.costPerSquare)
 					if (f == "castle" or f == "city" or f == "village") then
 						local r = World:placeAtString(x, y, 'return tostring(place:hasBuilding("Shipyard"))')
 						if r == "true" then
@@ -85,7 +85,7 @@ buildings = {
 				function (x, y, travel)
 					if travel then
 						local dist = math.abs(x - place:getX()) + math.abs(y - place:getY());
-						player:giveCoins(-self:adjustedCost(dist*self.costPerSquare))
+						player:giveCoins(-place:adjustedCost(dist*self.costPerSquare))
 						Time:advance(dist/2)
 						player:setPosition(x, y)
 					end

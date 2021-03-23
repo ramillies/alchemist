@@ -40,8 +40,14 @@ void putPopupsIntoLua(LuaState lua)
 		auto pot = string2ptr!PotionTable(potions.get!string("ptr"));
 		Mainloop.pushScreen(new ChooseItemScreen(p, t, pot, callback));
 	};
-	lua["battlescreen"] = delegate void (LuaTable player, LuaTable[] monsters, void delegate(string) callback, bool nonlethal)
+	lua["battlescreen"] = delegate void (LuaTable t)
 	{
+		LuaTable player = t.get!LuaTable("player");
+		LuaTable[] monsters = t.get!(LuaTable[])("opponents");
+		void delegate(string) callback = t.get!(void delegate(string))("onEnd");
+		bool nonlethal = t["nonlethal"].isNil ? false : t.get!bool("nonlethal");
+		string back = t["background"].isNil ? "grass" : t.get!string("background");
+
 		Unit[] list;
 		foreach(monster; monsters)
 		{
@@ -50,7 +56,7 @@ void putPopupsIntoLua(LuaState lua)
 			list ~= m;
 		}
 		auto p = string2ptr!Player(player.get!string("ptr"));
-		Mainloop.pushScreen(new BattleScreen(p, list, nonlethal, callback));
+		Mainloop.pushScreen(new BattleScreen(p, list, back, nonlethal, callback));
 	};
 	lua["endgamescreen"] = delegate void (LuaTable player, LuaTable potions, string heading, string msg)
 	{

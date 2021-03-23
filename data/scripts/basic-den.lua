@@ -19,6 +19,16 @@ function place:init()
 	self:addSprite()
 
 	self:updateDescription()
+
+	self.backgroundString = terrain
+	if terrain == "grass" then
+		local feature = World:featureAt(self:getX(), self:getY())
+		if feature == "forest" then
+			self.backgroundString = "forest 1"
+		elseif feature == "mountains" then
+			self.backgroundString = "mountains"
+		end
+	end
 end
 
 function place:newDay()
@@ -41,20 +51,24 @@ function place:enter(player)
 		choicebox("Lair", string.format("You come closer to the monster lair. The locals are right to fear this place, because you can see %d × %s milling around.\n\nDo you want to fight them?", #self.monsters, Units[self.allowedMonsters[1]].name),
 			{
 				{ text = "To battle!", callback = function ()
-					battlescreen(player, self.monsters, function (result)
-						print("in battle callback")
-						if result == "victory" then
-							local give = 3*#self.monsters + math.random(1, 5)
-							player:giveItems({ [self.ingredient] = give })
-							self.lootedCountdown = math.random(336, 672)
-							self:wipeSprites()
-							self.monsters = { }
-							self:updateDescription()
-							messagebox("Victory!", string.format("You defeated the vile monsters and searched the whole lair. After the looting is done and the place is ruined, you found that %d × %s will be useful to you.", give, Items[self.ingredient].name))
-						else
-							endgamescreen(player, PotionTable, "Defeat", "Sadly the death caught you in the midst of one of your many battles. The Potion of Youth will have to wait for another discoverer.")
-						end
-					end, false)
+					battlescreen {
+						player = player,
+						opponents = self.monsters,
+						onEnd = function (result)
+							if result == "victory" then
+								local give = 3*#self.monsters + math.random(1, 5)
+								player:giveItems({ [self.ingredient] = give })
+								self.lootedCountdown = math.random(336, 672)
+								self:wipeSprites()
+								self.monsters = { }
+								self:updateDescription()
+								messagebox("Victory!", string.format("You defeated the vile monsters and searched the whole lair. After the looting is done and the place is ruined, you found that %d × %s will be useful to you.", give, Items[self.ingredient].name))
+							else
+								endgamescreen(player, PotionTable, "Defeat", "Sadly the death caught you in the midst of one of your many battles. The Potion of Youth will have to wait for another discoverer.")
+							end
+						end,
+						background = self.backgroundString
+					}
 				end },
 				{ text = "Let's swiftly be gone from this dangerous place." }
 			}
