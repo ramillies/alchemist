@@ -19,6 +19,9 @@ class ReactiveText: Text
 		@Read bool _relativeOriginAllowed;
 		@Read Vector2f _relativeOrigin;
 		@Read @Write double _boxWidth;
+		@Read bool _drawOutline;
+		@Read int _outlineThickness;
+		@Read Color _outlineColor;
 	}
 
 	mixin(GenerateFieldAccessors);
@@ -29,6 +32,9 @@ class ReactiveText: Text
 		_relativeOrigin = Vector2f(0f, 0f);
 		_relativeOriginAllowed = false;
 		_boxWidth = 0.;
+		_drawOutline = false;
+		_outlineColor = Color(0,0,0,0);
+		_outlineThickness = 0;
 	}
 
 	private void updatePosition()
@@ -87,6 +93,15 @@ class ReactiveText: Text
 
 	void disableRelativeOrigin() { _relativeOriginAllowed = false; }
 
+	void setOutline(int frac, Color color)
+	{
+		_drawOutline = true;
+		_outlineThickness = frac;
+		_outlineColor = color;
+	}
+
+	void disableOutline() { _drawOutline = false; }
+
 	void update()
 	{
 		if(_colorCallback !is null) this.setColor(_colorCallback());
@@ -100,6 +115,26 @@ class ReactiveText: Text
 			this.setString(t);
 
 		updatePosition();
+	}
+
+	override void draw(RenderTarget target, RenderStates states)
+	{
+		if(_drawOutline && Shader.isAvailable)
+		{
+			auto savePos = this.position;
+			auto saveColor = this.getColor();
+			this.setColor(_outlineColor);
+			foreach(k; -_outlineThickness .. _outlineThickness)
+				foreach(l; -_outlineThickness .. _outlineThickness)
+					if((k^^2 + l^^2) <= _outlineThickness ^^ 2)
+					{
+						this.position = Vector2f(savePos.x + k, savePos.y + l);
+						super.draw(target, states);
+					}
+			this.setColor(saveColor);
+			this.position = savePos;
+		}
+		super.draw(target, states);
 	}
 
 }

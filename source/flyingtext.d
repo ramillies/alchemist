@@ -29,6 +29,9 @@ class FlyingText: ReactiveText, Animation
 	{
 		this.position = this.position + Vector2f(speed.x*dt, speed.y*dt);
 		alpha -= dt * vanishSpeed;
-		this.setColor(Color(startingColor.r, startingColor.g, startingColor.b, to!ubyte(clamp(alpha, 0., 255.))));
+		ubyte resultAlpha = to!ubyte(clamp(alpha, 0., 255.));
+		this.setColor(Color(startingColor.r, startingColor.g, startingColor.b, resultAlpha));
+		if(this.drawOutline)
+			this.setOutline(this.outlineThickness, Color(outlineColor.r, outlineColor.g, outlineColor.b, resultAlpha));
 	}
 }

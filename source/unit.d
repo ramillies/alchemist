@@ -62,6 +62,7 @@ class Unit: TimeRegistrable, Transformable, Drawable
 			setColor(Color.White);
 			setRelativeOrigin(Vector2f(.5f, 0f));
 			stringCallback = () => format("%s / %s", stats.hp, stats.maxhp);
+			setOutline(3, Color.Black);
 		}		
 		speedText = new ReactiveText;
 		with(speedText)
@@ -75,6 +76,7 @@ class Unit: TimeRegistrable, Transformable, Drawable
 					? format("%s = %(%s+%)", cooldowns.values.sum.to!int, cooldowns.values.map!`a.to!int`.array)
 					: format("%s", cooldowns.values.sum.to!int))
 				: "";
+			setOutline(3, Color.Black);
 		}		
 	}
 
@@ -115,12 +117,13 @@ class Unit: TimeRegistrable, Transformable, Drawable
 				setString("Immunity!");
 
 			setFont(Fonts.text);
-			setCharacterSize(40);
+			setCharacterSize(55);
 			setStyle(Text.Style.Bold);
+			setOutline(5, Color.Black);
 			setRelativeOrigin(Vector2f(.5f, .5f));
 			auto bounds = sprite.getGlobalBounds;
 			position = Vector2f(bounds.left, bounds.top);
-			initAnimation(Vector2f(20f, -20f), 100.);
+			initAnimation(Vector2f(40f, -40f), 200.);
 		}
 		screen.animations ~= msg;
 	}
